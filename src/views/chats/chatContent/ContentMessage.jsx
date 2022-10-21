@@ -1,0 +1,84 @@
+import Item from "antd/lib/list/Item";
+import { Text, View, StyleSheet, Image } from "react-native";
+
+function ContentMessage({ message }) {
+  const users = [
+    {
+      id: 0,
+      name: "Chau",
+    },
+    {
+      id: 1,
+      name: "Chauuuu",
+    },
+  ];
+
+  return (
+    <>
+      <View style={styles.content}>
+        <Image
+          style={styles.content__Avatar}
+          source={require("../../../../assets/chau.jpg")}
+        />
+        <View style={styles.message}>
+          <View style={styles.message_Item}>
+            <Text style={styles.content__User}>Chaau</Text>
+            <Text style={styles.message__Text}>{message.action}</Text>
+            <View style={styles.message__Time}>
+              <Text style={styles.createAt}>21:10</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  content: {
+    width: "85%",
+    flexDirection: "row",
+    marginVertical: 4,
+    marginHorizontal: 4,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
+
+  message: {
+    backgroundColor: "#fff",
+    padding: 8,
+    display: "flex",
+    alignContent: "flex-end",
+    borderRadius: 10,
+    borderColor: "#d2c3c3",
+    borderWidth: 1,
+  },
+  message_Item: {
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
+  message__Text: {
+    minWidth: 32,
+    maxWidth: "100%",
+    fontSize: 16,
+  },
+  message__Time: {},
+  createAt: {
+    marginTop: 4,
+    color: "#939ab7",
+  },
+  // content__Avatar
+  content__Avatar: {
+    height: 30,
+    width: 30,
+    borderRadius: 50,
+    marginRight: 5,
+  },
+
+  content__User: {
+    fontSize: 16,
+    color: "#24cd8c",
+  },
+});
+export default ContentMessage;
