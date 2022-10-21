@@ -4,7 +4,6 @@
 
 ## AsyncStorage
 
-    - Cài đặt thư viện
     `npm  install @react-native-async-storage/async-storage --save`
 
 ## React native Form
