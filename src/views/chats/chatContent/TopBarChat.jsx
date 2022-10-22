@@ -47,7 +47,7 @@ export default TopBarChat;
 
 const styles = StyleSheet.create({
   contentTop: {
-    height: "7%",
+    height: 45,
     width: "100%",
     display: "flex",
     justifyContent: "space-between",

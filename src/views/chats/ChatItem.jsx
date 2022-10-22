@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
   Image,
+  Platform,
 } from "react-native";
 
 import InputMessage from "./chatContent/InputMessage";
@@ -56,35 +57,21 @@ function ChatItem({ route, memberGroup, navigation }) {
       action: "Good luck!!",
       time: "21:10",
     },
-    // {
-    //   id: 0,
-    //   action:
-    //     "hello Chafkdh   cccccccccccccccccccc  hhh gggg hhgggg    llo Chafkdh   cccccccc   cccccccccccc  hhh gggg hhgggggggggggg hh fkdfhgkdfjhgkhu!",
-    //   time: "21:10",
-    // },
-    // {
-    //   id: 0,
-    //   action: "hello Ch afkdhfkd fhg fkdhfk dhfkdfjhgkhu!",
-    //   time: "21:10",
-    // },
   ];
 
   const renderItem = ({ item }) => (
     <>
-      <ContentMyMessage message={item} />
+      <ContentMessage message={item} />
     </>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <TopBarChat name={name} navigation={navigation} />
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <FlatList
-          style={{ flex: 1 }}
+          style={styles.content}
           data={messages}
           renderItem={renderItem}
           inverted
@@ -94,7 +81,7 @@ function ChatItem({ route, memberGroup, navigation }) {
 
         <InputMessage />
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -103,5 +90,9 @@ export default ChatItem;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  content: {
+    width: "100%",
+    height: "90%",
   },
 });

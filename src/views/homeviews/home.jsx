@@ -8,52 +8,21 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { getConversationAllByToken } from "../../redux/slices/ConversationSlice";
 import { saveUserChat } from "../../redux/slices/UserChatSlice";
+import ItemConservation from "../components/ItemConservation";
 
 export default function Home({ navigation }) {
-  // const headers = {
-  //   "Content-Type": "application/json",
-  //   Authorization: `Bearer ${global.userInfo.accessToken}`,
-  // };
-  // const handleLoadConverSations = () => {
-  //   axios
-  //     .get(`${BASE_URL}/api/conversation/all-of-user`, { headers: headers })
-  //     .then((data) => {
-  //       // console.log("data==================================");
-  //       // console.log(data.data);
-  //       setConversations(data.data.data);
-  //       // console.log("conversations==================================");
-  //       // console.log(conversations);
-  //     });
-  // };
-
-  const handleDisplayNameConversation = (item) => {
-    // if (item.type != 0) {
-    //   return item.name;
-    // }
-    // if (item.listMember[0].id == global.userInfo.id) {
-    //   return item.listMember[1].name;
-    // } else {
-    //   return item.listMember[0].name;
-    // }
-  };
-
-  useEffect(() => {
-    // console.log("Home Us");
-    // console.log(global.userInfo);
-    // handleLoadConverSations();
-  });
-
-  // ++++++++++++++++ redux  ++++++++++++++++
   const dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
   const { id: userId, accessToken } = useSelector((state) => state.user.user);
   const { conversations } = useSelector((state) => state.conversation);
+  const { userChat } = useSelector((state) => state.userChat);
 
   useEffect(() => {
     dispatch(getConversationAllByToken(accessToken));
@@ -85,26 +54,16 @@ export default function Home({ navigation }) {
       </View>
 
       <ScrollView>
-        {conversations.map((item) => (
-          <TouchableOpacity
-            style={styles.buttonMessage}
-            onPress={() => {
-              navigation.navigate("Chats", {
-                name: item.id,
-              });
-            }}
-          >
-            <Image source={item.avatar} style={styles.imgMessage} />
-            <View style={styles.content}>
-              <Text style={styles.name}>{item.id}</Text>
-
-              <Text style={styles.textdiscrible}>{item.id}</Text>
-            </View>
-
-            <View style={styles.viewTime}>
-              <Text style={styles.textdiscrible}>2 phút</Text>
-            </View>
-          </TouchableOpacity>
+        {conversations.map((conversation, index) => (
+          <ItemConservation
+            navigation={navigation}
+            isLoading={isLoading}
+            key={index}
+            name={conversation}
+            index={conversation.id}
+            userIdCurrent={userId}
+            {...conversation}
+          />
         ))}
       </ScrollView>
     </SafeAreaView>
@@ -155,33 +114,5 @@ const styles = StyleSheet.create({
     borderColor: "#dbdbdb",
     flexDirection: "row",
     alignItems: "center",
-  },
-
-  imgMessage: {
-    height: 50,
-    width: 50,
-    borderRadius: 50,
-    marginHorizontal: 15,
-  },
-  //
-  content: {
-    width: "60%",
-    height: "70%",
-    justifyContent: "space-around",
-  },
-
-  //
-  textdiscrible: {
-    color: "#6e6e6e",
-    fontSize: 17,
-  },
-  name: {
-    color: "#000",
-    fontSize: 20,
-  },
-  // viewTime
-  viewTime: {
-    width: "20%",
-    height: "55%",
   },
 });

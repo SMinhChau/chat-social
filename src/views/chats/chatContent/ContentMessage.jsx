@@ -22,10 +22,12 @@ function ContentMessage({ message }) {
         />
         <View style={styles.message}>
           <View style={styles.message_Item}>
-            <Text style={styles.content__User}>Chaau</Text>
-            <Text style={styles.message__Text}>{message.action}</Text>
-            <View style={styles.message__Time}>
-              <Text style={styles.createAt}>21:10</Text>
+            <View style={styles.message_Item__content}>
+              <Text style={styles.content__User}>Chaau</Text>
+              <Text style={styles.message__Text}>{message.action}</Text>
+              <View style={styles.message__Time}>
+                <Text style={styles.createAt}>21:10</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -36,7 +38,7 @@ function ContentMessage({ message }) {
 
 const styles = StyleSheet.create({
   content: {
-    width: "85%",
+    flex: 1,
     flexDirection: "row",
     marginVertical: 4,
     marginHorizontal: 4,
@@ -45,18 +47,23 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    backgroundColor: "#fff",
-    padding: 8,
     display: "flex",
+    width: "85%",
     alignContent: "flex-end",
-    borderRadius: 10,
-    borderColor: "#d2c3c3",
-    borderWidth: 1,
   },
   message_Item: {
     display: "flex",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+  },
+  message_Item__content: {
+    backgroundColor: "#fff",
+    padding: 8,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    borderRadius: 10,
+    borderColor: "#d2c3c3",
+    borderWidth: 1,
   },
   message__Text: {
     minWidth: 32,

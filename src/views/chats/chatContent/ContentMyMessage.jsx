@@ -11,10 +11,12 @@ function Texxt({ message }) {
         />
         <View style={styles.message}>
           <View style={styles.message_Item}>
-            <Text style={styles.content__User}>Chaau</Text>
-            <Text style={styles.message__Text}>{message.action}</Text>
-            <View style={styles.message__Time}>
-              <Text style={styles.createAt}>21:10</Text>
+            <View style={styles.message_Item__content}>
+              <Text style={styles.content__User}>Chaau</Text>
+              <Text style={styles.message__Text}>{message.action}</Text>
+              <View style={styles.message__Time}>
+                <Text style={styles.createAt}>21:10</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -32,19 +34,24 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    backgroundColor: "#fff",
-    padding: 8,
+    width: "85%",
     display: "flex",
-    borderRadius: 10,
-    borderColor: "#d2c3c3",
-    borderWidth: 1,
+    alignContent: "flex-end",
   },
   message_Item: {
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "flex-end",
   },
-
+  message_Item__content: {
+    backgroundColor: "#fff",
+    padding: 8,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+    borderRadius: 10,
+    borderColor: "#d2c3c3",
+    borderWidth: 1,
+  },
   message__Text: {
     minWidth: 32,
     maxWidth: "100%",

@@ -46,7 +46,7 @@ export default function Login({ navigation }) {
   };
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
-      // validationSchema: LoginSchema,
+      validationSchema: LoginSchema,
       initialValues: { phoneNumber: "", password: "" },
       onSubmit: (values) => {
         onFinish(values);
@@ -103,7 +103,7 @@ export default function Login({ navigation }) {
             returnKeyLabel="next"
             onChangeText={handleChange("phoneNumber")}
             onBlur={handleBlur("phoneNumber")}
-            // error={errors.phoneNumber}
+            error={errors.phoneNumber}
             values={values.phoneNumber}
             touched={touched.phoneNumber}
             onSubmitEditing={() => password.current?.focus()}
@@ -123,7 +123,7 @@ export default function Login({ navigation }) {
             autoCompleteType="password"
             onChangeText={handleChange("password")}
             onBlur={handleBlur("password")}
-            // error={errors.password}
+            error={errors.password}
             touched={touched.password}
             values={values.password}
             autoCapitalize="none"
@@ -133,9 +133,9 @@ export default function Login({ navigation }) {
             secureTextEntry={getPassVisible ? false : true}
           />
 
-          {/* {touched.password && errors.password && (
+          {touched.password && errors.password && (
             <Text style={{ color: "red" }}>{errors.password}</Text>
-          )} */}
+          )}
         </View>
       </View>
 
