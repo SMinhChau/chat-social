@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { getChatByConversationID } from "../../redux/slices/ChatSlice";
@@ -15,6 +15,8 @@ function ItemConservation({
   lastMessage,
   isLoading,
 }) {
+  const [currentDate, setCurrentDate] = useState("");
+
   const dispatch = useDispatch();
   const getNameConversation = () => {
     console.log(listMember);
@@ -51,10 +53,15 @@ function ItemConservation({
         navigation.navigate("Chats", { name: getNameConversation() });
       }}
     >
-      <Image
-        source={require("../../../assets/chau.jpg")}
-        style={styles.imgMessage}
-      />
+      {avatar ? (
+        <Image source={{ uri: avatar }} style={styles.imgMessage} />
+      ) : (
+        <Image
+          source={require("../../../assets/chau.jpg")}
+          style={styles.imgMessage}
+        />
+      )}
+
       <View style={styles.content}>
         <Text style={styles.name}>{getNameConversation()}</Text>
 
@@ -62,7 +69,7 @@ function ItemConservation({
       </View>
 
       <View style={styles.viewTime}>
-        <Text style={styles.textdiscrible}>2 phút</Text>
+        <Text style={styles.textdiscrible}>2 phut</Text>
       </View>
     </TouchableOpacity>
   );
@@ -72,13 +79,21 @@ export default ItemConservation;
 
 const styles = StyleSheet.create({
   buttonMessage: {
-    width: "100%",
-    height: 80,
+    flex: 1,
+    paddingVertical: 15,
+    marginVertical: 5,
+    marginHorizontal: 10,
     borderBottomWidth: 1,
     borderColor: "#dbdbdb",
     flexDirection: "row",
+    display: "flex",
+    justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#E3E8ED",
+    borderRadius: 10,
+    borderBottomWidth: 2,
   },
+
   imgMessage: {
     height: 50,
     width: 50,

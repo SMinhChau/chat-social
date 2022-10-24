@@ -49,14 +49,14 @@ function InputMessage(conversationId) {
       <Ionicons
         onPress={handleSendMessage}
         style={styles.icon}
-        name="ios-paper-plane"
-        size={30}
+        name="ios-paper-plane-outline"
+        size={24}
         color="#0068FF"
       />
       <Ionicons
         style={styles.iconRight}
         name="image"
-        size={30}
+        size={24}
         color="#0068FF"
       />
     </View>

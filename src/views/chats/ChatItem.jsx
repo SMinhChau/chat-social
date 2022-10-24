@@ -17,13 +17,25 @@ import InputMessage from "./chatContent/InputMessage";
 // redux
 import ContentMessage from "./chatContent/ContentMessage";
 import ContentMyMessage from "./chatContent/ContentMyMessage";
+import { useDispatch } from "react-redux";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+import { AvatarDefault, URL } from "../../utils/constant";
+import { updateContentChat } from "../../redux/slices/ChatSlice";
+import { updateSortConversations } from "../../redux/slices/ConversationSlice";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 function ChatItem({ route, memberGroup, navigation }) {
-  const [action, setaction] = useState("");
-
   const { name } = route.params;
 
-  // alert(JSON.stringify(route.params));
+  const { userChat } = useSelector((state) => state.userChat);
+  const { chat } = useSelector((state) => state.chat);
+  const dispatch = useDispatch();
+
+  var sock = new SockJS(`${URL}/ws`);
+  let stompClient = Stomp.over(sock);
+  const { user } = useSelector((state) => state.user);
 
   const messages = [
     {
@@ -59,9 +71,21 @@ function ChatItem({ route, memberGroup, navigation }) {
     },
   ];
 
-  const renderItem = ({ item }) => (
+  useEffect(() => {
+    sock.onopen = function () {
+      console.log("open");
+    };
+    stompClient.connect({}, function (frame) {
+      stompClient.subscribe(`/user/${user.id}/chat`, function (chat) {
+        const message = JSON.parse(chat.body);
+        dispatch(updateContentChat(message));
+      });
+    });
+  }, []);
+
+  const renderItem = ({ message }) => (
     <>
-      <ContentMessage message={item} />
+      <ContentMyMessage message={message} />
     </>
   );
 
@@ -72,7 +96,7 @@ function ChatItem({ route, memberGroup, navigation }) {
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <FlatList
           style={styles.content}
-          data={messages}
+          data={chat}
           renderItem={renderItem}
           inverted
           keyExtractor={(item, index) => item.id || index.toString()}
