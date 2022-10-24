@@ -12,3 +12,15 @@
         `npm i yup`
 
 `npm install http-proxy-middleware --save`
+
+## To get the Date Time Using moment.js
+
+    `npm install moment --save`
+
+## Gửi nhận tin nhắn
+
+    - Cài đặt thư vện
+        `npm i sockjs-client --save`
+        `npm i @stomp/stompjs --save`
+        `npm i stompjs --save1
+

@@ -7,6 +7,9 @@ import {
   ScrollView,
   Image,
   FlatList,
+  TextInput,
+  Button,
+  StatusBar,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -16,7 +19,13 @@ import { getConversationAllByToken } from "../../redux/slices/ConversationSlice"
 import { saveUserChat } from "../../redux/slices/UserChatSlice";
 import ItemConservation from "../components/ItemConservation";
 
-export default function Home({ navigation }) {
+export default function Home({
+  navigation,
+  clicked,
+  searchPhrase,
+  setSearchPhrase,
+  setCLicked,
+}) {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -34,8 +43,20 @@ export default function Home({ navigation }) {
     }
   }, [conversations]);
 
+  // const renderItem = ({ conversation, index }) => (
+  //   <ItemConservation
+  //     style={styles.FlatList}
+  //     navigation={navigation}
+  //     isLoading={isLoading}
+  //     key={index}
+  //     name={conversation}
+  //     index={conversation.id}
+  //     userIdCurrent={userId}
+  //     {...conversation}
+  //   />
+  // );
   return (
-    <SafeAreaView>
+    <View style={styles.home__content}>
       <View style={styles.searchComponent}>
         <TouchableOpacity style={styles.buttonSearch}>
           <Ionicons
@@ -53,24 +74,62 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <ScrollView>
-        {conversations.map((conversation, index) => (
-          <ItemConservation
-            navigation={navigation}
-            isLoading={isLoading}
-            key={index}
-            name={conversation}
-            index={conversation.id}
-            userIdCurrent={userId}
-            {...conversation}
-          />
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+      <View style={styles.content__FlatList}>
+        {/* <FlatList
+          style={styles.content}
+          data={conversations}
+          renderItem={renderItem}
+          inverted
+          keyExtractor={(conversation) => conversation.id}
+          contentContainerStyle={{ flexDirection: "column-reverse" }}
+        /> */}
+
+        <ScrollView style={styles.scrollView} horizontal={false}>
+          {conversations.map((conversation, index) => (
+            <ItemConservation
+              style={styles.FlatList}
+              navigation={navigation}
+              isLoading={isLoading}
+              key={index}
+              name={conversation}
+              index={conversation.id}
+              userIdCurrent={userId}
+              {...conversation}
+            />
+          ))}
+        </ScrollView>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  // Search bar
+  home__content: {
+    flex: 1,
+    width: "100%",
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flexDirection: "column",
+  },
+
+  // List
+  content__FlatList: {
+    flex: 1,
+    width: "100%",
+    display: "flex",
+    backgroundColor: "#E3E8ED",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  },
+  scrollView: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+  },
+  // View Chat
   Main: {
     flex: 1,
     justifyContent: "center",
@@ -79,7 +138,7 @@ const styles = StyleSheet.create({
 
   searchComponent: {
     width: "100%",
-    height: 50,
+    height: 45,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -105,14 +164,5 @@ const styles = StyleSheet.create({
   textSearch: {
     fontSize: 16,
     color: "#bebebe",
-  },
-
-  buttonMessage: {
-    width: "100%",
-    height: 80,
-    borderBottomWidth: 1,
-    borderColor: "#dbdbdb",
-    flexDirection: "row",
-    alignItems: "center",
   },
 });
