@@ -5,6 +5,8 @@ import Login from "../login/login";
 import Register from "../register/register";
 import RegisterPhone from "../register/registerphone";
 import OtpAuth from "../register/otpauth";
+import AddFriend from "../components/Model/AddFriend";
+
 
 const RootStack = createStackNavigator();
 

@@ -6,8 +6,9 @@ import { primaryColor, subprimaryColor } from "../../../utils/color";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-function TopBarChat({ name, memberGroup, navigation }) {
+function TopBarChat({ name, navigation }) {
   const [btnColor, setBtnColor] = useState("red");
+
   return (
     <View style={styles.contentTop}>
       <View style={styles.content__left}>
@@ -25,7 +26,7 @@ function TopBarChat({ name, memberGroup, navigation }) {
 
         <View style={[styles.cotentText, styles.rowCenter]}>
           <Text style={styles.nameText}>{name}</Text>
-          <Text style={styles.time}>2 phut</Text>
+          <Text style={styles.timeView}>2 phút</Text>
         </View>
       </View>
       <View style={[styles.rightBar, styles.row]}>
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: `${primaryColor}`,
   },
-  time: {
+  timeView: {
     fontSize: 12,
 
     color: `${subprimaryColor}`,

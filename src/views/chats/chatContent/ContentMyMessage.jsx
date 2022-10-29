@@ -1,21 +1,25 @@
 import Item from "antd/lib/list/Item";
 import { Text, View, StyleSheet, Image } from "react-native";
+import { useSelector } from "react-redux";
+import moment from "moment";
+function ContentMyMessage({ message }) {
+  // const { user } = useSelector((state) => state.user);
 
-function Texxt({ message }) {
   return (
     <>
       <View style={styles.content}>
-        <Image
+        {/* <Image
           style={styles.content__Avatar}
           source={require("../../../../assets/chau.jpg")}
-        />
+        /> */}
         <View style={styles.message}>
           <View style={styles.message_Item}>
             <View style={styles.message_Item__content}>
-              <Text style={styles.content__User}>Chaau</Text>
-              <Text style={styles.message__Text}>{message.action}</Text>
+              <Text style={styles.message__Text}>{message.content[0]}</Text>
               <View style={styles.message__Time}>
-                <Text style={styles.createAt}>21:10</Text>
+                <Text style={styles.createAt}>
+                  {moment(new Date(message.timeSend)).format("LT")}
+                </Text>
               </View>
             </View>
           </View>
@@ -44,7 +48,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   message_Item__content: {
-    backgroundColor: "#fff",
+    backgroundColor: "#AFEEEE",
     padding: 8,
     justifyContent: "flex-end",
     alignItems: "flex-end",
@@ -60,6 +64,7 @@ const styles = StyleSheet.create({
   message__Time: {},
   createAt: {
     marginTop: 4,
+    fontSize: 14,
     color: "#939ab7",
   },
   // content__Avatar
@@ -75,4 +80,4 @@ const styles = StyleSheet.create({
     color: "#24cd8c",
   },
 });
-export default Texxt;
+export default ContentMyMessage;

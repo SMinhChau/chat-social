@@ -1,29 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Platform, TextInput } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-function InputMessage(conversationId) {
-  const [isWrite, setIsWrite] = useState(false);
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useSelector } from "react-redux";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+import { updateContentChat } from "../../../redux/slices/ChatSlice";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { updateSortConversations } from "../../../redux/slices/ConversationSlice";
+import { URL } from "../../../utils/constant";
+import { useDispatch } from "react-redux";
+
+function InputMessage({ conversationId }) {
   const [message, setMessage] = useState("");
 
-  const handleWriteText = (value) => {
+  const [photo, setPhoto] = useState(
+    "https://s120-ava-talk.zadn.vn/3/3/6/5/63/120/3a1cf7ea2e80a0262202104db962090e.jpg"
+  );
+
+  const dispatch = useDispatch();
+
+  const handleSetInput = (value) => {
     setMessage(value);
-    if (value.length > 0) {
-      setIsWrite(true);
-    } else {
-      setIsWrite(false);
-    }
   };
 
-  const handleSendMessage = () => {
-    alert("send");
-    // const data = { content: message, senderID: userInfo._id, conversationID: conversationId };
+  const { user } = useSelector((state) => state.user);
+
+  const sendMessage = () => {
+    var chatMessage = {
+      conversationId: conversationId,
+      content: [message],
+      type: 0,
+      accessToken: user.accessToken,
+    };
+    try {
+      global.stompClient.send(
+        "/app/chat.sendMessage",
+        {},
+        JSON.stringify(chatMessage)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+    dispatch(updateSortConversations(conversationId));
     setMessage("");
   };
 
+  const handleChoosePhoto = () => {
+    setPhoto(response);
+  };
   return (
     <View style={styles.contentTop}>
       <FontAwesome
@@ -34,20 +60,17 @@ function InputMessage(conversationId) {
       />
       <View style={[styles.inputView, styles.rowCenter]}>
         <TextInput
+          maxLength={1000}
           placeholder="Nhập tin nhắn"
           value={message}
-          style={[
-            styles.input,
-            styles.rowCenter,
-            { paddingTop: Platform.OS === "ios" ? 10 : 0 },
-          ]}
+          onChangeText={handleSetInput}
+          style={[styles.input, styles.rowCenter]}
           multiline
-          onChangeText={handleWriteText}
         />
       </View>
 
       <Ionicons
-        onPress={handleSendMessage}
+        onPress={sendMessage}
         style={styles.icon}
         name="ios-paper-plane-outline"
         size={24}
@@ -95,6 +118,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: "10%",
+  },
+  iconLeft: {
+    paddingRight: 5,
   },
   iconRight: {},
 });

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { getChatByConversationID } from "../../redux/slices/ChatSlice";
 import { saveUserChat } from "../../redux/slices/UserChatSlice";
 import React from "react";
+import moment from "moment";
 function ItemConservation({
   navigation,
   name,
@@ -18,6 +19,7 @@ function ItemConservation({
   const [currentDate, setCurrentDate] = useState("");
 
   const dispatch = useDispatch();
+
   const getNameConversation = () => {
     console.log(listMember);
     // console.log(userIdCurrent);
@@ -31,7 +33,9 @@ function ItemConservation({
   };
 
   const handleChangeChat = () => {
-    navigation.navigate("Chats", { name: getNameConversation() });
+    navigation.navigate("Chats", {
+      name: getNameConversation(),
+    });
     dispatch(getChatByConversationID(id));
     dispatch(
       saveUserChat({
@@ -50,7 +54,7 @@ function ItemConservation({
     <TouchableOpacity
       style={styles.buttonMessage}
       onPress={() => {
-        navigation.navigate("Chats", { name: getNameConversation() });
+        handleChangeChat();
       }}
     >
       {avatar ? (
@@ -63,13 +67,25 @@ function ItemConservation({
       )}
 
       <View style={styles.content}>
-        <Text style={styles.name}>{getNameConversation()}</Text>
+        <Text style={styles.name} numberOfLines={1} textAlignVertical="top">
+          {getNameConversation()}
+        </Text>
 
-        <Text style={styles.textdiscrible}>{lastMessage?.content[0]}</Text>
+        <Text
+          style={styles.textdiscrible}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {lastMessage?.content[0] ? lastMessage.content : ""}
+        </Text>
       </View>
 
       <View style={styles.viewTime}>
-        <Text style={styles.textdiscrible}>2 phut</Text>
+        <Text style={styles.textdiscrible_time}>
+          {lastMessage?.timeSend
+            ? moment(new Date(lastMessage.timeSend)).fromNow()
+            : ""}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -80,6 +96,7 @@ export default ItemConservation;
 const styles = StyleSheet.create({
   buttonMessage: {
     flex: 1,
+    height: 90,
     paddingVertical: 15,
     marginVertical: 5,
     marginHorizontal: 10,
@@ -98,27 +115,44 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 50,
-    marginHorizontal: 15,
+    marginRight: 15,
   },
   //
   content: {
-    width: "60%",
-    height: "70%",
+    width: "50%",
+    height: "100%",
     justifyContent: "space-around",
   },
 
   //
   textdiscrible: {
+    width: "100%",
     color: "#6e6e6e",
-    fontSize: 17,
+    height: "50%",
+    fontSize: 14,
+    paddingTop: 3,
+  },
+  textdiscrible_time: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-end",
+    color: "#6e6e6e",
+    fontSize: 14,
+    paddingTop: 3,
   },
   name: {
+    width: "100%",
+    height: "50%",
     color: "#000",
     fontSize: 20,
   },
   // viewTime
   viewTime: {
     width: "20%",
-    height: "55%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-end",
+    marginLeft: 5,
   },
 });

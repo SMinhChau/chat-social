@@ -1,17 +1,15 @@
 import Item from "antd/lib/list/Item";
 import { Text, View, StyleSheet, Image } from "react-native";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import { useEffect } from "react";
+import { getConversationAllByToken } from "../../../redux/slices/ConversationSlice";
+import { saveUserChat } from "../../../redux/slices/UserChatSlice";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
 
-function ContentMessage({ message }) {
-  const users = [
-    {
-      id: 0,
-      name: "Chau",
-    },
-    {
-      id: 1,
-      name: "Chauuuu",
-    },
-  ];
+function ContentMessage({ message, navigation }) {
+  const { userChat } = useSelector((state) => state.userChat);
 
   return (
     <>
@@ -23,10 +21,13 @@ function ContentMessage({ message }) {
         <View style={styles.message}>
           <View style={styles.message_Item}>
             <View style={styles.message_Item__content}>
-              <Text style={styles.content__User}>Chaau</Text>
-              <Text style={styles.message__Text}>{message.action}</Text>
+              <Text style={styles.content__User}>{userChat.name}</Text>
+              <Text style={styles.message__Text}>{message.content[0]}</Text>
               <View style={styles.message__Time}>
-                <Text style={styles.createAt}>21:10</Text>
+                <Text style={styles.createAt}>
+                  {" "}
+                  {moment(new Date(message.timeSend)).format("LT")}
+                </Text>
               </View>
             </View>
           </View>
@@ -42,10 +43,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: 4,
     marginHorizontal: 4,
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
+    // justifyContent: "flex-start",
+    // alignItems: "flex-start",
   },
-
   message: {
     display: "flex",
     width: "85%",
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
   message__Time: {},
   createAt: {
     marginTop: 4,
+    fontSize: 14,
     color: "#939ab7",
   },
   // content__Avatar

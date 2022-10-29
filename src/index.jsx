@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import ChatItem from "./views/chats/ChatItem";
+import AddFriend from "./views/components/Model/AddFriend";
 
 import RootStackScreen from "./views/screen/RootStackScreen";
 
@@ -19,6 +20,7 @@ export default function Index() {
         <Stack.Screen name="RootStackScreen" component={RootStackScreen} />
         <Stack.Screen name="Home" component={TabsScreen} />
         <Stack.Screen name="Chats" component={ChatItem} />
+        <Stack.Screen name="AddFriend" component={AddFriend} />
       </Stack.Navigator>
     </NavigationContainer>
   );
