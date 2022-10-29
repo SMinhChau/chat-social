@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { getChatByConversationID } from "../../redux/slices/ChatSlice";
 import { saveUserChat } from "../../redux/slices/UserChatSlice";
 import React from "react";
+import moment from "moment";
 function ItemConservation({
   navigation,
   name,
@@ -18,6 +19,7 @@ function ItemConservation({
   const [currentDate, setCurrentDate] = useState("");
 
   const dispatch = useDispatch();
+
   const getNameConversation = () => {
     console.log(listMember);
     // console.log(userIdCurrent);
@@ -31,7 +33,9 @@ function ItemConservation({
   };
 
   const handleChangeChat = () => {
-    navigation.navigate("Chats", { name: getNameConversation() });
+    navigation.navigate("Chats", {
+      name: getNameConversation(),
+    });
     dispatch(getChatByConversationID(id));
     dispatch(
       saveUserChat({
@@ -50,7 +54,7 @@ function ItemConservation({
     <TouchableOpacity
       style={styles.buttonMessage}
       onPress={() => {
-        navigation.navigate("Chats", { name: getNameConversation() });
+        handleChangeChat();
       }}
     >
       {avatar ? (
@@ -63,13 +67,21 @@ function ItemConservation({
       )}
 
       <View style={styles.content}>
-        <Text style={styles.name}>{getNameConversation()}</Text>
+        <Text style={styles.name} multiline={true} textAlignVertical="top">
+          {getNameConversation()}
+        </Text>
 
-        <Text style={styles.textdiscrible}>{lastMessage?.content[0]}</Text>
+        <Text style={styles.textdiscrible}>
+          {lastMessage?.content[0] ? lastMessage.content : ""}
+        </Text>
       </View>
 
       <View style={styles.viewTime}>
-        <Text style={styles.textdiscrible}>2 phut</Text>
+        <Text style={styles.textdiscrible}>
+          {lastMessage?.timeSend
+            ? moment(new Date(lastMessage.timeSend)).fromNow()
+            : ""}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -102,7 +114,7 @@ const styles = StyleSheet.create({
   },
   //
   content: {
-    width: "60%",
+    width: "50%",
     height: "70%",
     justifyContent: "space-around",
   },
@@ -110,15 +122,20 @@ const styles = StyleSheet.create({
   //
   textdiscrible: {
     color: "#6e6e6e",
-    fontSize: 17,
+    fontSize: 14,
+    paddingTop: 3,
   },
   name: {
+    width: "100%",
     color: "#000",
     fontSize: 20,
   },
   // viewTime
   viewTime: {
     width: "20%",
+    display: "flex",
+    justifyContent: "center",
+    alignContent: "flex-end",
     height: "55%",
   },
 });
