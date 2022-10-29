@@ -67,17 +67,21 @@ function ItemConservation({
       )}
 
       <View style={styles.content}>
-        <Text style={styles.name} multiline={true} textAlignVertical="top">
+        <Text style={styles.name} numberOfLines={1} textAlignVertical="top">
           {getNameConversation()}
         </Text>
 
-        <Text style={styles.textdiscrible}>
+        <Text
+          style={styles.textdiscrible}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
           {lastMessage?.content[0] ? lastMessage.content : ""}
         </Text>
       </View>
 
       <View style={styles.viewTime}>
-        <Text style={styles.textdiscrible}>
+        <Text style={styles.textdiscrible_time}>
           {lastMessage?.timeSend
             ? moment(new Date(lastMessage.timeSend)).fromNow()
             : ""}
@@ -92,6 +96,7 @@ export default ItemConservation;
 const styles = StyleSheet.create({
   buttonMessage: {
     flex: 1,
+    height: 90,
     paddingVertical: 15,
     marginVertical: 5,
     marginHorizontal: 10,
@@ -110,32 +115,44 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 50,
-    marginHorizontal: 15,
+    marginRight: 15,
   },
   //
   content: {
     width: "50%",
-    height: "70%",
+    height: "100%",
     justifyContent: "space-around",
   },
 
   //
   textdiscrible: {
+    width: "100%",
+    color: "#6e6e6e",
+    height: "50%",
+    fontSize: 14,
+    paddingTop: 3,
+  },
+  textdiscrible_time: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-end",
     color: "#6e6e6e",
     fontSize: 14,
     paddingTop: 3,
   },
   name: {
     width: "100%",
+    height: "50%",
     color: "#000",
     fontSize: 20,
   },
   // viewTime
   viewTime: {
     width: "20%",
+    height: "100%",
     display: "flex",
     justifyContent: "center",
-    alignContent: "flex-end",
-    height: "55%",
+    alignItems: "flex-end",
+    marginLeft: 5,
   },
 });

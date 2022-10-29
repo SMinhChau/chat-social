@@ -15,6 +15,10 @@ import { useDispatch } from "react-redux";
 function InputMessage({ conversationId }) {
   const [message, setMessage] = useState("");
 
+  const [photo, setPhoto] = useState(
+    "https://s120-ava-talk.zadn.vn/3/3/6/5/63/120/3a1cf7ea2e80a0262202104db962090e.jpg"
+  );
+
   const dispatch = useDispatch();
 
   const handleSetInput = (value) => {
@@ -43,6 +47,9 @@ function InputMessage({ conversationId }) {
     setMessage("");
   };
 
+  const handleChoosePhoto = () => {
+    setPhoto(response);
+  };
   return (
     <View style={styles.contentTop}>
       <FontAwesome
@@ -53,6 +60,7 @@ function InputMessage({ conversationId }) {
       />
       <View style={[styles.inputView, styles.rowCenter]}>
         <TextInput
+          maxLength={1000}
           placeholder="Nhập tin nhắn"
           value={message}
           onChangeText={handleSetInput}
@@ -110,6 +118,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: "10%",
+  },
+  iconLeft: {
+    paddingRight: 5,
   },
   iconRight: {},
 });

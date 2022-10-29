@@ -11,21 +11,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Tooltip from "react-native-walkthrough-tooltip";
 import { headerBar } from "../../utils/color";
 import MenuIcon from "./MenuIcon";
-
-const items = [
-  {
-    id: 0,
-    icon: "person-add-outline",
-    title: "Thêm bạn",
-    onClick: "addFriend",
-  },
-  {
-    id: 1,
-    icon: "people-outline",
-    title: "Tạo nhóm",
-    onClick: "addListFriends",
-  },
-];
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 function SearchBar({ navigation, onClick }) {
   const [visible, setVisible] = useState(false);
@@ -48,6 +34,7 @@ function SearchBar({ navigation, onClick }) {
   const handleOnClickAdd = () => {
     navigation.navigate("AddFriend");
   };
+  const handleOnClickAddGroup = () => {};
 
   return (
     <View style={styles.searchBar}>
@@ -82,14 +69,16 @@ function SearchBar({ navigation, onClick }) {
         isVisible={visible}
         content={
           <>
-            {items.map((item, index) => (
-              <MenuIcon
-                icon={item.icon}
-                title={item.title}
-                key={index}
-                onPress={item.onClick ? handleOnClickAdd : null}
-              />
-            ))}
+            <MenuIcon
+              icon={<Ionicons name="person-add-outline" size={20} />}
+              title={"Thêm bạn"}
+              onPress={handleOnClickAdd}
+            />
+            <MenuIcon
+              icon={<Ionicons name="people-outline" size={20} />}
+              title={"Tạo nhóm"}
+              onPress={handleOnClickAddGroup}
+            />
           </>
         }
         placement={"bottom"}

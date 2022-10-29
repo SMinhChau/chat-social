@@ -5,7 +5,8 @@ import { border } from "../../utils/color";
 function MenuIcon({ icon, title, color, onPress }) {
   return (
     <TouchableOpacity style={styles.body} onPress={onPress}>
-      <Ionicons name={icon} size={20} />
+      {/* <Ionicons name={icon} size={20} /> */}
+      {icon}
       <Text style={[styles.title, { color: color }]}>{title}</Text>
     </TouchableOpacity>
   );

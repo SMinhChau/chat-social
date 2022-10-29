@@ -114,6 +114,7 @@ function ChatItem({ route, memberGroup, navigation }) {
           <TopBarChat name={userChat.name} navigation={navigation} />
           <ScrollView style={styles.scrollView}>
             <FlatList
+              style={{ paddingHorizontal: 10, paddingVertical: 5 }}
               data={chat.content}
               renderItem={renderItem}
               initialNumToRender={20}
@@ -165,13 +166,7 @@ const styles = StyleSheet.create({
   chatscreen: {
     backgroundColor: "#F7F7F7",
     flex: 1,
-    // display: "flex",
-    // justifyContent: "flex-end",
   },
-  // inner: {
-  //   width: " 100%",
-  //   height: "80%",
-  // },
   content__FlatList: {},
   chatemptyContainer: {
     alignItems: "center",
