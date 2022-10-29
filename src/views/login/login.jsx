@@ -20,6 +20,10 @@ import { useFormik } from "formik";
 import { useRef } from "react";
 import { SignInUser } from "../../redux/slices/UserSlice";
 
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+import { updateContentChat } from "../../redux/slices/ChatSlice";
+import { URL } from "../../utils/constant";
 export default function Login({ navigation }) {
   const [getPassVisible, setPassVisible] = useState(false);
   const password = useRef(null);
@@ -54,10 +58,28 @@ export default function Login({ navigation }) {
       },
     });
 
+  //   Connect Socket
+  const onError = (error) => {
+    console.log("Could not connect" + error);
+  };
+  const onConnected = () => {
+    console.log(" ======== connected ==========: ");
+    global.stompClient.subscribe(`/user/${user.id}/chat`, function (chat) {
+      const message = JSON.parse(chat.body);
+      dispatch(updateContentChat(message));
+    });
+  };
+
   useEffect(() => {
     if (isSuccess) {
+      var sock = new SockJS(`${URL}/ws`);
+      global.stompClient = Stomp.over(sock);
+
       navigation.navigate("Home");
       console.log(messages);
+
+      console.log(" ======== stompClient.connect ==========: ");
+      global.stompClient.connect(onError, onConnected);
     }
     if (isError) {
       console.log(messages);

@@ -18,6 +18,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getConversationAllByToken } from "../../redux/slices/ConversationSlice";
 import { saveUserChat } from "../../redux/slices/UserChatSlice";
 import ItemConservation from "../components/ItemConservation";
+import SearchBar from "../components/SearchBar";
+import { headerBar } from "../../utils/color";
+import { getToken } from "../../utils/function";
 
 export default function Home({
   navigation,
@@ -43,47 +46,10 @@ export default function Home({
     }
   }, [conversations]);
 
-  // const renderItem = ({ conversation, index }) => (
-  //   <ItemConservation
-  //     style={styles.FlatList}
-  //     navigation={navigation}
-  //     isLoading={isLoading}
-  //     key={index}
-  //     name={conversation}
-  //     index={conversation.id}
-  //     userIdCurrent={userId}
-  //     {...conversation}
-  //   />
-  // );
   return (
     <View style={styles.home__content}>
-      <View style={styles.searchComponent}>
-        <TouchableOpacity style={styles.buttonSearch}>
-          <Ionicons
-            name="search-outline"
-            style={{ fontSize: 25, marginHorizontal: 10, color: "white" }}
-          />
-          <Text style={styles.textSearch}>Tìm kiếm</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.buttonSetting}>
-          <Ionicons
-            name="settings-outline"
-            style={{ fontSize: 25, color: "white" }}
-          />
-        </TouchableOpacity>
-      </View>
-
+      <SearchBar navigation={navigation} />
       <View style={styles.content__FlatList}>
-        {/* <FlatList
-          style={styles.content}
-          data={conversations}
-          renderItem={renderItem}
-          inverted
-          keyExtractor={(conversation) => conversation.id}
-          contentContainerStyle={{ flexDirection: "column-reverse" }}
-        /> */}
-
         <ScrollView style={styles.scrollView} horizontal={false}>
           {conversations.map((conversation, index) => (
             <ItemConservation
@@ -119,7 +85,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     display: "flex",
-    backgroundColor: "#E3E8ED",
+    backgroundColor: "#F7F7F7",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
@@ -147,7 +113,7 @@ const styles = StyleSheet.create({
   buttonSearch: {
     flexDirection: "row",
     flex: 9,
-    backgroundColor: "#0068FF",
+    backgroundColor: `${headerBar}`,
     height: "100%",
     justifyContent: "flex-start",
     alignItems: "center",
@@ -158,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     height: "100%",
-    backgroundColor: "#0068FF",
+    backgroundColor: `${headerBar}`,
   },
 
   textSearch: {

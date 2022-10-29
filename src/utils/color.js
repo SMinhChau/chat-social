@@ -1,5 +1,7 @@
 export const primaryColor = "#fff";
+export const primaryColorTitle = "#000";
 export const subprimaryColor = "#939ab7";
+export const headerBar = "#0068FF";
 
 export const bgColor = "#fff";
 export const border = "#e5e7eb";
