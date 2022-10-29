@@ -4,6 +4,7 @@ import Zolo from "../Main/zolo";
 import Login from "../login/login";
 import Register from "../register/register";
 import RegisterPhone from "../register/registerphone";
+import OtpAuth from "../register/otpauth";
 
 const RootStack = createStackNavigator();
 
@@ -17,6 +18,7 @@ function RootStackScreen() {
       <RootStack.Screen name="Zolo" component={Zolo} />
       <RootStack.Screen name="Login" component={Login} />
       <RootStack.Screen name="RegisterPhone" component={RegisterPhone} />
+      <RootStack.Screen name="OtpAuth" component={OtpAuth} />
       <RootStack.Screen name="Register" component={Register} />
     </RootStack.Navigator>
   );

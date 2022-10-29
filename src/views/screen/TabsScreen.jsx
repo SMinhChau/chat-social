@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Home from "../homeviews/home";
 import Login from "../login/login";
+import Account from "../homeviews/account";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -59,7 +60,7 @@ function TabsScreen() {
 
         <Tab.Screen
           name="Cá nhân"
-          component={Login}
+          component={Account}
           options={{ headerShown: false, tabBarVisible: false }}
         />
       </Tab.Navigator>

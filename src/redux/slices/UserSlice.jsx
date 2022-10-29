@@ -9,10 +9,10 @@ export const SignInUser = createAsyncThunk(
     try {
       const { data } = await axios.post(`${URL}/api/auth/login`, user);
 
-      localStorage.setItem(
-        "accessToken",
-        JSON.stringify(data.data.accessToken)
-      );
+      // localStorage.setItem(
+      //   "accessToken",
+      //   JSON.stringify(data.data.accessToken)
+      // );
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue({
