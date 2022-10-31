@@ -3,6 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Home from "../homeviews/home";
+import PhoneBooks from "../homeviews/phonebooks";
+import Account from "../homeviews/account";
 import Login from "../login/login";
 
 const Tab = createBottomTabNavigator();
@@ -48,7 +50,7 @@ function TabsScreen() {
         />
         <Tab.Screen
           name="Danh bạ"
-          component={Login}
+          component={PhoneBooks}
           options={{ headerShown: false, tabBarVisible: false }}
         />
         <Tab.Screen
@@ -59,7 +61,7 @@ function TabsScreen() {
 
         <Tab.Screen
           name="Cá nhân"
-          component={Login}
+          component={Account}
           options={{ headerShown: false, tabBarVisible: false }}
         />
       </Tab.Navigator>

@@ -5,93 +5,182 @@ import {
   SafeAreaView,
   ImageBackground,
   TouchableOpacity,
+  Animated,
+  Image,
 } from "react-native";
 import React from "react";
-
+import { bgColor } from "../../utils/color";
+import { useRef } from "react";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useEffect } from "react";
 export default function Zolo({ navigation }) {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 5000,
+    }).start();
+  }, [fadeAnim]);
+
   return (
-    <ImageBackground
-      source={require("../../imgs/background.png")}
-      style={styles.image}
-    >
-      <View style={styles.component}>
-        <View style={styles.component}>
-          <Text style={styles.zalotitle}>ZULO</Text>
-        </View>
+    <SafeAreaView style={styles.container}>
+      <ImageBackground
+        style={{ flex: 1 }}
+        resizeMode="cover"
+        source={require("../../../assets/Vector.png")}
+      >
+        <View style={styles.line_top}>
+          <Image
+            style={[styles.logo, { marginTop: 15 }]}
+            source={require("../../../assets/start_screen01.png")}
+          />
 
-        <View style={styles.component}>
-          <TouchableOpacity
-            style={styles.buttonLogin}
-            onPress={() => {
-              navigation.navigate("Login");
+          <Animated.View
+            style={{
+              opacity: fadeAnim,
             }}
           >
-            <Text style={styles.textTouch}>Đăng nhập</Text>
-          </TouchableOpacity>
+            <View style={styles.icon_View}>
+              <TouchableOpacity style={styles.icon_logo}>
+                <Ionicons
+                  style={[styles.icon]}
+                  name="chatbubble-ellipses-sharp"
+                  size={100}
+                  color="#0068FF"
+                />
+              </TouchableOpacity>
+              <Text style={[styles.text, styles.text_shadow]}>
+                Chào mừng bạn!
+              </Text>
+            </View>
+          </Animated.View>
 
-          <TouchableOpacity
-            style={styles.buttonRegis}
-            onPress={() => {
-              navigation.navigate("RegisterPhone");
-            }}
-          >
-            <Text style={styles.textTouch2}>Đăng ký</Text>
-          </TouchableOpacity>
+          <View style={styles.view_Icon}>
+            <Image
+              style={styles.logo}
+              source={require("../../../assets/start_screen.png")}
+            />
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+        <View style={styles.line}>
+          <View style={styles._touchableOpacity}>
+            <Animated.View
+              style={{
+                opacity: fadeAnim,
+              }}
+            >
+              <Text style={[styles.text_start, styles.text_shadow]}>
+                Khám phá ngay
+              </Text>
+            </Animated.View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Login");
+              }}
+            >
+              <Ionicons
+                style={styles.iconBtn}
+                name="chevron-forward-circle-outline"
+                size={60}
+                color="#0a937e"
+              />
+            </TouchableOpacity>
+          </View>
+          <Image
+            style={[styles.logo]}
+            source={require("../../../assets/start_screen_buttom.png")}
+          />
+        </View>
+      </ImageBackground>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   image: {
     flex: 1,
+    justifyContent: "center",
+  },
+
+  icon_View: {
+    justifyContent: "center",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  icon_logo: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 140,
+    height: 140,
+    borderColor: "#36e60e",
+    borderWidth: 0.5,
+    borderRadius: 10,
+    shadowColor: "#36e60e",
+    textShadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.5,
+    textShadowRadius: 10,
+    elevation: 5,
+  },
+  _touchableOpacity: {
     width: "100%",
-    height: "100%",
-    resizeMode: "stretch",
-  },
 
-  component: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-  },
-
-  zalotitle: {
-    fontSize: 80,
-    fontWeight: "bold",
-    color: "#0573ff",
-  },
-
-  buttonRegis: {
-    backgroundColor: "#D1D1D1",
-    width: 250,
-    height: 40,
-    display: "flex",
     justifyContent: "center",
+  },
+  line: {
+    height: "50%",
+    width: "100%",
+    justifyContent: "space-around",
+  },
+  line_top: {
+    height: "50%",
+    width: "100%",
+    justifyContent: "space-around",
+  },
+  iconBtn: {
     alignItems: "center",
-    marginVertical: 10,
-    borderRadius: 30,
+    shadowColor: "black",
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 5,
+    textShadowColor: "#0a937e",
   },
 
-  buttonLogin: {
-    backgroundColor: "#0573ff",
-    width: 250,
-    height: 40,
-    display: "flex",
+  view_Icon: {
+    width: "100%",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  logo: {
+    marginHorizontal: 15,
+  },
+  text: {
+    width: "100%",
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    textAlign: "center",
     justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 10,
-    borderRadius: 30,
+    fontSize: 30,
+    fontWeight: "500",
+    color: "#0068FF",
   },
-
-  textTouch: {
-    fontSize: 18,
-    color: "white",
+  text_start: {
+    width: "100%",
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    textAlign: "center",
+    justifyContent: "center",
+    fontSize: 30,
+    fontWeight: "500",
+    color: "#0a937e",
   },
-
-  textTouch2: {
-    fontSize: 18,
-    color: "#000",
+  text_shadow: {
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 10,
+    textShadowColor: "#0068FF",
   },
 });

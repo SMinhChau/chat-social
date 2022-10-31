@@ -2,6 +2,7 @@ import Item from "antd/lib/list/Item";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { useSelector } from "react-redux";
 import moment from "moment";
+
 function ContentMyMessage({ message }) {
   // const { user } = useSelector((state) => state.user);
 
@@ -15,9 +16,18 @@ function ContentMyMessage({ message }) {
         <View style={styles.message}>
           <View style={styles.message_Item}>
             <View style={styles.message_Item__content}>
-              <Text style={styles.message__Text}>{message.content[0]}</Text>
+              {message.type === 0 ? (
+                <Text style={styles.message__Text}>{message.content[0]}</Text>
+              ) : (
+                <Image
+                  style={{ width: 50, height: 50 }}
+                  source={{ uri: message.content[0] }}
+                />
+              )}
+
               <View style={styles.message__Time}>
                 <Text style={styles.createAt}>
+                  {" "}
                   {moment(new Date(message.timeSend)).format("LT")}
                 </Text>
               </View>

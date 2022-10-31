@@ -22,7 +22,13 @@ function ContentMessage({ message, navigation }) {
           <View style={styles.message_Item}>
             <View style={styles.message_Item__content}>
               <Text style={styles.content__User}>{userChat.name}</Text>
-              <Text style={styles.message__Text}>{message.content[0]}</Text>
+
+              {message.type === 0 ? (
+                <Text style={styles.message__Text}>{message.content[0]}</Text>
+              ) : (
+                <Image source={{ uri: message.content[0] }} />
+              )}
+
               <View style={styles.message__Time}>
                 <Text style={styles.createAt}>
                   {" "}
