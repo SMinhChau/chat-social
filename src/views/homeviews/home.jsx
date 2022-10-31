@@ -47,7 +47,7 @@ export default function Home({
   }, [conversations]);
 
   return (
-    <View style={styles.home__content}>
+    <SafeAreaView style={styles.home__content}>
       <SearchBar navigation={navigation} />
       <View style={styles.content__FlatList}>
         <ScrollView style={styles.scrollView} horizontal={false}>
@@ -65,7 +65,7 @@ export default function Home({
           ))}
         </ScrollView>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
 
   // List
   content__FlatList: {
-    flex: 1,
+    height: "80%",
     width: "100%",
     display: "flex",
     backgroundColor: "#F7F7F7",
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: "100%",
-    height: "100%",
+    height: "80%",
     display: "flex",
   },
   // View Chat

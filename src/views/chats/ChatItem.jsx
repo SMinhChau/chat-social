@@ -84,35 +84,20 @@ function ChatItem({ route, memberGroup, navigation }) {
     </>
   );
 
+  // useEffect(() => {
+  //   console.log(chat.content);
+  // }, [chat.content]);
   return (
     <>
-      {/* <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 10}
-      >
-        <View style={styles.body}>
-          <TopBarChat name={userChat.name} navigation={navigation} />
-          <FlatList
-            data={chat.content}
-            renderItem={renderItem}
-            initialNumToRender={20}
-            inverted
-            keyExtractor={(item, index) => item._id || index.toString()}
-            contentContainerStyle={{ flexDirection: "column-reverse" }}
-          />
-        </View>
-        <InputMessage conversationId={userChat.id} />
-      </KeyboardAvoidingView> */}
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 10}
-      >
-        <View style={styles.body}>
-          <TopBarChat name={userChat.name} navigation={navigation} />
-          <ScrollView style={styles.scrollView}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 10}
+        >
+          <View style={styles.body}>
+            <TopBarChat name={userChat.name} navigation={navigation} />
+            {/* <ScrollView style={styles.scrollView}> */}
             <FlatList
               style={{ paddingHorizontal: 10, paddingVertical: 5 }}
               data={chat.content}
@@ -122,40 +107,12 @@ function ChatItem({ route, memberGroup, navigation }) {
               keyExtractor={(item, index) => item._id || index.toString()}
               contentContainerStyle={{ flexDirection: "column-reverse" }}
             />
-          </ScrollView>
-        </View>
-
-        <InputMessage conversationId={userChat.id} />
-      </KeyboardAvoidingView>
-
-      {/* <View style={styles.chatscreen}>
-        <TopBarChat name={userChat.name} navigation={navigation} />
-        <KeyboardAvoidingView
-          behavior="padding"
-
-          // behavior={Platform.OS === "ios" ? "position" : null}
-          // keyboardVerticalOffset={Platform.OS === "ios" ? 50 : 70}
-        >
-          <View style={styles.inner}>
-            {chat.content ? (
-              <FlatList
-                initialNumToRender={4}
-                data={chat.content}
-                renderItem={renderItem}
-                inverted
-                keyExtractor={(item, index) => item.id || index.toString()}
-                contentContainerStyle={{ flexDirection: "column-reverse" }}
-              />
-            ) : (
-              <View style={styles.chatemptyContainer}>
-                <Text style={styles.chatemptyText}>Loading....</Text>
-              </View>
-            )}
-
-            <InputMessage conversationId={userChat.id} />
+            {/* </ScrollView> */}
           </View>
+
+          <InputMessage conversationId={userChat.id} />
         </KeyboardAvoidingView>
-      </View> */}
+      </SafeAreaView>
     </>
   );
 }

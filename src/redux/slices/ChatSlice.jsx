@@ -17,7 +17,7 @@ export const getChatByConversationID = createAsyncThunk(
         },
         {
           headers: {
-            Authorization: `Bearer ${getToken()}`,
+            Authorization: `Bearer ${await getToken()}`,
             Accept: "application/json",
           },
         }

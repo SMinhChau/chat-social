@@ -3,13 +3,10 @@ import { Platform, TextInput } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { useSelector } from "react-redux";
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
-import { updateContentChat } from "../../../redux/slices/ChatSlice";
 import Ionicons from "react-native-vector-icons/Ionicons";
+
+import { useSelector } from "react-redux";
 import { updateSortConversations } from "../../../redux/slices/ConversationSlice";
-import { URL } from "../../../utils/constant";
 import { useDispatch } from "react-redux";
 
 function InputMessage({ conversationId }) {
@@ -118,9 +115,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: "10%",
-  },
-  iconLeft: {
     paddingRight: 5,
   },
+  iconLeft: {},
   iconRight: {},
 });
