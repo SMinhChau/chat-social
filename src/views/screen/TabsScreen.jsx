@@ -5,6 +5,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Home from "../homeviews/home";
 import Login from "../login/login";
 import Account from "../homeviews/account";
+import AccountInfo from "../account/accountInfo";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();

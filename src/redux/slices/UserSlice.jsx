@@ -28,10 +28,10 @@ export const SignUpUser = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const { data } = await axios.post(`${URL}/api/user/create`, user);
-      localStorage.setItem(
-        "accessToken",
-        JSON.stringify(data.data.accessToken)
-      );
+      // localStorage.setItem(
+      //   "accessToken",
+      //   JSON.stringify(data.data.accessToken)
+      // );
       return data;
     } catch (error) {
       console.log(error);
@@ -104,4 +104,4 @@ const UserSlice = createSlice({
 });
 
 export default UserSlice.reducer;
-export const { logout } = UserSlice.actions;
+export const { logout, updateUser } = UserSlice.actions;

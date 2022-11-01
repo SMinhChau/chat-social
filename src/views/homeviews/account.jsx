@@ -1,9 +1,12 @@
 import { StyleSheet, View, SafeAreaView , Text, Image, TouchableOpacity, FlatList} from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function Account() {
+
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchComponent}>
@@ -17,7 +20,7 @@ export default function Account() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.buttonAccount}>
+      <TouchableOpacity style={styles.buttonAccount}  onPress={() => {navigation.navigate('AccountInfo')}}>
           <Image source={require('../../imgs/zalo.png')} style={styles.imgAccount} />
           <View>
               <Text style={{fontSize:17}}>Your Account</Text>

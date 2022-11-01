@@ -6,6 +6,8 @@ import Register from "../register/register";
 import RegisterPhone from "../register/registerphone";
 import OtpAuth from "../register/otpauth";
 import AddFriend from "../components/Model/AddFriend";
+import AccountInfo from "../account/accountInfo";
+import Account from "../homeviews/account";
 
 
 const RootStack = createStackNavigator();
@@ -22,7 +24,9 @@ function RootStackScreen() {
       <RootStack.Screen name="RegisterPhone" component={RegisterPhone} />
       <RootStack.Screen name="OtpAuth" component={OtpAuth} />
       <RootStack.Screen name="Register" component={Register} />
+      <RootStack.Screen name="AccountInfo" component={AccountInfo} />
     </RootStack.Navigator>
+    
   );
 }
 

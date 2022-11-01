@@ -3,7 +3,6 @@ import { TextInput, TouchableOpacity } from 'react-native';
 import React, { useContext, useState } from "react";
 import  DateTimePicker from '@react-native-community/datetimepicker';
 
-
 export default function Register({ navigation }) {
   const [getPassVisible, setPassVisible] = useState(false);
   const [getCofirmPassVisible, setCofirmPassVisible] = useState(false);

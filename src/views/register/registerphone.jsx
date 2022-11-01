@@ -11,7 +11,7 @@ export default function RegisterPhone({ navigation }) {
         <TouchableOpacity style={styles.touchBack} onPress={() => {navigation.goBack()}}>
           <Image source={require('../../imgs/left-arrow.png')} style={styles.imgIcon}/>
         </TouchableOpacity>
-        
+
         <Text style={styles.textTitle}>Đăng ký</Text>
       </View>
 
@@ -37,7 +37,7 @@ export default function RegisterPhone({ navigation }) {
       </View>
 
       </KeyboardAvoidingView>
-      
+
     </SafeAreaView>
   );
 }
