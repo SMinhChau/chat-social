@@ -13,4 +13,9 @@ export const store = configureStore({
     userChat: UserChatSlice,
     otps: OtpSlice
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }),
 });

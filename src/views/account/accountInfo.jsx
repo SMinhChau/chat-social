@@ -17,17 +17,26 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/slices/UserSlice';
 import { getToken } from '../../utils/function';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import  DateTimePicker from '@react-native-community/datetimepicker';
+
+
 
 export default function AccountInfo() {
 
+    const dispatch = useDispatch();
     const navigation = useNavigation();
-
     const [visible, setVisible] = useState(false);
-    const [imageUri, setImageUri] = useState();
-    const [imageUrl, setImageUrl] = useState();
     const user = useSelector(state => state.user.user);
 
+    const [avatarUrl, setAvatarUrl] = useState();
+    const [imageUri, setImageUri] = useState(user.avatar);
+    const [visibleBG, setVisibleBG] = useState(false);
+    const [coverUri, setCoverUri] = useState(user.coverImage);
+    const [coverUrl, setCoverUrl] = useState();
+    const [checkAvatar, setCheckAvatar] = useState("");
+    const [checkCover, setCheckCover] = useState("");
+
+    
     const onAvatarLibrary = useCallback( async () => {
           let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -37,18 +46,15 @@ export default function AccountInfo() {
             base64: true,
           });
 
-          console.log(result.uri);
-          setImageUrl(result.base64)
-          handleUpdateAvatar(imageUrl);
+          console.log("avatar image", result.uri);
+          setCheckAvatar(result.uri);
+        //   onCheckImg();
+          setAvatarUrl(result.base64);
       
           if (!result.cancelled) {
             setImageUri(result.uri);
           }
     }, []);
-
-
-    const [visibleBG, setVisibleBG] = useState(false);
-    const [backgroundUri, setBackgroundUri] = useState();
 
     const onBacgroundLibrary = useCallback( async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -59,18 +65,21 @@ export default function AccountInfo() {
           base64: true,
         });
 
-        console.log(result.uri);
+        console.log("cover image", result.uri);
+        setCheckCover(result.uri);
+        // onCheckCover();
+        setCoverUrl(result.base64);
     
         if (!result.cancelled) {
-            setBackgroundUri(result.uri);
+            setCoverUri(result.uri);
         }
   }, []);
 
-    const handleUpdateAvatar = async (values) => {
-
+    const handleUpdateAvatar = async (name, avatar, coverImage, id) => {
         axios.put(`${URL}/api/user/update`, {
-            ...values,
-            avatar: imageUrl,
+            name: user.name,
+            avatar: checkAvatar + avatarUrl,
+            coverImage: user.coverImage,
             id: user.id,
         }, {
             headers: {
@@ -78,14 +87,31 @@ export default function AccountInfo() {
                 Accept: 'application/json',
             },
         }).then(res => {
-            Alert.alert("Cập nhật ảnh thành công");
-            let user = res?.data?.data;
-            console.log(res);
-            AsyncStorage.setItem("user", JSON.stringify(user));git
-            dispatch(updateUser(user))
+            console.log("Res", res);
+            console.log("cập nhật avatar thành công");
+            dispatch(updateUser(res.data.data));
+        }).catch(err => console.log(err))
+    };
+
+    const handleUpdateCover = async (name,avatar, coverImage, id) => {
+        axios.put(`${URL}/api/user/update`, {
+            name: user.name,
+            avatar: user.avatar,
+            coverImage: checkCover + coverUrl,
+            id: user.id,
+        }, {
+            headers: {
+                Authorization: `Bearer ${await getToken()}`,
+                Accept: 'application/json',
+            },
+        }).then(res => {
+            console.log("Res", res);
+            console.log("cập nhật avatar thành công");
+            dispatch(updateUser(res.data.data));
         }).catch(err => console.log(err))
     }
 
+    //camera
     // const permisionFunction = async () => {
     //     // here is how you can get the camera permission
     
@@ -99,18 +125,27 @@ export default function AccountInfo() {
     //     }
     //   };
 
+        var getdate = user.dateOfBirth
+       
+
     return (
         <SafeAreaView style={styles.container}>
 
             {/* cover image */}
             <View style={styles.backgroundImg}>
-                {backgroundUri? 
-                    <Image style={{ width: '100%', height: '100%' }} source={{uri: backgroundUri}} /> :
+                {coverUri? 
+                    <Image style={{ width: '100%', height: '100%' }} source={{uri: coverUri}} /> :
                     <Image style={{ width: '100%', height: '100%' }} source={images.cover} />
                 }
-                <TouchableOpacity style={{position:'absolute', right:10, bottom:10}} onPress={() => {setVisibleBG(true)}}>
-                    <Image style={styles.editBackground} source={images.editing}/>
-                </TouchableOpacity>
+                <View style={styles.buttonCover} >
+                    <TouchableOpacity style={styles.btnCover} onPress={() => {setVisibleBG(true)}}>
+                        <Text style={styles.textCover}>Tải lên</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.btnCover} onPress={() =>{handleUpdateCover()}}>
+                        <Text style={styles.textCover}>Cập nhật</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
 
             {/* avatar image */}
@@ -119,26 +154,35 @@ export default function AccountInfo() {
                     <Image style={styles.avatar} source={{uri: imageUri}}/> : 
                     <Image style={styles.avatar} source={images.avatar}/>
                 }
-                <TouchableOpacity style={{position:'absolute', right:5, bottom:5}} onPress={() => setVisible(true)}>
-                    <Image style={styles.editAvatar} source={images.editing}/>
+                <TouchableOpacity style={styles.buttonAvatar}  onPress={() => setVisible(true)}>
+                    <Text style={styles.textAvatar}>Tải lên</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.buttonAvatar} onPress={() => handleUpdateAvatar()}>
+                    <Text style={styles.textAvatar}>Cập Nhật</Text>
                 </TouchableOpacity>
             </View>
 
-            <Text style={styles.textNameUser}>Your Name</Text>
+            <View style={styles.infoContainer}>
+                <View style={styles.itemInfo}>
+                    <Text style={styles.titleInfo}>Tên hiển thị:</Text>
+                    <Text style={styles.titleName}>{user.name}</Text>
+                </View>
+
+                <View style={styles.itemInfo}>
+                    <Text style={styles.titleInfo}>Giới tính:</Text>
+                    <Text style={styles.titleName}>{user.gender}</Text>
+                </View>
+
+                <View style={styles.itemInfo}>
+                    <Text style={styles.titleInfo}>Ngày Sinh:</Text>
+                    <Text style={styles.titleName}>{getdate}</Text>
+                </View>
+            </View>
 
             {/* Modal option */}
-            <ImagePickerModal
-                isVisible={visible}
-                onClose={() => setVisible(false)}
-                onImageLibraryPress={onAvatarLibrary}
-            />
-
-            {/* Modal option */}
-            <ImagePickerModal
-                isVisible={visibleBG}
-                onClose={() => setVisibleBG(false)}
-                onImageLibraryPress={onBacgroundLibrary}
-            />
+            <ImagePickerModal isVisible={visible} onClose={() => setVisible(false)} onImageLibraryPress={onAvatarLibrary}/>
+            <ImagePickerModal isVisible={visibleBG} onClose={() => setVisibleBG(false)} onImageLibraryPress={onBacgroundLibrary}/>
 
             {/* button back */}
             <View style={styles.title}>
@@ -153,8 +197,7 @@ export default function AccountInfo() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems:'center'
+        flex: 1
     },
 
     backgroundImg: {
@@ -167,9 +210,9 @@ const styles = StyleSheet.create({
     containerImg: {
         width: 100,
         height: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: -70
+        flexDirection:'row',
+        alignItems:'center',
+        marginVertical:15
     },
 
     avatarBorder:{
@@ -183,7 +226,8 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 100,
         borderColor: '#000',
-        borderWidth:2
+        borderWidth:2,
+        marginHorizontal:20
     },
 
     touchBack: {
@@ -210,7 +254,6 @@ const styles = StyleSheet.create({
 
     textNameUser: {
         fontSize: 18,
-        marginTop: 10,
         fontWeight: 'bold'
     },
 
@@ -224,6 +267,70 @@ const styles = StyleSheet.create({
         height:30
     },
 
+    buttonAvatar:{
+        width:100,
+        height:35,
+        backgroundColor:'#0573ff',
+        marginHorizontal:10,
+        justifyContent:'center',
+        alignItems:'center',
+        borderRadius:15
+    },
 
+    textAvatar:{
+        fontSize:17,
+        fontWeight:'bold',
+        color:'white'
+    },
+    
+    buttonCover:{
+        position:'absolute',
+        right:5, 
+        bottom:12,
+        flexDirection:'row',
+        width:170,
+        height:20,
+        justifyContent:'center',
+        alignItems:'center'
+    },
 
+    btnCover:{
+        height:20,
+        width:75,
+        marginRight:10,
+        borderWidth:1,
+        backgroundColor:'#0573ff',
+        borderRadius:5
+    },
+
+    textCover:{
+        width:75,
+        textAlign:'center',
+        color:'white'
+    },
+
+    infoContainer:{
+        width: '100%',
+        height:170,
+    },
+
+    itemInfo:{
+        width:'90%',
+        height:40,
+        marginBottom:15,
+        marginLeft:20,
+        flexDirection:'row',
+        alignItems:'center'
+    },
+
+    titleInfo:{
+        width:100,
+        fontSize:17,
+        fontWeight:'bold'
+    },
+
+    titleName:{
+        width:265,
+        fontSize:17,
+    }
 });

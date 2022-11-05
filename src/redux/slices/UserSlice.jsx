@@ -1,20 +1,21 @@
 import { URL } from "../../utils/constant";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 const { default: axios } = require("axios");
 
 export const SignInUser = createAsyncThunk(
   "user/signin",
   async ({ user }, thunkAPI) => {
+    // console.log(user);
     try {
       const { data } = await axios.post(`${URL}/api/auth/login`, user);
-
-      // localStorage.setItem(
-      //   "accessToken",
-      //   JSON.stringify(data.data.accessToken)
-      // );
+      await AsyncStorage.setItem(
+        "accessToken",
+        JSON.stringify(data.data.accessToken)
+      );
       return data;
     } catch (error) {
+      console.log(error);
       return thunkAPI.rejectWithValue({
         status: 401,
         message: "Tài khoản hoặc mật khẩu không đúng",
@@ -28,10 +29,10 @@ export const SignUpUser = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const { data } = await axios.post(`${URL}/api/user/create`, user);
-      // localStorage.setItem(
-      //   "accessToken",
-      //   JSON.stringify(data.data.accessToken)
-      // );
+      await AsyncStorage.setItem(
+        "accessToken",
+        JSON.stringify(data.data.accessToken)
+      );
       return data;
     } catch (error) {
       console.log(error);

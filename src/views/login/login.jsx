@@ -5,25 +5,30 @@ import {
   SafeAreaView,
   Image,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
+import React from "react";
 import { TouchableOpacity } from "react-native";
-import React, { useContext, useState } from "react";
-
+import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useEffect } from "react";
+
 import * as Yup from "yup";
+import { useFormik } from "formik";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
 
-import { useFormik } from "formik";
 import { useRef } from "react";
+import { URL } from "../../utils/constant";
 import { SignInUser } from "../../redux/slices/UserSlice";
 
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { updateContentChat } from "../../redux/slices/ChatSlice";
-import { URL } from "../../utils/constant";
+import Header from "../components/Header";
+import { bgborder, bgColor } from "../../utils/color";
+
 export default function Login({ navigation }) {
   const [getPassVisible, setPassVisible] = useState(false);
   const password = useRef(null);
@@ -37,6 +42,7 @@ export default function Login({ navigation }) {
     user,
   } = useSelector((state) => state.user);
 
+  // Valid
   const LoginSchema = Yup.object().shape({
     phoneNumber: Yup.string().matches(
       /^0[0-9]{9}$/,
@@ -54,7 +60,7 @@ export default function Login({ navigation }) {
       initialValues: { phoneNumber: "", password: "" },
       onSubmit: (values) => {
         onFinish(values);
-        console.log(values);
+        console.log("Login form " + values);
       },
     });
 
@@ -88,129 +94,119 @@ export default function Login({ navigation }) {
   }, [isLoading, isSuccess, isError]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.title}>
-        <TouchableOpacity
-          style={styles.touchBack}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Image
-            source={require("../../imgs/left-arrow.png")}
-            style={styles.imgIcon}
-          />
-        </TouchableOpacity>
-
-        <Text style={styles.textTitle}>Đăng nhập</Text>
-      </View>
-
-      <View style={styles.noteText}>
-        <Text>Kết nối với bạn bè ngay!</Text>
-      </View>
-
-      {/* Form */}
-
-      <View style={{ width: "100%" }}>
-        <View
-          style={{ paddingHorizontal: 32, marginBottom: 16, width: "100%" }}
-        >
-          <TextInput
-            icon="phone"
-            placeholder="Nhập số điện thoại"
-            autoCapitalize="none"
-            autoCompleteType="email"
-            keyboardAppearance="dark"
-            returnKeyType="next"
-            returnKeyLabel="next"
-            onChangeText={handleChange("phoneNumber")}
-            onBlur={handleBlur("phoneNumber")}
-            error={errors.phoneNumber}
-            values={values.phoneNumber}
-            touched={touched.phoneNumber}
-            onSubmitEditing={() => password.current?.focus()}
-          />
-          {touched.phoneNumber && errors.phoneNumber && (
-            <Text style={{ color: "red" }}>{errors.phoneNumber}</Text>
-          )}
-        </View>
-
-        <View
-          style={{ paddingHorizontal: 32, marginBottom: 16, width: "100%" }}
-        >
-          <TextInput
-            ref={password}
-            icon="key"
-            placeholder="Nhập mật khẩu"
-            autoCompleteType="password"
-            onChangeText={handleChange("password")}
-            onBlur={handleBlur("password")}
-            error={errors.password}
-            touched={touched.password}
-            values={values.password}
-            autoCapitalize="none"
-            keyboardAppearance="dark"
-            returnKeyType="go"
-            returnKeyLabel="go"
-            secureTextEntry={getPassVisible ? false : true}
-          />
-
-          {touched.password && errors.password && (
-            <Text style={{ color: "red" }}>{errors.password}</Text>
-          )}
-        </View>
-      </View>
-
-      <Button label="ĐĂNG NHẬP" disabled={isLoading} onPress={handleSubmit} />
-
-      {/* <View style={styles.formLogin}>
-        <TextInput
-          style={styles.inputNumber}
-          value={phoneNumber}
-          keyboardType="numeric"
-          placeholder="Số điện thoại"
-          onChangeText={(text) => setPhoneNumber(text)}
-        />
-
-        <View style={styles.formPass}>
-          <TextInput
-            style={styles.inputPass}
-            value={password}
-            placeholder="Mật khẩu"
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry={getPassVisible ? false : true}
-          />
-
-          <TouchableOpacity
-            style={{ fontSize: 26, right: "50%" }}
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 10}
+      >
+        <View style={styles.content_Top}>
+          <Header
             onPress={() => {
-              setPassVisible(!getPassVisible);
+              navigation.goBack();
             }}
           >
-            {getPassVisible ? (
-              <Text style={styles.txtHide}>Ẩn</Text>
-            ) : (
-              <Text style={styles.txtHide}>Hiện</Text>
-            )}
-          </TouchableOpacity>
+            <Text style={styles.title_Header}>Đăng nhập</Text>
+          </Header>
+
+          <View style={styles.content_Slide}>
+            {/* <Swiper style={styles.wrapper} showsButtons>
+            <View style={styles.slide}>
+              <Image
+                style={[styles.logo, { marginTop: 15 }]}
+                source={require("../../../assets/slide_1.png")}
+              />
+            </View>
+            <View style={styles.slide}>
+              <Image
+                style={[styles.logo, { marginTop: 15 }]}
+                source={require("../../../assets/slide_z1.png")}
+              />
+            </View>
+            <View style={styles.slide}>
+              <Image
+                style={[styles.logo, { marginTop: 15 }]}
+                source={require("../../../assets/slide_2.png")}
+              />
+            </View>
+          </Swiper> */}
+          </View>
         </View>
 
-        <TouchableOpacity style={styles.buttonSub} onPress={handleSubmit}>
-          <Text style={styles.textLogin}>Đăng nhập</Text>
-        </TouchableOpacity>
- */}
-      <View style={styles.regisLink}>
-        <Text>Bạn không có tài khoản? </Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("RegisterPhone");
-          }}
-        >
-          <Text style={{ color: "#0573ff", fontStyle: "italic" }}>
-            Đăng Ký.
-          </Text>
-        </TouchableOpacity>
-      </View>
+        {/* Form */}
+        <View style={styles.content_Bottom}>
+          <View style={{ width: "100%" }}>
+            <View
+              style={{ paddingHorizontal: 32, marginBottom: 16, width: "100%" }}
+            >
+              <TextInput
+                icon="phone"
+                placeholder="Nhập số điện thoại"
+                autoCapitalize="none"
+                autoCompleteType="email"
+                keyboardAppearance="dark"
+                returnKeyType="next"
+                returnKeyLabel="next"
+                onChangeText={handleChange("phoneNumber")}
+                onBlur={handleBlur("phoneNumber")}
+                error={errors.phoneNumber}
+                values={values.phoneNumber}
+                touched={touched.phoneNumber}
+                onSubmitEditing={() => password.current?.focus()}
+              />
+              {touched.phoneNumber && errors.phoneNumber && (
+                <Text style={{ color: "red" }}>{errors.phoneNumber}</Text>
+              )}
+            </View>
+
+            <View
+              style={{ paddingHorizontal: 32, marginBottom: 16, width: "100%" }}
+            >
+              <TextInput
+                ref={password}
+                icon="key"
+                placeholder="Nhập mật khẩu"
+                autoCompleteType="password"
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                error={errors.password}
+                touched={touched.password}
+                values={values.password}
+                autoCapitalize="none"
+                keyboardAppearance="dark"
+                returnKeyType="go"
+                returnKeyLabel="go"
+                secureTextEntry={getPassVisible ? false : true}
+              />
+
+              {touched.password && errors.password && (
+                <Text style={{ color: "red" }}>{errors.password}</Text>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.regisLink}>
+            <Button
+              label="ĐĂNG NHẬP"
+              disabled={isLoading}
+              onPress={handleSubmit}
+            />
+          </View>
+
+          <View style={styles.regisLink}>
+            <Text>Bạn không có tài khoản? </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("RegisterPhone");
+              }}
+            >
+              <Text style={{ color: "#0573ff", fontStyle: "italic" }}>
+                Đăng Ký.
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -221,8 +217,23 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "space-between",
   },
 
+  content_Top: {
+    width: "100%",
+    height: "60%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  content_Bottom: {
+    width: "100%",
+    height: "40%",
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+  },
   title: {
     width: "100%",
     height: 40,
@@ -244,7 +255,14 @@ const styles = StyleSheet.create({
     width: "30%",
     paddingTop: 4,
   },
-
+  //
+  title_Header: {
+    width: "80%",
+    textAlign: "center",
+    fontSize: 22,
+    fontWeight: "500",
+    color: `${bgColor}`,
+  },
   touchBack: {
     width: "12%",
     height: "100%",
@@ -336,5 +354,37 @@ const styles = StyleSheet.create({
     marginTop: 15,
     justifyContent: "center",
     flexDirection: "row",
+  },
+
+  // content_Slide
+  content_Slide: {
+    marginVertical: 20,
+    height: 350,
+    width: "80%",
+    borderColor: "transparent",
+    borderWidth: 0.5,
+    borderRadius: 10,
+    shadowColor: "#2b3a9d",
+    textShadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.5,
+    textShadowRadius: 10,
+    elevation: 5,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  slide: {
+    height: 350,
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logo: {
+    width: 300,
+    resizeMode: "contain",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

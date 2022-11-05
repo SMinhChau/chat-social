@@ -51,7 +51,7 @@ export default function Register({ navigation }) {
         </View>
 
         <View style={styles.inputDateOfBirth}>
-          <TextInput style={styles.textDate} placeholder='dd/mm/yy' >{text}</TextInput>
+          <TextInput style={styles.textDate} placeholder='dd/mm/yy'>{text}</TextInput>
 
           <TouchableOpacity style={styles.buttonDate} onPress={() => showMode('date')}>
             <Text style={{color:'white', fontWeight:'bold'}}>Ngày sinh</Text>
