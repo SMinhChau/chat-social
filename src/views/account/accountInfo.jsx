@@ -10,14 +10,14 @@ import {
 import React, { useState, useCallback } from "react";
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import {images} from '../../imgs/index'
+import { images } from '../../imgs/index'
 import { ImagePickerModal } from '../components/Model/ImagePickerModal'
 import { URL } from "../../utils/constant";
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/slices/UserSlice';
 import { getToken } from '../../utils/function';
-import  DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 
@@ -36,44 +36,44 @@ export default function AccountInfo() {
     const [checkAvatar, setCheckAvatar] = useState("");
     const [checkCover, setCheckCover] = useState("");
 
-    
-    const onAvatarLibrary = useCallback( async () => {
-          let result = await ImagePicker.launchImageLibraryAsync({
+
+    const onAvatarLibrary = useCallback(async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing:true,
-            aspect:[3,3],
+            allowsEditing: true,
+            aspect: [3, 3],
             quality: 1,
             base64: true,
-          });
+        });
 
-          console.log("avatar image", result.uri);
-          setCheckAvatar(result.uri);
+        console.log("avatar image", result.uri);
+        setCheckAvatar(result.uri);
         //   onCheckImg();
-          setAvatarUrl(result.base64);
-      
-          if (!result.cancelled) {
+        setAvatarUrl(result.base64);
+
+        if (!result.cancelled) {
             setImageUri(result.uri);
-          }
+        }
     }, []);
 
-    const onBacgroundLibrary = useCallback( async () => {
+    const onBacgroundLibrary = useCallback(async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing:true,
-          aspect:[8,4],
-          quality: 1,
-          base64: true,
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [8, 4],
+            quality: 1,
+            base64: true,
         });
 
         console.log("cover image", result.uri);
         setCheckCover(result.uri);
         // onCheckCover();
         setCoverUrl(result.base64);
-    
+
         if (!result.cancelled) {
             setCoverUri(result.uri);
         }
-  }, []);
+    }, []);
 
     const handleUpdateAvatar = async (name, avatar, coverImage, id) => {
         axios.put(`${URL}/api/user/update`, {
@@ -93,7 +93,7 @@ export default function AccountInfo() {
         }).catch(err => console.log(err))
     };
 
-    const handleUpdateCover = async (name,avatar, coverImage, id) => {
+    const handleUpdateCover = async (name, avatar, coverImage, id) => {
         axios.put(`${URL}/api/user/update`, {
             name: user.name,
             avatar: user.avatar,
@@ -114,35 +114,57 @@ export default function AccountInfo() {
     //camera
     // const permisionFunction = async () => {
     //     // here is how you can get the camera permission
-    
+
     //     const imagePermission = await ImagePicker.getMediaLibraryPermissionsAsync();
     //     console.log(imagePermission.status);
-    
+
     //     setGalleryPermission(imagePermission.status === 'granted');
-    
+
     //     if (imagePermission.status !== 'granted') {
     //       alert('Permission for media access needed.');
     //     }
     //   };
 
-        var getdate = user.dateOfBirth
-       
+
+
+    // const timestamp = new Date().getTime();
+    // console.log(timestamp); // 👉️ 1642664853302
+
+    const convertDate = () => {
+        const getdate = user.dateOfBirth;
+
+        const date = new Date(getdate);
+
+        // 👇️ Format date and time using different locales
+        // console.log(date.toLocaleString('en-US')); //  "1/20/2022, 9:50:15 AM"
+        // console.log(date.toLocaleString('en-GB')); //  "20/01/2022 09:50:15"
+        // console.log(date.toLocaleString('sv')); //  "2022-01-20 09:50:15"
+
+        //  Display only date
+        return date.toLocaleDateString('en-GB'); //  "20/01/2022"
+
+        //  Display only time
+        // console.log(date.toLocaleTimeString('en-US')); //  "9:50:15 AM"
+
+    }
+
+
 
     return (
         <SafeAreaView style={styles.container}>
 
             {/* cover image */}
             <View style={styles.backgroundImg}>
-                {coverUri? 
-                    <Image style={{ width: '100%', height: '100%' }} source={{uri: coverUri}} /> :
+                {coverUri ?
+                    <Image style={{ width: '100%', height: '100%' }} source={{ uri: coverUri }} /> :
                     <Image style={{ width: '100%', height: '100%' }} source={images.cover} />
                 }
                 <View style={styles.buttonCover} >
-                    <TouchableOpacity style={styles.btnCover} onPress={() => {setVisibleBG(true)}}>
+                    <TouchableOpacity style={styles.btnCover} onPress={() => { setVisibleBG(true) }}>
                         <Text style={styles.textCover}>Tải lên</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.btnCover} onPress={() =>{handleUpdateCover()}}>
+                    <TouchableOpacity style={styles.btnCover} onPress={() => { handleUpdateCover() }}>
                         <Text style={styles.textCover}>Cập nhật</Text>
                     </TouchableOpacity>
                 </View>
@@ -151,10 +173,10 @@ export default function AccountInfo() {
             {/* avatar image */}
             <View style={styles.containerImg}>
                 {imageUri ?
-                    <Image style={styles.avatar} source={{uri: imageUri}}/> : 
-                    <Image style={styles.avatar} source={images.avatar}/>
+                    <Image style={styles.avatar} source={{ uri: imageUri }} /> :
+                    <Image style={styles.avatar} source={images.avatar} />
                 }
-                <TouchableOpacity style={styles.buttonAvatar}  onPress={() => setVisible(true)}>
+                <TouchableOpacity style={styles.buttonAvatar} onPress={() => setVisible(true)}>
                     <Text style={styles.textAvatar}>Tải lên</Text>
                 </TouchableOpacity>
 
@@ -176,13 +198,13 @@ export default function AccountInfo() {
 
                 <View style={styles.itemInfo}>
                     <Text style={styles.titleInfo}>Ngày Sinh:</Text>
-                    <Text style={styles.titleName}>{getdate}</Text>
+                    <Text style={styles.titleName}>{convertDate(user.dateOfBirth)}</Text>
                 </View>
             </View>
 
             {/* Modal option */}
-            <ImagePickerModal isVisible={visible} onClose={() => setVisible(false)} onImageLibraryPress={onAvatarLibrary}/>
-            <ImagePickerModal isVisible={visibleBG} onClose={() => setVisibleBG(false)} onImageLibraryPress={onBacgroundLibrary}/>
+            <ImagePickerModal isVisible={visible} onClose={() => setVisible(false)} onImageLibraryPress={onAvatarLibrary} />
+            <ImagePickerModal isVisible={visibleBG} onClose={() => setVisibleBG(false)} onImageLibraryPress={onBacgroundLibrary} />
 
             {/* button back */}
             <View style={styles.title}>
@@ -210,15 +232,15 @@ const styles = StyleSheet.create({
     containerImg: {
         width: 100,
         height: 100,
-        flexDirection:'row',
-        alignItems:'center',
-        marginVertical:15
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 15
     },
 
-    avatarBorder:{
+    avatarBorder: {
         width: 100,
-        height:100,
-        borderRadius: 100,    
+        height: 100,
+        borderRadius: 100,
     },
 
     avatar: {
@@ -226,8 +248,8 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 100,
         borderColor: '#000',
-        borderWidth:2,
-        marginHorizontal:20
+        borderWidth: 2,
+        marginHorizontal: 20
     },
 
     touchBack: {
@@ -244,7 +266,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         position: 'absolute',
         margin: 10,
-        left:0
+        left: 0
     },
 
     imgIcon: {
@@ -257,80 +279,81 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
-    editAvatar:{
-        width:25,
-        height:25
+    editAvatar: {
+        width: 25,
+        height: 25
     },
 
-    editBackground:{
-        width:30,
-        height:30
+    editBackground: {
+        width: 30,
+        height: 30
     },
 
-    buttonAvatar:{
-        width:100,
-        height:35,
-        backgroundColor:'#0573ff',
-        marginHorizontal:10,
-        justifyContent:'center',
-        alignItems:'center',
-        borderRadius:15
+    buttonAvatar: {
+        width: 100,
+        height: 35,
+        backgroundColor: '#0573ff',
+        marginHorizontal: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 15
     },
 
-    textAvatar:{
-        fontSize:17,
-        fontWeight:'bold',
-        color:'white'
-    },
-    
-    buttonCover:{
-        position:'absolute',
-        right:5, 
-        bottom:12,
-        flexDirection:'row',
-        width:170,
-        height:20,
-        justifyContent:'center',
-        alignItems:'center'
+    textAvatar: {
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: 'white'
     },
 
-    btnCover:{
-        height:20,
-        width:75,
-        marginRight:10,
-        borderWidth:1,
-        backgroundColor:'#0573ff',
-        borderRadius:5
+    buttonCover: {
+        position: 'absolute',
+        right: 5,
+        bottom: 12,
+        flexDirection: 'row',
+        width: 170,
+        height: 20,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 
-    textCover:{
-        width:75,
-        textAlign:'center',
-        color:'white'
+    btnCover: {
+        height: 20,
+        width: 75,
+        marginRight: 10,
+        borderWidth: 1,
+        backgroundColor: '#0573ff',
+        borderRadius: 5
     },
 
-    infoContainer:{
+    textCover: {
+        width: 75,
+        textAlign: 'center',
+        color: 'white'
+    },
+
+    infoContainer: {
         width: '100%',
-        height:170,
+        height: 170,
     },
 
-    itemInfo:{
-        width:'90%',
-        height:40,
-        marginBottom:15,
-        marginLeft:20,
-        flexDirection:'row',
-        alignItems:'center'
+    itemInfo: {
+        width: '90%',
+        height: 40,
+        marginBottom: 15,
+        marginLeft: 20,
+        flexDirection: 'row',
+        alignItems: 'center'
     },
 
-    titleInfo:{
-        width:100,
-        fontSize:17,
-        fontWeight:'bold'
+    titleInfo: {
+        width: 110,
+        fontSize: 17,
+        fontWeight: 'bold'
     },
 
-    titleName:{
-        width:265,
-        fontSize:17,
+    titleName: {
+        width: 250,
+        fontSize: 17,
+        marginLeft: 10
     }
 });
