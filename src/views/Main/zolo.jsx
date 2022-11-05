@@ -20,6 +20,7 @@ export default function Zolo({ navigation }) {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 5000,
+      useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
 
