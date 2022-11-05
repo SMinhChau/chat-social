@@ -1,54 +1,97 @@
-import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView } from 'react-native';
-import React from 'react';
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  Platform,
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Tooltip from "react-native-walkthrough-tooltip";
+import { headerBar } from "../../utils/color";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import MenuIcon from "../components/MenuIcon";
 
+function PhoneBooks({ navigation, onClick }) {
+  const [visible, setVisible] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
 
-export default function PhoneBooks() {
+  const onOpenSearch = () => {
+    setIsSearch(true);
+  };
+
+  const onHideSearch = () => {
+    setIsSearch(false);
+    setSearchInput("");
+  };
+
+  const handleSearchInput = (value) => {
+    setSearchInput(() => setSearchInput(value));
+  };
+
+  const handleOnClickAddGroup = () => {};
+
   return (
-    <SafeAreaView style={styles.container}>
-        <View style={styles.searchComponent}>
-        <TouchableOpacity style={styles.buttonSearch}>
-            <Ionicons name="search-outline" style={{fontSize:25, marginHorizontal: 10, color:'white'}}/>
-            <Text style={styles.textSearch}>Tìm kiếm</Text>
-        </TouchableOpacity>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.searchBar}>
+        {isSearch === true ? (
+          <>
+            <Icon
+              name="arrow-left"
+              size={24}
+              color="#fff"
+              onPress={onHideSearch}
+            />
+            <View style={styles.inputSearch}>
+              <TextInput
+                placeholder="Tìm kiếm"
+                value={searchInput}
+                onChangeText={handleSearchInput}
+              />
+            </View>
+          </>
+        ) : (
+          <>
+            <Icon name="magnify" size={24} color="#fff" />
+            <View style={styles.textSearch}>
+              <Text style={styles.textSearch} onPress={onOpenSearch}>
+                Tìm Kiếm
+              </Text>
+            </View>
+          </>
+        )}
 
-        <TouchableOpacity style={styles.buttonSetting}>
-            <Ionicons name="settings-outline" style={{fontSize:25, color:'white'}}/>
-        </TouchableOpacity>
+        <Ionicons size={24} color="#fff" name="person-add-outline" />
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  searchComponent:{
-    width: '100%',
-    height:50,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems:'center',
+  searchBar: {
+    height: 50,
+    width: "100%",
+    backgroundColor: `${headerBar}`,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
-
-  buttonSearch:{
-    flexDirection: 'row',
-    flex: 9,
-    backgroundColor:'#0068FF',
-    height:'100%',
-    justifyContent: 'flex-start',
-    alignItems:'center',
-
+  inputSearch: {
+    width: "70%",
+    height: "70%",
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    justifyContent: "center",
   },
-
-  buttonSetting:{
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-    height:'100%',
-    backgroundColor: '#0068FF'
+  textSearch: {
+    width: "70%",
+    color: "#fff",
+    fontSize: 18,
   },
-
-  textSearch:{
-    fontSize: 16,
-    color:'#bebebe'
-  }
 });
+
+export default PhoneBooks;

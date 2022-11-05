@@ -33,6 +33,7 @@ function SearchBar({ navigation, onClick }) {
 
   const handleOnClickAdd = () => {
     navigation.navigate("AddFriend");
+    setVisible(!visible);
   };
   const handleOnClickAddGroup = () => {};
 
@@ -73,6 +74,7 @@ function SearchBar({ navigation, onClick }) {
               icon={<Ionicons name="person-add-outline" size={20} />}
               title={"Thêm bạn"}
               onPress={handleOnClickAdd}
+              onClose={() => handleCancel(false)}
             />
             <MenuIcon
               icon={<Ionicons name="people-outline" size={20} />}
@@ -101,7 +103,7 @@ function SearchBar({ navigation, onClick }) {
 
 const styles = StyleSheet.create({
   searchBar: {
-    height: 45,
+    height: 50,
     width: "100%",
     backgroundColor: `${headerBar}`,
     flexDirection: "row",

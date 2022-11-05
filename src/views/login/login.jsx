@@ -18,6 +18,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
+import Swiper from "react-native-swiper";
 
 import { useRef } from "react";
 import { URL } from "../../utils/constant";
@@ -60,7 +61,7 @@ export default function Login({ navigation }) {
       initialValues: { phoneNumber: "", password: "" },
       onSubmit: (values) => {
         onFinish(values);
-        console.log("Login form " + values);
+        // console.log("Login form " + values);
       },
     });
 
@@ -82,13 +83,13 @@ export default function Login({ navigation }) {
       global.stompClient = Stomp.over(sock);
 
       navigation.navigate("Home");
-      console.log(messages);
+      // console.log(messages);
 
       console.log(" ======== stompClient.connect ==========: ");
       global.stompClient.connect(onError, onConnected);
     }
     if (isError) {
-      console.log(messages);
+      console.log(isError);
       Alert.alert("Thông báo", messages);
     }
   }, [isLoading, isSuccess, isError]);
@@ -98,7 +99,7 @@ export default function Login({ navigation }) {
       <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 10}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 10}
       >
         <View style={styles.content_Top}>
           <Header
@@ -108,28 +109,28 @@ export default function Login({ navigation }) {
           >
             <Text style={styles.title_Header}>Đăng nhập</Text>
           </Header>
-
+          {/* Slide */}
           <View style={styles.content_Slide}>
-            {/* <Swiper style={styles.wrapper} showsButtons>
-            <View style={styles.slide}>
-              <Image
-                style={[styles.logo, { marginTop: 15 }]}
-                source={require("../../../assets/slide_1.png")}
-              />
-            </View>
-            <View style={styles.slide}>
-              <Image
-                style={[styles.logo, { marginTop: 15 }]}
-                source={require("../../../assets/slide_z1.png")}
-              />
-            </View>
-            <View style={styles.slide}>
-              <Image
-                style={[styles.logo, { marginTop: 15 }]}
-                source={require("../../../assets/slide_2.png")}
-              />
-            </View>
-          </Swiper> */}
+            <Swiper style={styles.wrapper} showsButtons>
+              <View style={styles.slide}>
+                <Image
+                  style={[styles.logo, { marginTop: 15 }]}
+                  source={require("../../../assets/slide_1.png")}
+                />
+              </View>
+              <View style={styles.slide}>
+                <Image
+                  style={[styles.logo, { marginTop: 15 }]}
+                  source={require("../../../assets/slide_z1.png")}
+                />
+              </View>
+              <View style={styles.slide}>
+                <Image
+                  style={[styles.logo, { marginTop: 15 }]}
+                  source={require("../../../assets/slide_2.png")}
+                />
+              </View>
+            </Swiper>
           </View>
         </View>
 
@@ -230,6 +231,7 @@ const styles = StyleSheet.create({
   content_Bottom: {
     width: "100%",
     height: "40%",
+
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "flex-start",
@@ -358,9 +360,10 @@ const styles = StyleSheet.create({
 
   // content_Slide
   content_Slide: {
-    marginVertical: 20,
-    height: 350,
+    marginVertical: 10,
+    height: 300,
     width: "80%",
+
     borderColor: "transparent",
     borderWidth: 0.5,
     borderRadius: 10,
@@ -374,8 +377,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   slide: {
-    height: 350,
-    width: "100%",
+    height: 300,
+    width: "90%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

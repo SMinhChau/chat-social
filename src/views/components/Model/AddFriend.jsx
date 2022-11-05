@@ -6,8 +6,9 @@ import {
   Pressable,
   FlatList,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   bgborder,
   bgColor,
@@ -15,19 +16,22 @@ import {
   primaryColor,
   primaryColorTitle,
 } from "../../../utils/color";
-import Ionicons from "react-native-vector-icons/Ionicons";
+
 import TextInput from "../TextInput";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import AddFrientItem from "./AddFrientItem";
 import axios from "axios";
-import { getHeaders, URL } from "../../../utils/constant";
+import { URL } from "../../../utils/constant";
 import { getToken } from "../../../utils/function";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Header from "../Header";
 
 function AddFriend({ navigation }) {
   const [findFriend, setFindFriend] = useState();
-  const [friendInvited, setFriendInvited] = useState();
   const [isLoading, setIsLoading] = useState(false);
+
+  const phoneRef = useRef();
   // const datas = [
   //   {
   //     id: 0,
@@ -45,27 +49,28 @@ function AddFriend({ navigation }) {
 
   const onFinishFindFriend = async (value) => {
     try {
-      setIsLoading(true);
+      // setIsLoading(true);
       const { data } = await axios.get(
         `${URL}/api/user/phone-number/${value.phone}`,
         {
           headers: {
-            Authorization: `Bearer ${getToken()}`,
+            Authorization: `Bearer ${await getToken()}`,
             Accept: "application/json",
           },
         }
       );
       setFindFriend(data);
+      console.log(data);
     } catch (error) {
       setFindFriend({
         code: 404,
         message: "Không tìm thấy !!!",
       });
     }
-    setIsLoading(false);
-    console.log(findFriend);
+
+    // setIsLoading(false);
   };
-  const onSearch = (value) => console.log(value);
+
   const AddFriendSchema = Yup.object().shape({
     phone: Yup.string()
       .matches(/^0[0-9]{9}$/, "Số điện thoại không đúng!")
@@ -81,84 +86,108 @@ function AddFriend({ navigation }) {
       },
     });
 
+  //  Search
+
+  const onSearch = (value) => console.log("onSearch", value);
+
   return (
     <>
-      <View style={styles.container}>
-        <View style={[styles.header]}>
-          <Ionicons
-            name="chevron-back-outline"
-            style={{ paddingLeft: 15, fontSize: 20, color: "white" }}
-            onPress={() => {
-              navigation.navigate("Home");
-            }}
-          />
-          <View>
-            <Text style={styles.title}>Thêm bạn</Text>
-          </View>
-        </View>
-
-        <View style={styles.contentCenter}>
-          <Text style={[styles.title_sub, styles.padding_title]}>
-            Thêm bạn bằng số điện thoại
-          </Text>
-          <Text style={[styles.name_sub, styles.padding_title]}>
-            Vietnam (+84)
-          </Text>
-        </View>
-
-        <View style={styles.contentSearch}>
-          <View style={styles.contentSearch_input}>
-            <TextInput
-              // icon="phone"
-              placeholder="Nhập số điện thoại"
-              autoCapitalize="none"
-              keyboardAppearance="dark"
-              returnKeyType="next"
-              returnKeyLabel="next"
-              onChangeText={handleChange("phone")}
-              onBlur={handleBlur("phone")}
-              error={errors.phone}
-              values={values.phone}
-              touched={touched.phone}
-            />
-            {/* <View>
-              {touched.phoneNumber && errors.phoneNumber && (
-                <Text style={{ color: "red" }}>{errors.phoneNumber}</Text>
-              )}
-            </View> */}
+      <SafeAreaView style={styles.container}>
+        <Header
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Text style={styles.title}>Thêm bạn</Text>
+        </Header>
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 10}
+        >
+          <View style={styles.contentCenter}>
+            <Text style={[styles.title_sub, styles.padding_title]}>
+              Thêm bạn bằng số điện thoại
+            </Text>
+            <Text style={[styles.name_sub, styles.padding_title]}>
+              Vietnam (+84)
+            </Text>
           </View>
 
-          <TouchableOpacity
-            style={styles.button}
-            disabled={isLoading}
-            onPress={handleSubmit}
-          >
-            <Text style={styles.text}>TÌM</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.contentSearch}>
+            <View style={styles.contentSearch_input}>
+              <TextInput
+                // icon="phone"
+                ref={phoneRef}
+                placeholder="Nhập số điện thoại"
+                autoCapitalize="none"
+                keyboardAppearance="dark"
+                returnKeyType="next"
+                returnKeyLabel="next"
+                onChangeText={handleChange("phone")}
+                onBlur={handleBlur("phone")}
+                error={errors.phone}
+                values={values.phone}
+                touched={touched.phone}
+                onSearch={onSearch}
+              />
+              <View>
+                {touched.phone && errors.phone && (
+                  <Text style={{ color: "red" }}>{errors.phone}</Text>
+                )}
+              </View>
+            </View>
 
-        <View style={styles.contentCenter}>
-          <Text style={[styles.title_sub, styles.padding_title]}>
-            Kết quả tìm kiếm
-          </Text>
+            <TouchableOpacity
+              style={styles.button}
+              disabled={isLoading}
+              onPress={handleSubmit}
+            >
+              <Text style={styles.text}>TÌM</Text>
+            </TouchableOpacity>
+          </View>
 
-          {findFriend?.code === 200 ? (
-            <FlatList
-              style={styles.contentFlatList}
-              data={data}
-              renderItem={({ item }) => (
-                <AddFrientItem
-                  name={item.name}
-                  avatar={item.avatar}
-                  keyExtractor={(item, index) => index}
-                />
-              )}
-            />
-          ) : (
-            findFriend?.message
-          )}
-        </View>
-      </View>
+          <View style={styles.contentCenter}>
+            <Text
+              style={[
+                styles.title_sub,
+                styles.padding_title,
+                { marginTop: 10 },
+              ]}
+            >
+              Kết quả tìm kiếm
+            </Text>
+
+            {findFriend?.code === 200 ? (
+              <AddFrientItem
+                avatar={findFriend.data.avatar}
+                name={findFriend.data.name}
+                id={findFriend.data.id}
+              />
+            ) : (
+              // <FlatList
+              //   style={styles.contentFlatList}
+              //   data={findFriend.data}
+              //   renderItem={({ item }) => (
+              //     <AddFrientItem
+              //       name={item.name}
+              //       avatar={item.avatar}
+              //       id={item.id}
+              //       keyExtractor={(item, index) => index}
+              //     />
+              //   )}
+              // />
+              // <AddFrientItem
+
+              //   avatar={findFriend.avatar}
+              //   name={findFriend.name}
+              //   id={findFriend.id}
+              // />
+              <Text style={styles.textError}>{findFriend?.message}</Text>
+            )}
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </>
   );
 }
@@ -182,7 +211,8 @@ const styles = StyleSheet.create({
 
   title: {
     paddingLeft: 20,
-    fontSize: 18,
+    fontSize: 22,
+    fontWeight: "500",
     color: `${primaryColor}`,
   },
 
@@ -217,14 +247,15 @@ const styles = StyleSheet.create({
   title_sub: {
     width: "100%",
     color: `${primaryColorTitle}`,
-    fontSize: 14,
+    fontSize: 17,
+    fontWeight: "500",
   },
   name_sub: {
     width: "100%",
     color: `${primaryColorTitle}`,
     fontSize: 16,
     borderBottomWidth: 0.5,
-
+    fontWeight: "500",
     borderBottomColor: `${bgborder}`,
   },
 
@@ -248,7 +279,7 @@ const styles = StyleSheet.create({
   contentFlatList: {
     width: "100%",
   },
-  contentFlatList__error: {
+  textError: {
     color: "red",
   },
 });

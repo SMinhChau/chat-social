@@ -7,26 +7,44 @@ import { getConversationAllByToken } from "../../../redux/slices/ConversationSli
 import { saveUserChat } from "../../../redux/slices/UserChatSlice";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { AvatarDefault } from "../../../utils/constant";
 
-function ContentMessage({ message, navigation }) {
+function ContentMessage({ message, navigation, avatar }) {
   const { userChat } = useSelector((state) => state.userChat);
 
+  const ImageMessage = () => {
+    return (
+      <>
+        {/* <Text> {message.content[0]}</Text> */}
+        <Image
+          style={{ width: 100, height: 100 }}
+          source={{ uri: message.content[0] }}
+        />
+      </>
+    );
+  };
   return (
     <>
       <View style={styles.content}>
-        <Image
-          style={styles.content__Avatar}
-          source={require("../../../../assets/chau.jpg")}
-        />
+        {userChat.avatar ? (
+          <Image
+            style={styles.content__Avatar}
+            source={{ uri: userChat.avatar }}
+          />
+        ) : (
+          <Image
+            style={styles.content__Avatar}
+            source={{ uri: AvatarDefault }}
+          />
+        )}
         <View style={styles.message}>
           <View style={styles.message_Item}>
             <View style={styles.message_Item__content}>
               <Text style={styles.content__User}>{userChat.name}</Text>
-
-              {message.type === 0 ? (
-                <Text style={styles.message__Text}>{message.content[0]}</Text>
+              {message.type === 1 ? (
+                <ImageMessage />
               ) : (
-                <Image source={{ uri: message.content[0] }} />
+                <Text style={styles.message__Text}>{message.content[0]}</Text>
               )}
 
               <View style={styles.message__Time}>
