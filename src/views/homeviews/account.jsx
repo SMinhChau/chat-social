@@ -4,13 +4,18 @@ import {
   SafeAreaView,
   Text,
   Image,
-  TouchableOpacity,
-  FlatList,
+  TouchableOpacity
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import React from "react";
+import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector} from 'react-redux';
 
 export default function Account() {
+
+  const navigation = useNavigation();
+  const user = useSelector(state => state.user.user);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchComponent}>
@@ -29,14 +34,14 @@ export default function Account() {
           />
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.buttonAccount}>
+    
+      <TouchableOpacity style={styles.buttonAccount} onPress={() => {navigation.navigate('AccountInfo')}}>
         <Image
-          source={require("../../imgs/zalo.png")}
+          source={{uri: user.avatar}}
           style={styles.imgAccount}
         />
         <View>
-          <Text style={{ fontSize: 17 }}>Your Account</Text>
+          <Text style={{ fontSize: 17 }}>{user.name}</Text>
           <Text style={{ color: "#6e6e6e" }}>Xem trang cá nhân</Text>
         </View>
       </TouchableOpacity>

@@ -3,7 +3,6 @@ import { TextInput, TouchableOpacity } from 'react-native';
 import React, { useContext, useState } from "react";
 import  DateTimePicker from '@react-native-community/datetimepicker';
 
-
 export default function Register({ navigation }) {
   const [getPassVisible, setPassVisible] = useState(false);
   const [getCofirmPassVisible, setCofirmPassVisible] = useState(false);
@@ -52,7 +51,7 @@ export default function Register({ navigation }) {
         </View>
 
         <View style={styles.inputDateOfBirth}>
-          <TextInput style={styles.textDate} placeholder='dd/mm/yy' >{text}</TextInput>
+          <TextInput style={styles.textDate} placeholder='dd/mm/yy'>{text}</TextInput>
 
           <TouchableOpacity style={styles.buttonDate} onPress={() => showMode('date')}>
             <Text style={{color:'white', fontWeight:'bold'}}>Ngày sinh</Text>

@@ -9,7 +9,6 @@ export const SignInUser = createAsyncThunk(
     // console.log(user);
     try {
       const { data } = await axios.post(`${URL}/api/auth/login`, user);
-      // console.log(data.data.accessToken);
       await AsyncStorage.setItem(
         "accessToken",
         JSON.stringify(data.data.accessToken)
@@ -106,4 +105,4 @@ const UserSlice = createSlice({
 });
 
 export default UserSlice.reducer;
-export const { logout } = UserSlice.actions;
+export const { logout, updateUser } = UserSlice.actions;

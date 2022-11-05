@@ -11,7 +11,7 @@ export default function RegisterPhone({ navigation }) {
         <TouchableOpacity style={styles.touchBack} onPress={() => {navigation.goBack()}}>
           <Image source={require('../../imgs/left-arrow.png')} style={styles.imgIcon}/>
         </TouchableOpacity>
-        
+
         <Text style={styles.textTitle}>Đăng ký</Text>
       </View>
 
@@ -24,7 +24,7 @@ export default function RegisterPhone({ navigation }) {
         <Text style={styles.textPhone}>Số điện thoại:</Text>
         <TextInput style={styles.inputPhoneNumber} keyboardType='numeric' placeholder='Vui lòng nhập số điện thoại' />
 
-        <TouchableOpacity style={styles.buttonSub} onPress={() => {navigation.navigate('Register');}}>
+        <TouchableOpacity style={styles.buttonSub} onPress={() => {navigation.navigate('OtpAuth');}}>
           <Text style={styles.textNext}>Tiếp theo</Text>
           <Ionicons name='chevron-forward-outline' style={{fontSize:25, color:'white', flex:2}}/>
         </TouchableOpacity>
@@ -37,7 +37,7 @@ export default function RegisterPhone({ navigation }) {
       </View>
 
       </KeyboardAvoidingView>
-      
+
     </SafeAreaView>
   );
 }

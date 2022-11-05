@@ -6,6 +6,7 @@ import Home from "../homeviews/home";
 import PhoneBooks from "../homeviews/phonebooks";
 import Account from "../homeviews/account";
 import Login from "../login/login";
+import AccountInfo from "../account/accountInfo";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
