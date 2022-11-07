@@ -30,48 +30,16 @@ function ChatItem({ route, memberGroup, navigation }) {
   const { chat } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
 
-  // const messages = [
-  //   {
-  //     id: 0,
-  //     action: "hello Chau!jhjghjhjgh",
-  //     time: "21:10",
-  //   },
-  //   {
-  //     id: 0,
-  //     action: "hello Chau!",
-  //     time: "21:10",
-  //   },
-  //   {
-  //     id: 0,
-  //     action:
-  //       "English Grammar in Use là một cuốn sách tham khảo và luyện tập tự học dành cho sinh viên tiếng Anh từ trình độ trung cấp đến cao cấp.",
-  //     time: "21:10",
-  //   },
-  //   {
-  //     id: 0,
-  //     action: "Good luck!!",
-  //     time: "21:10",
-  //   },
-  //   {
-  //     id: 0,
-  //     action: "trình độ trung cấp đến cao cấp.",
-  //     time: "21:10",
-  //   },
-  //   {
-  //     id: 0,
-  //     action: "Good luck!!",
-  //     time: "21:10",
-  //   },
-  // ];
-
-  //use your link here
-
   const renderItem = ({ item }) => (
     <>
       {item.senderId === user.id ? (
         <ContentMyMessage message={item} avatar={userChat.avatar} />
       ) : (
-        <ContentMessage message={item} avatar={userChat.avatar} />
+        <ContentMessage
+          message={item}
+          avatar={userChat.avatar}
+          sender={item.senderId}
+        />
       )}
     </>
   );

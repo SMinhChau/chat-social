@@ -75,6 +75,7 @@ function InputMessage({ conversationId }) {
           },
         })
           .then(({ data }) => {
+            console.log("dataSend", data);
             dispatch(
               updateContentChat({
                 ...data.data,

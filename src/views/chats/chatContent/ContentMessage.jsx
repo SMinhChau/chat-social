@@ -9,9 +9,11 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { AvatarDefault } from "../../../utils/constant";
 
-function ContentMessage({ message, navigation, avatar }) {
+function ContentMessage({ message, navigation, avatar, sender }) {
   const { userChat } = useSelector((state) => state.userChat);
-
+  useEffect(() => {
+    console.log(sender);
+  }, [sender]);
   const ImageMessage = () => {
     return (
       <>
@@ -39,21 +41,26 @@ function ContentMessage({ message, navigation, avatar }) {
         )}
         <View style={styles.message}>
           <View style={styles.message_Item}>
-            <View style={styles.message_Item__content}>
-              <Text style={styles.content__User}>{userChat.name}</Text>
-              {message.type === 1 ? (
-                <ImageMessage />
-              ) : (
-                <Text style={styles.message__Text}>{message.content[0]}</Text>
-              )}
+            {message && (
+              <View style={styles.message_Item__content}>
+                <Text style={styles.content__User}>{sender}</Text>
+                {message.type === 1 ? (
+                  <Image
+                    style={{ width: 100, height: 100 }}
+                    source={{ uri: message.content[0] }}
+                  />
+                ) : (
+                  <Text style={styles.message__Text}>{message.content[0]}</Text>
+                )}
 
-              <View style={styles.message__Time}>
-                <Text style={styles.createAt}>
-                  {" "}
-                  {moment(new Date(message.timeSend)).format("LT")}
-                </Text>
+                <View style={styles.message__Time}>
+                  <Text style={styles.createAt}>
+                    {" "}
+                    {moment(new Date(message.timeSend)).format("LT")}
+                  </Text>
+                </View>
               </View>
-            </View>
+            )}
           </View>
         </View>
       </View>
