@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { primaryColor, subprimaryColor } from "../../../utils/color";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity } from "react-native";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 
 function TopBarChat({ name, navigation }) {
   const [btnColor, setBtnColor] = useState("red");

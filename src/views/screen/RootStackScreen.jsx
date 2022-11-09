@@ -22,7 +22,7 @@ function RootStackScreen() {
       <RootStack.Screen name="Zolo" component={Zolo} />
       <RootStack.Screen name="Login" component={Login} />
       <RootStack.Screen name="RegisterPhone" component={RegisterPhone} />
-      <RootStack.Screen name="OtpAuth" component={OtpAuth} />
+      {/* <RootStack.Screen name="OtpAuth" component={OtpAuth} /> */}
       <RootStack.Screen name="Register" component={Register} />
       <RootStack.Screen name="AccountInfo" component={AccountInfo} />
     </RootStack.Navigator>

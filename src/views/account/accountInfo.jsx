@@ -18,6 +18,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/slices/UserSlice';
 import { getToken } from '../../utils/function';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useEffect } from "react";
 
 
 
@@ -35,7 +36,7 @@ export default function AccountInfo() {
     const [coverUrl, setCoverUrl] = useState();
     const [checkAvatar, setCheckAvatar] = useState("");
     const [checkCover, setCheckCover] = useState("");
-
+    const [gender, setGender] = useState("");
 
     const onAvatarLibrary = useCallback(async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -106,7 +107,7 @@ export default function AccountInfo() {
             },
         }).then(res => {
             console.log("Res", res);
-            console.log("cập nhật avatar thành công");
+            console.log("cập nhật ảnh bìa thành công");
             dispatch(updateUser(res.data.data));
         }).catch(err => console.log(err))
     }
@@ -125,30 +126,28 @@ export default function AccountInfo() {
     //     }
     //   };
 
-
-
-    // const timestamp = new Date().getTime();
-    // console.log(timestamp); // 👉️ 1642664853302
-
     const convertDate = () => {
         const getdate = user.dateOfBirth;
-
         const date = new Date(getdate);
 
         // 👇️ Format date and time using different locales
         // console.log(date.toLocaleString('en-US')); //  "1/20/2022, 9:50:15 AM"
         // console.log(date.toLocaleString('en-GB')); //  "20/01/2022 09:50:15"
         // console.log(date.toLocaleString('sv')); //  "2022-01-20 09:50:15"
-
         //  Display only date
         return date.toLocaleDateString('en-GB'); //  "20/01/2022"
 
-        //  Display only time
-        // console.log(date.toLocaleTimeString('en-US')); //  "9:50:15 AM"
-
     }
 
-
+    useEffect(() => {
+        if(user.gender === "true" || user.gender === true){
+            setGender('Nam');
+        }else if(user.gender === "false" || user.gender === false){
+            setGender('Nữ');
+        }else{
+            setGender('Khác');
+        }
+    })
 
     return (
         <SafeAreaView style={styles.container}>
@@ -193,7 +192,7 @@ export default function AccountInfo() {
 
                 <View style={styles.itemInfo}>
                     <Text style={styles.titleInfo}>Giới tính:</Text>
-                    <Text style={styles.titleName}>{user.gender}</Text>
+                    <Text style={styles.titleName}>{gender}</Text>
                 </View>
 
                 <View style={styles.itemInfo}>

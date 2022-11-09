@@ -7,14 +7,17 @@ import {
   TouchableOpacity
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector} from 'react-redux';
+import { images } from '../../imgs/index'
+
 
 export default function Account() {
 
   const navigation = useNavigation();
   const user = useSelector(state => state.user.user);
+  const [imageUri, setImageUri] = useState(user.avatar);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -35,11 +38,11 @@ export default function Account() {
         </TouchableOpacity>
       </View>
     
-      <TouchableOpacity style={styles.buttonAccount} onPress={() => {navigation.navigate('AccountInfo')}}>
-        <Image
-          source={{uri: user.avatar}}
-          style={styles.imgAccount}
-        />
+      <TouchableOpacity style={styles.buttonAccount} onPress={() => {navigation.navigate('AccountInfo')}}> 
+        {imageUri ?
+          <Image source={{uri: user.avatar}} style={styles.imgAccount}/> :
+          <Image source={images.avatar} style={styles.imgAccount}/>}
+
         <View>
           <Text style={{ fontSize: 17 }}>{user.name}</Text>
           <Text style={{ color: "#6e6e6e" }}>Xem trang cá nhân</Text>

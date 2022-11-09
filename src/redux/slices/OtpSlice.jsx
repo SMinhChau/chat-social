@@ -13,7 +13,6 @@ export const OtpVerify = createAsyncThunk(
       //   "accessToken",
       //   JSON.stringify(data.data.accessToken)
       // );
-      
         return data;
       
     } catch (error) {

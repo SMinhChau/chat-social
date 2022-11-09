@@ -12,72 +12,60 @@ import { useNavigation } from '@react-navigation/native';
 import { useFormik } from "formik";
 import { OtpVerify } from "../../redux/slices/OtpSlice";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { URL } from "../../utils/constant";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function OtpAuth(phoneNumber) {
-  var phone = phoneNumber.route.params;
-
-  const firstInput = useRef();
-  const secondInput = useRef();
-  const thirdInput = useRef();
-  const fourthInput = useRef();
-  const fiveInput = useRef();
-  const sixInput = useRef();
-
-  const [input1, setInput1] = useState();
-  const [input2, setInput2] = useState();
-  const [input3, setInput3] = useState();
-  const [input4, setInput4] = useState();
-  const [input5, setInput5] = useState();
-  const [input6, setInput6] = useState();
-
-  const otpObject = {a: input1,
-                     b: input2, 
-                     c: input3, 
-                     d: input4, 
-                     e: input5, 
-                     f: input6,
-                     codeotp : function() {
-                      return this.a + this.b + this.c + this.d + this.e + this.f;
-                    }};
-
-  
-  
+export default function OtpAuth( phoneNum ) {
+  const phone = "+84" + phoneNum.route.params;
   const navigation = useNavigation();
-  
-  const dispatch = useDispatch();
+  const [otpCode, setOtpCode] = useState("");
+  // const dispatch = useDispatch();
 
-  const {
-    isLoading,
-    isSuccess,
-    isError,
-    message: messages,
-    otps,
-  } = useSelector((state) => state.otps);
+  // const {
+  //   isLoading,
+  //   isSuccess,
+  //   isError,
+  //   message: messages,
+  //   otps,
+  // } = useSelector((state) => state.otps);
 
-  const onFinish = async (values) => {
-    dispatch(OtpVerify(values));
+  // const onFinish = async (values) => {
+  //   dispatch(OtpVerify(values));
+  // };
+
+  // const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
+  //   useFormik({
+  //     // validationSchema: LoginSchema,
+  //     initialValues: {otp: "", phoneNumber:""},
+  //     onSubmit: (values) => {
+  //       onFinish(values);
+  //       console.log(values);
+  //     },
+  //   });
+
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     navigation.navigate("Register");
+  //     console.log(messages);
+  //   }
+  //   if (isError) {
+  //     console.log(messages);
+  //     Alert.alert("Thông báo", messages);
+  //   }
+  // }, [isLoading, isSuccess, isError]);
+
+  const handleOptAuth = async () => {
+    axios.post(`${URL}/api/auth/verify-otp-phone-number`, {
+      otp: otpCode,
+      phoneNumber: phone,
+    }).then(res => {
+        console.log("Res", res);
+        console.log("otp đã xác nhận");
+        // AsyncStorage.setItem("res.data.data", JSON.stringify(res.data.data));
+        navigation.navigate("Register");
+    }).catch(err => console.log(err))
   };
-
-  const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
-    useFormik({
-      // validationSchema: LoginSchema,
-      initialValues: {otp: "", phoneNumber:`${phone}`},
-      onSubmit: (values) => {
-        onFinish(values);
-        console.log(values);
-      },
-    });
-
-  useEffect(() => {
-    if (isSuccess) {
-      navigation.navigate("Register");
-      console.log(messages);
-    }
-    if (isError) {
-      console.log(messages);
-      Alert.alert("Thông báo", messages);
-    }
-  }, [isLoading, isSuccess, isError]);
 
     return (
        <SafeAreaView style={styles.container}>
@@ -92,91 +80,9 @@ export default function OtpAuth(phoneNumber) {
         </View>
 
         <View style={styles.otpContainer}>
-            <Text style={styles.noteText}>Nhập mã OTP vừa gửi đến số {phone}</Text>
+            <Text style={styles.noteText}>Nhập mã OTP vừa gửi đến số</Text>
 
-            {/* <View style={styles.otpInputContainer}>
-              <View style={styles.otpBox}>
-                <TextInput
-                  style={styles.otpText}
-                  keyboardType="number-pad"
-                  maxLength={1}
-                  value={input1}
-                  ref={firstInput}
-                  onChangeText={text => {
-                    setOtp({...otpcode, 1: text});
-                    text && secondInput.current.focus();
-                    setInput1(text);
-                  }}
-                />
-              </View>
-              <View style={styles.otpBox}>
-                <TextInput
-                  style={styles.otpText}
-                  keyboardType="number-pad"
-                  maxLength={1}
-                  ref={secondInput}
-                  onChangeText={text => {
-                    setOtp({...otpcode, 2: text});
-                    text ? thirdInput.current.focus() : firstInput.current.focus();
-                    setInput2(text);
-                  }}
-                />
-              </View>
-              <View style={styles.otpBox}>
-                <TextInput
-                  style={styles.otpText}
-                  keyboardType="number-pad"
-                  maxLength={1}
-                  ref={thirdInput}
-                  onChangeText={text => {
-                    setOtp({...otpcode, 3: text});
-                    text ? fourthInput.current.focus() : secondInput.current.focus();
-                    setInput3(text);
-                  }}
-                />
-              </View>
-              <View style={styles.otpBox}>
-                <TextInput
-                  style={styles.otpText}
-                  keyboardType="number-pad"
-                  maxLength={1}
-                  ref={fourthInput}
-                  onChangeText={text => {
-                    setOtp({...otpcode, 4: text});
-                    text ? fiveInput.current.focus() : thirdInput.current.focus();
-                    setInput4(text);
-                  }}
-                />
-              </View>
-              <View style={styles.otpBox}>
-                <TextInput
-                  style={styles.otpText}
-                  keyboardType="number-pad"
-                  maxLength={1}
-                  ref={fiveInput}
-                  onChangeText={text => {
-                    setOtp({...otpcode, 5: text});
-                    text ? sixInput.current.focus() : fourthInput.current.focus();
-                    setInput5(text);
-                  }}
-                />
-              </View>
-              <View style={styles.otpBox}>
-                <TextInput
-                  style={styles.otpText}
-                  keyboardType="number-pad"
-                  maxLength={1}
-                  ref={sixInput}
-                  onChangeText={text => {
-                    setOtp({...otpcode, 6: text});
-                    !text && fiveInput.current.focus();
-                    setInput6(text);
-                  }}
-                />
-              </View>
-            </View> */}
-
-                  <TextInput style={styles.inputCode}
+                  {/* <TextInput style={styles.inputCode}
                      keyboardType='numeric'
                      onChangeText={handleChange("otp")}
                      onBlur={handleBlur("otp")}
@@ -186,9 +92,15 @@ export default function OtpAuth(phoneNumber) {
                      keyboardAppearance="dark"
                      returnKeyType="next"
                      returnKeyLabel="next"
-                     placeholder='Code'/>
+                     placeholder='Code'/> */}
 
-            <TouchableOpacity style={styles.OtpButton} disabled={isLoading} onPress={handleSubmit}>
+                     <TextInput style={styles.inputCode}
+                                keyboardType='numeric'
+                                value={otpCode}
+                                onChangeText={text => {setOtpCode(text)}}
+                     />
+
+            <TouchableOpacity style={styles.OtpButton} onPress={() => {handleOptAuth()}}>
                 <Text style={styles.textButton}>Xác Nhận</Text>
             </TouchableOpacity>
         </View>
@@ -288,12 +200,12 @@ const styles = StyleSheet.create({
         marginHorizontal:5
       },
 
-      otpText:{
-        fontSize: 25,
-        padding: 0,
-        textAlign: 'center',
-        paddingHorizontal: 13,
-        paddingVertical: 10,
-      }
+      // otpText:{
+      //   fontSize: 25,
+      //   padding: 0,
+      //   textAlign: 'center',
+      //   paddingHorizontal: 13,
+      //   paddingVertical: 10,
+      // }
 
 });
