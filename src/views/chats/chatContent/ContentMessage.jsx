@@ -68,6 +68,8 @@ function ContentMessage({ message, navigation, avatar, sender }) {
   );
 }
 
+export default ContentMessage;
+
 const styles = StyleSheet.create({
   content: {
     flex: 1,
@@ -120,4 +122,4 @@ const styles = StyleSheet.create({
     color: "#24cd8c",
   },
 });
-export default ContentMessage;
+

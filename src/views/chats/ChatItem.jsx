@@ -20,7 +20,7 @@ import {
 } from "react-native";
 
 import InputMessage from "./chatContent/InputMessage/InputMessage";
-import ContentMessage from "./chatContent/ContentMessage";
+import * as ContentMessage from "./chatContent/ContentMessage";
 import ContentMyMessage from "./chatContent/ContentMyMessage";
 import { useSelector } from "react-redux";
 

@@ -18,7 +18,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
-import * as Swiper from "react-native-swiper";
+// import * as Swiper from "react-native-swiper";
 
 import { useRef } from "react";
 import { URL } from "../../utils/constant";
@@ -30,7 +30,7 @@ import { updateContentChat } from "../../redux/slices/ChatSlice";
 import Header from "../components/Header";
 import { bgborder, bgColor } from "../../utils/color";
 
-export default function Login({ navigation }) {
+function Login({ navigation }) {
   const [getPassVisible, setPassVisible] = useState(false);
   const password = useRef(null);
   const dispatch = useDispatch();
@@ -55,6 +55,7 @@ export default function Login({ navigation }) {
   const onFinish = async (values) => {
     dispatch(SignInUser({ user: values }));
   };
+
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
       validationSchema: LoginSchema,
@@ -111,7 +112,7 @@ export default function Login({ navigation }) {
           </Header>
           {/* Slide */}
           <View style={styles.content_Slide}>
-            <Swiper style={styles.wrapper} showsButtons>
+            {/* <Swiper style={styles.wrapper} showsButtons> */}
               <View style={styles.slide}>
                 <Image
                   style={[styles.logo, { marginTop: 15 }]}
@@ -130,7 +131,7 @@ export default function Login({ navigation }) {
                   source={require("../../../assets/slide_2.png")}
                 />
               </View>
-            </Swiper>
+            {/* </Swiper> */}
           </View>
         </View>
 
@@ -211,6 +212,8 @@ export default function Login({ navigation }) {
     </SafeAreaView>
   );
 }
+
+export default Login;
 
 const styles = StyleSheet.create({
   container: {
