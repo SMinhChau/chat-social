@@ -19,18 +19,10 @@ import {
   ScrollView,
 } from "react-native";
 
-import InputMessage from "./chatContent/InputMessage";
+import InputMessage from "./chatContent/InputMessage/InputMessage";
 import ContentMessage from "./chatContent/ContentMessage";
 import ContentMyMessage from "./chatContent/ContentMyMessage";
-import { useDispatch } from "react-redux";
-import { AvatarDefault, URL } from "../../utils/constant";
-import { updateContentChat } from "../../redux/slices/ChatSlice";
-import { updateSortConversations } from "../../redux/slices/ConversationSlice";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import { TextInput } from "react-native-web";
-import Header from "../components/Header";
-import { Feather } from "@expo/vector-icons";
 
 function ChatItem({ route, memberGroup, navigation }) {
   // Get all chat conversation
@@ -38,48 +30,16 @@ function ChatItem({ route, memberGroup, navigation }) {
   const { chat } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
 
-  // const messages = [
-  //   {
-  //     id: 0,
-  //     action: "hello Chau!jhjghjhjgh",
-  //     time: "21:10",
-  //   },
-  //   {
-  //     id: 0,
-  //     action: "hello Chau!",
-  //     time: "21:10",
-  //   },
-  //   {
-  //     id: 0,
-  //     action:
-  //       "English Grammar in Use là một cuốn sách tham khảo và luyện tập tự học dành cho sinh viên tiếng Anh từ trình độ trung cấp đến cao cấp.",
-  //     time: "21:10",
-  //   },
-  //   {
-  //     id: 0,
-  //     action: "Good luck!!",
-  //     time: "21:10",
-  //   },
-  //   {
-  //     id: 0,
-  //     action: "trình độ trung cấp đến cao cấp.",
-  //     time: "21:10",
-  //   },
-  //   {
-  //     id: 0,
-  //     action: "Good luck!!",
-  //     time: "21:10",
-  //   },
-  // ];
-
-  //use your link here
-
   const renderItem = ({ item }) => (
     <>
       {item.senderId === user.id ? (
-        <ContentMyMessage message={item} />
+        <ContentMyMessage message={item} avatar={userChat.avatar} />
       ) : (
-        <ContentMessage message={item} />
+        <ContentMessage
+          message={item}
+          avatar={userChat.avatar}
+          sender={item.senderId}
+        />
       )}
     </>
   );
@@ -93,7 +53,7 @@ function ChatItem({ route, memberGroup, navigation }) {
         <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 10}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 10}
         >
           <View style={styles.body}>
             <TopBarChat name={userChat.name} navigation={navigation} />

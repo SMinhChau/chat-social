@@ -3,6 +3,7 @@ import ChatSlice from "./slices/ChatSlice";
 import ConversationSlice from "./slices/ConversationSlice";
 import UserSlice from "./slices/UserSlice";
 import UserChatSlice from "./slices/UserChatSlice";
+import friendListSlice from "./slices/FriendSlice";
 import OtpSlice from "./slices/OtpSlice";
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
     conversation: ConversationSlice,
     chat: ChatSlice,
     userChat: UserChatSlice,
+    friends: friendListSlice,
     otps: OtpSlice
   },
   middleware: (getDefaultMiddleware) =>

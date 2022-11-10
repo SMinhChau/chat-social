@@ -1,24 +1,37 @@
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
-import { AvatarDefault, URL } from "../../../utils/constant";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import axios from "axios";
+import { URL, AvatarDefault } from "../../../utils/constant";
+import { getToken } from "../../../utils/function";
+import { useState } from "react";
 
-function AddFrientItem({ name, content, avatar, idFriend, closeModal }) {
+function AddFrientItem({ name, content, avatar, curentUser, id }) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Send request to user
   const handleAddFriend = async () => {
+    setIsLoading(true);
+    console.log(id);
     const data = await axios
       .post(
         `${URL}/api/friend-request/send-to-user/${id}`,
         {},
         {
           headers: {
-            Authorization: `Bearer ${getToken()}`,
+            Authorization: `Bearer ${await getToken()}`,
             Accept: "application/json",
           },
         }
       )
-      .catch((err) => message.error(err?.response?.data?.messageError));
-    if (data.code === 200) message.success("Gửi lời mời thành công");
+      .catch((err) => console.log(err));
+
+    if (data.code === 200) {
+      console.log("Gửi lời mời thành công");
+    }
+    setIsLoading(false);
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.container__Left}>
@@ -32,7 +45,12 @@ function AddFrientItem({ name, content, avatar, idFriend, closeModal }) {
 
       <View style={styles.container__Right}>
         <TouchableOpacity>
-          <Ionicons name="person-add-outline" size={24} color="#0068FF" />
+          <Ionicons
+            name="person-add-outline"
+            size={30}
+            color="#068FF"
+            onPress={handleAddFriend}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -72,5 +90,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     paddingRight: 10,
+    color: "#068FF",
   },
 });

@@ -5,6 +5,7 @@ import { getChatByConversationID } from "../../redux/slices/ChatSlice";
 import { saveUserChat } from "../../redux/slices/UserChatSlice";
 import React from "react";
 import moment from "moment";
+import { AvatarDefault } from "../../utils/constant";
 function ItemConservation({
   navigation,
   name,
@@ -21,7 +22,7 @@ function ItemConservation({
   const dispatch = useDispatch();
 
   const getNameConversation = () => {
-    console.log(listMember);
+    // console.log(listMember);
     // console.log(userIdCurrent);
 
     if (type) {
@@ -60,10 +61,7 @@ function ItemConservation({
       {avatar ? (
         <Image source={{ uri: avatar }} style={styles.imgMessage} />
       ) : (
-        <Image
-          source={require("../../../assets/chau.jpg")}
-          style={styles.imgMessage}
-        />
+        <Image source={{ uri: AvatarDefault }} style={styles.imgMessage} />
       )}
 
       <View style={styles.content}>

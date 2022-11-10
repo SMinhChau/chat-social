@@ -2,10 +2,13 @@ import Item from "antd/lib/list/Item";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import { AvatarDefault } from "../../../utils/constant";
+import { useEffect } from "react";
 
 function ContentMyMessage({ message }) {
-  // const { user } = useSelector((state) => state.user);
-
+  useEffect(() => {
+    console.log("message", message.content[0]);
+  }, [message]);
   return (
     <>
       <View style={styles.content}>
@@ -14,25 +17,27 @@ function ContentMyMessage({ message }) {
           source={require("../../../../assets/chau.jpg")}
         /> */}
         <View style={styles.message}>
-          <View style={styles.message_Item}>
-            <View style={styles.message_Item__content}>
-              {message.type === 0 ? (
-                <Text style={styles.message__Text}>{message.content[0]}</Text>
-              ) : (
-                <Image
-                  style={{ width: 50, height: 50 }}
-                  source={{ uri: message.content[0] }}
-                />
-              )}
+          {message && (
+            <View style={styles.message_Item}>
+              <View style={styles.message_Item__content}>
+                {message.type === 1 ? (
+                  <Image
+                    style={{ width: 100, height: 100 }}
+                    source={{ uri: message.content[0] }}
+                  />
+                ) : (
+                  <Text style={styles.message__Text}>{message.content[0]}</Text>
+                )}
 
-              <View style={styles.message__Time}>
-                <Text style={styles.createAt}>
-                  {" "}
-                  {moment(new Date(message.timeSend)).format("LT")}
-                </Text>
+                <View style={styles.message__Time}>
+                  <Text style={styles.createAt}>
+                    {" "}
+                    {moment(new Date(message.timeSend)).format("LT")}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
+          )}
         </View>
       </View>
     </>

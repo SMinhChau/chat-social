@@ -57,6 +57,7 @@ export default function Home({
               navigation={navigation}
               isLoading={isLoading}
               key={index}
+              avatar={conversation.avatar}
               name={conversation}
               index={conversation.id}
               userIdCurrent={userId}
