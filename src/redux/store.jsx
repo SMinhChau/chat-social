@@ -3,8 +3,9 @@ import ChatSlice from "./slices/ChatSlice";
 import ConversationSlice from "./slices/ConversationSlice";
 import UserSlice from "./slices/UserSlice";
 import UserChatSlice from "./slices/UserChatSlice";
-import friendListSlice from "./slices/FriendSlice";
+import UserInfoSlice from "./slices/UserInfoSlice";
 import OtpSlice from "./slices/OtpSlice";
+import FriendSlice from "./slices/FriendSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,8 +13,9 @@ export const store = configureStore({
     conversation: ConversationSlice,
     chat: ChatSlice,
     userChat: UserChatSlice,
-    friends: friendListSlice,
-    otps: OtpSlice
+    info: UserInfoSlice,
+    otps: OtpSlice,
+    friends: FriendSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

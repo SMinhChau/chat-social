@@ -6,9 +6,9 @@ import { AvatarDefault } from "../../../utils/constant";
 import { useEffect } from "react";
 
 function ContentMyMessage({ message }) {
-  useEffect(() => {
-    console.log("message", message.content[0]);
-  }, [message]);
+  // useEffect(() => {
+  //   console.log("message", message.content[0]);
+  // }, [message]);
   return (
     <>
       <View style={styles.content}>

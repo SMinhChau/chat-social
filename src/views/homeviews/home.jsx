@@ -38,7 +38,7 @@ export default function Home({
 
   useEffect(() => {
     dispatch(getConversationAllByToken(accessToken));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (conversations.length) {

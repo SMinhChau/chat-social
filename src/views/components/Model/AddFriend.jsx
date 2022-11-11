@@ -165,24 +165,6 @@ function AddFriend({ navigation }) {
                 id={findFriend.data.id}
               />
             ) : (
-              // <FlatList
-              //   style={styles.contentFlatList}
-              //   data={findFriend.data}
-              //   renderItem={({ item }) => (
-              //     <AddFrientItem
-              //       name={item.name}
-              //       avatar={item.avatar}
-              //       id={item.id}
-              //       keyExtractor={(item, index) => index}
-              //     />
-              //   )}
-              // />
-              // <AddFrientItem
-
-              //   avatar={findFriend.avatar}
-              //   name={findFriend.name}
-              //   id={findFriend.id}
-              // />
               <Text style={styles.textError}>{findFriend?.message}</Text>
             )}
           </View>

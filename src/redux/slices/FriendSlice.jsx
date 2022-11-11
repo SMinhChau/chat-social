@@ -1,109 +1,59 @@
-// import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// import config from "../../config";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { URL } from "../../utils/constant";
+import { getToken } from "../../utils/function";
+const { default: axios } = require("axios");
 
-// const friendListSlice = createSlice({
-//   name: "friends",
-//   initialState: { data: [], friendId: null, userId: null },
-//   reducers: {
-//     clickSendChat: (state, action) => {
-//       state.friendId = action.payload;
-//     },
-//   },
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchFriendsRequest.fulfilled, (state, action) => {
-//         state.data = action.payload;
-//       })
-//       .addCase(fetchLoadFriendsRequest.fulfilled, (state, action) => {
-//         state.data = action.payload;
-//       });
-//   },
-// });
+const handleAddFriend = async (data) => {
+  const { id } = data;
 
-// export const fetchFriendsRequest = createAsyncThunk(
-//   "friends/fetchFriendsRequest",
-//   async (data) => {
-//     try {
-//       const res = await fetch(`${config.LINK_API_V2}/friendRequests/create`, {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(data),
-//       });
-//       const friendRequest = await res.json();
-//       return friendRequest;
-//     } catch (err) {
-//       console.log(`err fetch users: ${err}`);
-//     }
-//   }
-// );
+  const { status, senderID, receiverID } = data;
+  try {
+    const data = await axios.post(
+      `${URL}/api/friend-request/send-to-user/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          Accept: "application/json",
+        },
+      }
+    );
+    console.log(status, senderID, receiverID);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-// export const fetchLoadFriendsRequest = createAsyncThunk(
-//   "friends/fetchLoadFriendsRequest",
-//   async (id) => {
-//     if (id) {
-//       try {
-//         const res = await fetch(
-//           `${config.LINK_API_V2}/friendRequests/get-list-request/${id}`
-//         );
-//         const allFriendRequest = await res.json();
-//         return allFriendRequest.data;
-//       } catch (err) {
-//         console.log(`[fetch messages]: ${err}`);
-//       }
-//     }
-//   }
-// );
+export const getMyFriends = createAsyncThunk(
+  "friends/fetchListFriends",
+  async (thunkAPI) => {
+    try {
+      const { data } = await axios.get(`${URL}/api/user/get-list-friend`, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          Accept: "application/json",
+        },
+      });
+      console.log(data.data);
+      return data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
-// export const fetchHandleFriendsRequest = createAsyncThunk(
-//   "friends/fetchHandleFriendsRequest",
-//   async (data) => {
-//     try {
-//       const { idFriendRequest } = data;
+const FriendSlice = createSlice({
+  name: "friends",
+  initialState: {
+    friends: [],
+    friendId: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getMyFriends.fulfilled, (state, action) => {
+      state.friends = action.payload;
+    });
+  },
+});
 
-//       const { status, senderID, receiverID } = data;
-
-//       await fetch(
-//         `${config.LINK_API_V2}/friendRequests/friend-request/${idFriendRequest}`,
-//         {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({ status, senderID, receiverID }),
-//         }
-//       );
-//     } catch (err) {
-//       console.log(`err fetch users: ${err}`);
-//     }
-//   }
-// );
-
-// export const fetchBackFriendRequest = createAsyncThunk(
-//   "friends/fetchBackFriendRequest",
-//   async (data) => {
-//     try {
-//       const { friendRequestID } = data;
-
-//       const { status, senderID } = data;
-
-//       const res = await fetch(
-//         `${config.LINK_API_V2}/friendRequests/${friendRequestID}`,
-//         {
-//           method: "DELETE",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({ status, senderID }),
-//         }
-//       );
-//       const dataBackFriendsRequest = res.json();
-//       console.log("Data back", dataBackFriendsRequest);
-//       return dataBackFriendsRequest.data;
-//     } catch (err) {
-//       console.log(`err fetch users: ${err}`);
-//     }
-//   }
-// );
-// export default friendListSlice.reducer;
+export default FriendSlice.reducer;
