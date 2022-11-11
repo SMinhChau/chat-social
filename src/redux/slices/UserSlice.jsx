@@ -2,6 +2,7 @@ import { URL } from "../../utils/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 const { default: axios } = require("axios");
+import { getToken } from "../../utils/function";
 
 export const SignInUser = createAsyncThunk(
   "user/signin",
@@ -39,6 +40,31 @@ export const SignUpUser = createAsyncThunk(
       return thunkAPI.rejectWithValue({
         status: 401,
         message: "Đăng ký thất bại",
+      });
+    }
+  }
+);
+
+export const fetchUserById = createAsyncThunk(
+  "user/fetchById",
+  async (userId, thunkAPI) => {
+    try {
+      console.log("SlideuserId", userId);
+      const { data } = await fetch(`${URL}/api/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          Accept: "application/json",
+        },
+      });
+      const contentReverse = data.reverse();
+      data = contentReverse;
+      console.log("data", contentReverse);
+      return contentReverse;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue({
+        status: 401,
+        message: "Người dùng không tồn tại",
       });
     }
   }

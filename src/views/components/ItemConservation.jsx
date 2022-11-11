@@ -17,8 +17,6 @@ function ItemConservation({
   lastMessage,
   isLoading,
 }) {
-  const [currentDate, setCurrentDate] = useState("");
-
   const dispatch = useDispatch();
 
   const getNameConversation = () => {

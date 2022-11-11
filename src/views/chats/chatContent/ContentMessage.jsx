@@ -1,19 +1,25 @@
 import Item from "antd/lib/list/Item";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useEffect } from "react";
-import { getConversationAllByToken } from "../../../redux/slices/ConversationSlice";
-import { saveUserChat } from "../../../redux/slices/UserChatSlice";
-import { useDispatch } from "react-redux";
-import { useState } from "react";
-import { AvatarDefault } from "../../../utils/constant";
 
-function ContentMessage({ message, navigation, avatar, sender }) {
-  const { userChat } = useSelector((state) => state.userChat);
+import { useState } from "react";
+import { AvatarDefault, URL } from "../../../utils/constant";
+import { fetchUserSenderById } from "../../../redux/slices/UserInfoSlice";
+
+function ContentMessage({ message, navigation, receiverId }) {
+  const [userSender, setUserSender] = useState({});
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    console.log(sender);
-  }, [sender]);
+    dispatch(fetchUserSenderById(receiverId)).then((data) => {
+      setUserSender(data.payload);
+      // console.log(userSender.payload.data.name);
+    });
+  }, [dispatch]);
+
   const ImageMessage = () => {
     return (
       <>
@@ -25,13 +31,14 @@ function ContentMessage({ message, navigation, avatar, sender }) {
       </>
     );
   };
+
   return (
     <>
       <View style={styles.content}>
-        {userChat.avatar ? (
+        {userSender?.code === 200 ? (
           <Image
             style={styles.content__Avatar}
-            source={{ uri: userChat.avatar }}
+            source={{ uri: userSender.data.avatar }}
           />
         ) : (
           <Image
@@ -43,7 +50,12 @@ function ContentMessage({ message, navigation, avatar, sender }) {
           <View style={styles.message_Item}>
             {message && (
               <View style={styles.message_Item__content}>
-                <Text style={styles.content__User}>{sender}</Text>
+                {userSender?.code === 200 ? (
+                  <Text style={styles.content__User}>
+                    {userSender.data.name}
+                  </Text>
+                ) : null}
+
                 {message.type === 1 ? (
                   <Image
                     style={{ width: 100, height: 100 }}

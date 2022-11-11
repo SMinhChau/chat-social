@@ -57,3 +57,51 @@ async function getImageToBase64(imageURL) {
   return image;
 }
 ```
+
+```js
+import { URL } from "../../utils/constant";
+import { getToken } from "../../utils/function";
+const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
+const { default: axios } = require("axios");
+
+// First, create the thunk
+const fetchUserById = createAsyncThunk(
+  "info/fetchUserById",
+  async (userId, thunkAPI) => {
+    console.log("fetchUserById", userId);
+    try {
+      const data = await axios.get(`${URL}/api/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          Accept: "application/json",
+        },
+      });
+      return data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+const initialState = {
+  data: [],
+  senderId: null,
+};
+
+// Then, handle actions in your reducers:
+const UserInfoSlice = createSlice({
+  name: "info",
+  initialState,
+  reducers: {
+    fetchSenderById: (state, action) => {
+      state.receiverId = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchUserById.fulfilled, (state, action) => {
+      state.data = action.payload;
+    });
+  },
+});
+export default UserInfoSlice.reducer;
+```

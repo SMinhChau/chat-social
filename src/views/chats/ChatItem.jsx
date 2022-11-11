@@ -22,7 +22,11 @@ import {
 import InputMessage from "./chatContent/InputMessage/InputMessage";
 import ContentMessage from "./chatContent/ContentMessage";
 import ContentMyMessage from "./chatContent/ContentMyMessage";
+import { fetchUserById } from "../../redux/slices/UserSlice";
+import { getToken } from "../../utils/function";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 function ChatItem({ route, memberGroup, navigation }) {
   // Get all chat conversation
@@ -38,7 +42,7 @@ function ChatItem({ route, memberGroup, navigation }) {
         <ContentMessage
           message={item}
           avatar={userChat.avatar}
-          sender={item.senderId}
+          receiverId={item.senderId}
         />
       )}
     </>

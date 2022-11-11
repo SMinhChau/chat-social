@@ -2,12 +2,12 @@ import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import axios from "axios";
-import { URL, AvatarDefault } from "../../../utils/constant";
-import { getToken } from "../../../utils/function";
+import { URL, AvatarDefault } from "../../utils/constant";
+import { getToken } from "../../utils/function";
 import { useState } from "react";
-import { bgborder } from "../../../utils/color";
+import { bgColor, bg_item_frient, headerBar } from "../../utils/color";
 
-function AddFrientItem({ name, content, avatar, curentUser, id }) {
+function AvatarFriend({ name, content, avatar, curentUser, id }) {
   const [isLoading, setIsLoading] = useState(false);
 
   // Send request to user
@@ -34,7 +34,7 @@ function AddFrientItem({ name, content, avatar, curentUser, id }) {
   };
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container}>
       <View style={styles.container__Left}>
         {avatar ? (
           <Image source={{ uri: avatar }} style={styles.imgMessage} />
@@ -46,28 +46,29 @@ function AddFrientItem({ name, content, avatar, curentUser, id }) {
 
       <View style={styles.container__Right}>
         <TouchableOpacity>
-          <Ionicons
-            name="person-add-outline"
-            size={30}
-            size={24}
-            style={styles.icon}
-            onPress={handleAddFriend}
-          />
+          <Ionicons name="call-outline" size={24} style={styles.icon} />
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Ionicons name="videocam-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
-export default AddFrientItem;
+export default AvatarFriend;
 
 const styles = StyleSheet.create({
   container: {
     height: 70,
-    width: "90%",
+    marginVertical: 5,
+    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    borderBottomWidth: 3,
+    borderColor: `${bg_item_frient}`,
   },
   imgMessage: {
     height: 45,
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   container_name: {
-    fontSize: 16,
+    fontSize: 20,
     alignItems: "center",
     justifyContent: "center",
     color: "#000",
@@ -98,6 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   icon: {
-    color: "",
+    color: "blue",
+    paddingHorizontal: 10,
   },
 });
