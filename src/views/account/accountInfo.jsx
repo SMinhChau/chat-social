@@ -17,8 +17,8 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/slices/UserSlice';
 import { getToken } from '../../utils/function';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useEffect } from "react";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 
 
@@ -81,6 +81,8 @@ export default function AccountInfo() {
             name: user.name,
             avatar: checkAvatar + avatarUrl,
             coverImage: user.coverImage,
+            dateOfBirth: user.dateOfBirth,
+            gender: user.gender,
             id: user.id,
         }, {
             headers: {
@@ -99,6 +101,8 @@ export default function AccountInfo() {
             name: user.name,
             avatar: user.avatar,
             coverImage: checkCover + coverUrl,
+            dateOfBirth: user.dateOfBirth,
+            gender: user.gender,
             id: user.id,
         }, {
             headers: {
@@ -126,27 +130,22 @@ export default function AccountInfo() {
     //     }
     //   };
 
-    const convertDate = () => {
-        const getdate = user.dateOfBirth;
-        const date = new Date(getdate);
-
-        // 👇️ Format date and time using different locales
-        // console.log(date.toLocaleString('en-US')); //  "1/20/2022, 9:50:15 AM"
-        // console.log(date.toLocaleString('en-GB')); //  "20/01/2022 09:50:15"
-        // console.log(date.toLocaleString('sv')); //  "2022-01-20 09:50:15"
-        //  Display only date
-        return date.toLocaleDateString('en-GB'); //  "20/01/2022"
-
-    }
+    //Convert dateOfBirth
+    const [DateFormat, setDateFormat] = useState();
 
     useEffect(() => {
-        if(user.gender === "true" || user.gender === true){
+        if (user.gender === "true" || user.gender === true) {
             setGender('Nam');
-        }else if(user.gender === "false" || user.gender === false){
+        } else if (user.gender === "false" || user.gender === false) {
             setGender('Nữ');
-        }else{
+        } else {
             setGender('Khác');
         }
+
+        const milliseconds = user.dateOfBirth;
+        const dateObject = new Date(milliseconds);
+        setDateFormat(dateObject.getDate() + "/" + dateObject.getMonth() + "/" + dateObject.getFullYear());
+
     })
 
     return (
@@ -197,13 +196,25 @@ export default function AccountInfo() {
 
                 <View style={styles.itemInfo}>
                     <Text style={styles.titleInfo}>Ngày Sinh:</Text>
-                    <Text style={styles.titleName}>{convertDate(user.dateOfBirth)}</Text>
+                    <Text style={styles.titleName}>{DateFormat}</Text>
+                </View>
+
+                <View style={styles.itemInfo}>
+                    <Text style={styles.titleInfo}>Số điện thoại:</Text>
+                    <Text style={styles.titleName}>{user.phoneNumber}</Text>
                 </View>
             </View>
 
             {/* Modal option */}
             <ImagePickerModal isVisible={visible} onClose={() => setVisible(false)} onImageLibraryPress={onAvatarLibrary} />
             <ImagePickerModal isVisible={visibleBG} onClose={() => setVisibleBG(false)} onImageLibraryPress={onBacgroundLibrary} />
+
+            <View style={styles.containerBtnEdit}>
+                <TouchableOpacity style={styles.buttonEdit} onPress={() => { navigation.navigate('EditAccountInfo') }}>
+                    <Text style={styles.textBtnName}>Chỉnh sửa</Text>
+                    <Ionicons style={{ fontSize: 25 }} name="create-outline"></Ionicons>
+                </TouchableOpacity>
+            </View>
 
             {/* button back */}
             <View style={styles.title}>
@@ -338,14 +349,13 @@ const styles = StyleSheet.create({
     itemInfo: {
         width: '90%',
         height: 40,
-        marginBottom: 15,
         marginLeft: 20,
         flexDirection: 'row',
         alignItems: 'center'
     },
 
     titleInfo: {
-        width: 110,
+        width: 130,
         fontSize: 17,
         fontWeight: 'bold'
     },
@@ -353,6 +363,29 @@ const styles = StyleSheet.create({
     titleName: {
         width: 250,
         fontSize: 17,
-        marginLeft: 10
+        marginLeft: 20
+    },
+
+    buttonEdit: {
+        width: '80%',
+        height: 35,
+        borderRadius: 30,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#c0c0c0'
+    },
+
+    containerBtnEdit:{
+        width:'100%',
+        height:35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop:10
+    },
+
+    textBtnName:{
+        fontSize:17,
+        marginHorizontal:10
     }
 });
