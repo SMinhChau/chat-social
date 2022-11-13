@@ -49,7 +49,7 @@ function AddFrientItem({ name, content, avatar, curentUser, id }) {
           <Ionicons
             name="person-add-outline"
             size={30}
-            size={24}
+            // size={24}
             style={styles.icon}
             onPress={handleAddFriend}
           />

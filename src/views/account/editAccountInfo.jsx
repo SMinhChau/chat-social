@@ -87,9 +87,9 @@ export default function EditAccountInfo() {
         }).catch(err => console.log(err))
     };
 
-    // useEffect(() => {
-    //     radioButtons[0].selected;
-    // })
+    useEffect(() => {
+        
+    })
 
     return (
         <SafeAreaView style={styles.container} >

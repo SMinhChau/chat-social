@@ -35,7 +35,10 @@ function SearchBar({ navigation, onClick }) {
     navigation.navigate("AddFriend");
     setVisible(!visible);
   };
-  const handleOnClickAddGroup = () => {};
+  const handleOnClickAddGroup = () => {
+    navigation.navigate("AddGroup");
+    setVisible(!visible);
+  };
 
   return (
     <View style={styles.searchBar}>

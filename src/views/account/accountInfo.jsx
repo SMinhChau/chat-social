@@ -20,8 +20,6 @@ import { getToken } from '../../utils/function';
 import { useEffect } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-
-
 export default function AccountInfo() {
 
     const dispatch = useDispatch();
@@ -132,8 +130,14 @@ export default function AccountInfo() {
 
     //Convert dateOfBirth
     const [DateFormat, setDateFormat] = useState();
+    const convertDateOfBirth = () => {
+        const milliseconds = user.dateOfBirth;
+        const dateObject = new Date(milliseconds);
+        setDateFormat(dateObject.getDate() + "/" + dateObject.getMonth() + "/" + dateObject.getFullYear());
+    }
 
-    useEffect(() => {
+    //convert gender
+    const covertGender = () => {
         if (user.gender === "true" || user.gender === true) {
             setGender('Nam');
         } else if (user.gender === "false" || user.gender === false) {
@@ -141,13 +145,33 @@ export default function AccountInfo() {
         } else {
             setGender('Khác');
         }
+    }
 
-        const milliseconds = user.dateOfBirth;
-        const dateObject = new Date(milliseconds);
-        setDateFormat(dateObject.getDate() + "/" + dateObject.getMonth() + "/" + dateObject.getFullYear());
+    const [data, setData] = useState();
+    async function FreshData(){
+        axios
+            .get(`${URL}/api/user/${user.id}`,{
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`,
+                    Accept: 'application/json',
+                }
+            })
+            .then(res =>{
+                dispatch(setData(res.data));
+            })
+            .catch(err => {
+                console.log('error:', err);
+            })
+        }
 
-    })
+    
+    useEffect(() => {
+        FreshData();
+        covertGender();
+        convertDateOfBirth();
+    }, [])
 
+    
     return (
         <SafeAreaView style={styles.container}>
 
