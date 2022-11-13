@@ -1,8 +1,7 @@
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import React from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from '@react-navigation/native';
-import Header from '../Header';
 
 export default function AddGroup() {
 
