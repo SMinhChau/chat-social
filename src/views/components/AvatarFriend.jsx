@@ -7,7 +7,7 @@ import { getToken } from "../../utils/function";
 import { useState } from "react";
 import { bgColor, bg_item_frient, headerBar } from "../../utils/color";
 
-function AvatarFriend({ name, content, avatar, curentUser, id }) {
+function AvatarFriend({ name, avatar, id, navigation }) {
   const [isLoading, setIsLoading] = useState(false);
 
   // Send request to user
@@ -33,8 +33,13 @@ function AvatarFriend({ name, content, avatar, curentUser, id }) {
     setIsLoading(false);
   };
 
+  // Change To Screen Info
+  const handleGetInfo = () => {
+    navigation.navigate("AccountInfo");
+  };
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handleGetInfo}>
       <View style={styles.container__Left}>
         {avatar ? (
           <Image source={{ uri: avatar }} style={styles.imgMessage} />
@@ -49,9 +54,9 @@ function AvatarFriend({ name, content, avatar, curentUser, id }) {
           <Ionicons name="call-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Ionicons name="videocam-outline" size={24} style={styles.icon} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </TouchableOpacity>
   );
