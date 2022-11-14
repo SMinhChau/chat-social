@@ -393,6 +393,26 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
 
+  editAvatar: {
+    width: 25,
+    height: 25,
+  },
+
+  editBackground: {
+    width: 30,
+    height: 30,
+  },
+
+  buttonAvatar: {
+    width: 100,
+    height: 35,
+    backgroundColor: "#0573ff",
+    marginHorizontal: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15,
+  },
+
   textAvatar: {
     fontSize: 17,
     fontWeight: "bold",
