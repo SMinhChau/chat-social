@@ -9,38 +9,31 @@ function ContentMyMessage({ message }) {
   // useEffect(() => {
   //   console.log("message", message.content[0]);
   // }, [message]);
-
-  const ImageMessage = () => {
-    return (
-      <>
-        {message.content && (
-          <Image
-            source={{ uri: message.content[0] }}
-            style={{ width: 100, height: 100 }}
-          />
-        )}
-      </>
-    );
-  };
   return (
     <>
       <View style={styles.content}>
+        {/* <Image
+          style={styles.content__Avatar}
+          source={require("../../../../assets/chau.jpg")}
+        /> */}
         <View style={styles.message}>
           {message && (
             <View style={styles.message_Item}>
               <View style={styles.message_Item__content}>
                 {message.type === 1 ? (
-                  <ImageMessage />
+                  <Image
+                    style={{ width: 100, height: 100 }}
+                    source={{ uri: message.content[0] }}
+                  />
                 ) : (
                   <Text style={styles.message__Text}>{message.content[0]}</Text>
                 )}
 
                 <View style={styles.message__Time}>
-                  {message.content ? (
-                    <Text style={styles.createAt}>
-                      {moment(new Date(message.timeSend)).format("LT")}
-                    </Text>
-                  ) : null}
+                  <Text style={styles.createAt}>
+                    {" "}
+                    {moment(new Date(message.timeSend)).format("LT")}
+                  </Text>
                 </View>
               </View>
             </View>

@@ -19,15 +19,8 @@ import { getConversationAllByToken } from "../../redux/slices/ConversationSlice"
 import { saveUserChat } from "../../redux/slices/UserChatSlice";
 import ItemConservation from "../components/ItemConservation";
 import SearchBar from "../components/SearchBar";
-import {
-  bgborder,
-  bgColor,
-  border,
-  borderInfor,
-  headerBar,
-} from "../../utils/color";
+import { headerBar } from "../../utils/color";
 import { getToken } from "../../utils/function";
-import { AvatarDefault } from "../../utils/constant";
 
 export default function Home({
   navigation,
@@ -57,30 +50,21 @@ export default function Home({
     <SafeAreaView style={styles.home__content}>
       <SearchBar navigation={navigation} />
       <View style={styles.content__FlatList}>
-        {conversations ? (
-          <ScrollView style={styles.scrollView} horizontal={false}>
-            <>
-              {conversations.map((conversation, index) => (
-                <ItemConservation
-                  style={styles.FlatList}
-                  navigation={navigation}
-                  isLoading={isLoading}
-                  key={index}
-                  avatar={conversation.avatar}
-                  name={conversation}
-                  index={conversation.id}
-                  userIdCurrent={userId}
-                  {...conversation}
-                />
-              ))}
-            </>
-          </ScrollView>
-        ) : (
-          <View style={[styles.conversations_found]}>
-            <Text style={[styles.text_friend]}>Chưa có bạn bè!</Text>
-            <Image source={{ uri: AvatarDefault }} style={styles.imgMessage} />
-          </View>
-        )}
+        <ScrollView style={styles.scrollView} horizontal={false}>
+          {conversations.map((conversation, index) => (
+            <ItemConservation
+              style={styles.FlatList}
+              navigation={navigation}
+              isLoading={isLoading}
+              key={index}
+              avatar={conversation.avatar}
+              name={conversation}
+              index={conversation.id}
+              userIdCurrent={userId}
+              {...conversation}
+            />
+          ))}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -99,12 +83,11 @@ const styles = StyleSheet.create({
 
   // List
   content__FlatList: {
-    height: "100%",
+    height: "80%",
     width: "100%",
     display: "flex",
     backgroundColor: "#F7F7F7",
     justifyContent: "center",
-
     alignItems: "center",
     flexDirection: "column",
   },
@@ -148,19 +131,5 @@ const styles = StyleSheet.create({
   textSearch: {
     fontSize: 16,
     color: "#bebebe",
-  },
-  conversations_found: {
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  text_friend: {
-    fontSize: 18,
-    fontStyle: "italic",
-  },
-  imgMessage: {
-    resizeMode: "contain",
-    width: 60,
-    height: 60,
-    marginVertical: 20,
   },
 });

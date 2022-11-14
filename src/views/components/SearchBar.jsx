@@ -12,16 +12,11 @@ import Tooltip from "react-native-walkthrough-tooltip";
 import { headerBar } from "../../utils/color";
 import MenuIcon from "./MenuIcon";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { logout } from "../../redux/slices/UserSlice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+
 function SearchBar({ navigation, onClick }) {
   const [visible, setVisible] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
-  const { id: userId } = useSelector((state) => state.user.user);
-  const [logOut, setLogOut] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-  const dispatch = useDispatch();
 
   const onOpenSearch = () => {
     setIsSearch(true);
@@ -41,12 +36,6 @@ function SearchBar({ navigation, onClick }) {
     setVisible(!visible);
   };
   const handleOnClickAddGroup = () => {};
-
-  //
-  const handleLogout = () => {
-    dispatch(logout());
-    navigation.navigate("Login");
-  };
 
   return (
     <View style={styles.searchBar}>
@@ -92,16 +81,11 @@ function SearchBar({ navigation, onClick }) {
               title={"Tạo nhóm"}
               onPress={handleOnClickAddGroup}
             />
-            <MenuIcon
-              icon={<Ionicons name="log-in-outline" size={20} />}
-              title={"Đăng xuất"}
-              onPress={handleLogout}
-            />
           </>
         }
         placement={"bottom"}
         onClose={() => setVisible(!visible)}
-        contentStyle={{ width: 200, height: 120 }}
+        contentStyle={{ width: 200, height: 100 }}
         {...(Platform.OS === "ios"
           ? { tooltipStyle: { marginLeft: 17, marginTop: 10 } }
           : { tooltipStyle: { marginLeft: 17, marginTop: 0 } })}
@@ -116,6 +100,7 @@ function SearchBar({ navigation, onClick }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   searchBar: {
     height: 50,

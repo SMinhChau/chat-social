@@ -23,18 +23,17 @@ function TopBarChat({ name, navigation }) {
         </View>
       </View>
       <View style={[styles.rightBar, styles.row]}>
-        {/* Call */}
         <TouchableOpacity>
           <Ionicons name="call-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
-        {/* Video */}
+
         <TouchableOpacity>
           <Ionicons name="videocam-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
-        {/* 
+
         <TouchableOpacity>
           <Ionicons name="list-outline" size={24} style={styles.icon} />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </Header>
   );
@@ -43,6 +42,16 @@ function TopBarChat({ name, navigation }) {
 export default TopBarChat;
 
 const styles = StyleSheet.create({
+  // contentTop: {
+  //   height: 50,
+  //   width: "100%",
+  //   display: "flex",
+  //   alignItems: "center",
+  //   justifyContent: "flex-start",
+  //   flexDirection: "row",
+  //   backgroundColor: "#0068FF",
+  //   paddingHorizontal: 10,
+  // },
   content__left: {
     paddingLeft: 10,
     width: "50%",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, Platform, TextInput, TouchableOpacity } from "react-native";
+import { Image, Platform, TextInput } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
@@ -149,41 +149,29 @@ function InputMessage({ conversationId }) {
           />
         </View>
 
-        <View style={[styles.iconView]}>
-          <TouchableOpacity style={[styles.iconView_touch]}>
-            <Ionicons
-              onPress={sendMessage}
-              name="ios-paper-plane-outline"
-              size={24}
-              color="#0068FF"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.iconView_touch]}>
-            <Ionicons
-              name="image"
-              size={24}
-              color="#0068FF"
-              onPress={pickImage}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.iconView_touch]}>
-            <Ionicons
-              name="ios-link"
-              size={24}
-              color="#0068FF"
-              onPress={pickImage}
-            />
-          </TouchableOpacity>
-        </View>
+        <Ionicons
+          onPress={sendMessage}
+          style={styles.icon}
+          name="ios-paper-plane-outline"
+          size={24}
+          color="#0068FF"
+        />
+        <Ionicons
+          style={styles.iconRight}
+          name="image"
+          size={24}
+          color="#0068FF"
+          onPress={pickImage}
+        />
       </View>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        {/* {image && (
+        {image && (
           <Image
             source={{ uri: image }}
             resizeMode={"cover"}
             style={{ width: 200, height: 200 }}
           />
-        )} */}
+        )}
       </View>
     </View>
   );
@@ -198,8 +186,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
-    paddingHorizontal: 10,
-    justifyContent: "center",
+    // justifyContent: "center",
     backgroundColor: "#fff",
   },
   barInput: {
@@ -218,7 +205,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   inputView: {
-    width: "70%",
+    width: "75%",
     height: "100%",
   },
   rowCenter: {
@@ -227,23 +214,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    width: "95%",
+    width: "100%",
     height: "100%",
     fontSize: 18,
-
-    marginTop: 13,
+    paddingLeft: 8,
+    paddingRight: 8,
   },
   icon: {
     width: "10%",
     paddingRight: 5,
   },
-
-  iconView: {
-    justifyContent: "flex-start",
-    flexDirection: "row",
-  },
-  iconView_touch: {
-    paddingHorizontal: 3,
-    paddingVertical: 5,
-  },
+  iconLeft: {},
+  iconRight: {},
 });

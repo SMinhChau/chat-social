@@ -18,12 +18,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AvatarFriend from "../components/AvatarFriend";
 import { getMyFriends } from "../../redux/slices/FriendSlice";
 import { useDispatch } from "react-redux";
-import FriendRequest from "../components/Model/FriendRequest";
 
 function PhoneBooks({ navigation, onClick }) {
   const [isSearch, setIsSearch] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-  const [listFrient, setLisFrient] = useState([]);
+  const [listFrient, setLisFrient] = useState();
 
   const dispatch = useDispatch();
 
@@ -48,10 +47,8 @@ function PhoneBooks({ navigation, onClick }) {
   useEffect(() => {
     dispatch(getMyFriends()).then((data) => {
       setLisFrient(data.payload);
-      console.log("listFrient", data);
     });
   }, [dispatch]);
-
   return (
     <SafeAreaView style={[{ flex: 1 }]}>
       <View style={styles.searchBar}>
@@ -91,10 +88,7 @@ function PhoneBooks({ navigation, onClick }) {
       </View>
       <View style={styles.container}>
         <View style={[styles.conten, styles.flex]}>
-          <TouchableOpacity
-            style={styles.touch_frend}
-            onPress={() => navigation.navigate("FriendRequest")}
-          >
+          <TouchableOpacity style={styles.touch_frend} onpr>
             <View style={styles.button}>
               <Ionicons name="people-outline" size={30} color="#fff" />
             </View>
@@ -112,9 +106,8 @@ function PhoneBooks({ navigation, onClick }) {
             <FlatList
               style={[styles.contentFlatList]}
               data={listFrient}
-              renderItem={({ item, index }) => (
+              renderItem={({ item }) => (
                 <AvatarFriend
-                  key={index}
                   data={listFrient}
                   name={item.name}
                   avatar={item.avatar}
