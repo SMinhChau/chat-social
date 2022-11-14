@@ -17,7 +17,8 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUser } from "../../redux/slices/UserSlice";
 import { getToken } from "../../utils/function";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { useEffect } from "react";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function AccountInfo() {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ export default function AccountInfo() {
   const [coverUrl, setCoverUrl] = useState();
   const [checkAvatar, setCheckAvatar] = useState("");
   const [checkCover, setCheckCover] = useState("");
+  const [gender, setGender] = useState("");
 
   const onAvatarLibrary = useCallback(async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -79,6 +81,8 @@ export default function AccountInfo() {
           name: user.name,
           avatar: checkAvatar + avatarUrl,
           coverImage: user.coverImage,
+          dateOfBirth: user.dateOfBirth,
+          gender: user.gender,
           id: user.id,
         },
         {
@@ -104,6 +108,8 @@ export default function AccountInfo() {
           name: user.name,
           avatar: user.avatar,
           coverImage: checkCover + coverUrl,
+          dateOfBirth: user.dateOfBirth,
+          gender: user.gender,
           id: user.id,
         },
         {
@@ -115,7 +121,7 @@ export default function AccountInfo() {
       )
       .then((res) => {
         console.log("Res", res);
-        console.log("cập nhật avatar thành công");
+        console.log("cập nhật ảnh bìa thành công");
         dispatch(updateUser(res.data.data));
       })
       .catch((err) => console.log(err));
@@ -135,7 +141,53 @@ export default function AccountInfo() {
   //     }
   //   };
 
-  var getdate = user.dateOfBirth;
+  //Convert dateOfBirth
+  const [DateFormat, setDateFormat] = useState();
+  const convertDateOfBirth = () => {
+    const milliseconds = user.dateOfBirth;
+    const dateObject = new Date(milliseconds);
+    setDateFormat(
+      dateObject.getDate() +
+        "/" +
+        dateObject.getMonth() +
+        "/" +
+        dateObject.getFullYear()
+    );
+  };
+
+  //convert gender
+  const covertGender = () => {
+    if (user.gender === "true" || user.gender === true) {
+      setGender("Nam");
+    } else if (user.gender === "false" || user.gender === false) {
+      setGender("Nữ");
+    } else {
+      setGender("Khác");
+    }
+  };
+
+  const [data, setData] = useState();
+  async function FreshData() {
+    axios
+      .get(`${URL}/api/user/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          Accept: "application/json",
+        },
+      })
+      .then((res) => {
+        dispatch(setData(res.data));
+      })
+      .catch((err) => {
+        console.log("error:", err);
+      });
+  }
+
+  useEffect(() => {
+    FreshData();
+    covertGender();
+    convertDateOfBirth();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -203,12 +255,17 @@ export default function AccountInfo() {
 
         <View style={styles.itemInfo}>
           <Text style={styles.titleInfo}>Giới tính:</Text>
-          <Text style={styles.titleName}>{user.gender}</Text>
+          <Text style={styles.titleName}>{gender}</Text>
         </View>
 
         <View style={styles.itemInfo}>
           <Text style={styles.titleInfo}>Ngày Sinh:</Text>
-          <Text style={styles.titleName}>{getdate}</Text>
+          <Text style={styles.titleName}>{DateFormat}</Text>
+        </View>
+
+        <View style={styles.itemInfo}>
+          <Text style={styles.titleInfo}>Số điện thoại:</Text>
+          <Text style={styles.titleName}>{user.phoneNumber}</Text>
         </View>
       </View>
 
@@ -223,6 +280,18 @@ export default function AccountInfo() {
         onClose={() => setVisibleBG(false)}
         onImageLibraryPress={onBacgroundLibrary}
       />
+
+      <View style={styles.containerBtnEdit}>
+        <TouchableOpacity
+          style={styles.buttonEdit}
+          onPress={() => {
+            navigation.navigate("EditAccountInfo");
+          }}
+        >
+          <Text style={styles.textBtnName}>Chỉnh sửa</Text>
+          <Ionicons style={{ fontSize: 25 }} name="create-outline"></Ionicons>
+        </TouchableOpacity>
+      </View>
 
       {/* button back */}
       <View style={styles.title}>
@@ -364,20 +433,43 @@ const styles = StyleSheet.create({
   itemInfo: {
     width: "90%",
     height: 40,
-    marginBottom: 15,
     marginLeft: 20,
     flexDirection: "row",
     alignItems: "center",
   },
 
   titleInfo: {
-    width: 100,
+    width: 130,
     fontSize: 17,
     fontWeight: "bold",
   },
 
   titleName: {
-    width: 265,
+    width: 250,
     fontSize: 17,
+    marginLeft: 20,
+  },
+
+  buttonEdit: {
+    width: "80%",
+    height: 35,
+    borderRadius: 30,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#c0c0c0",
+  },
+
+  containerBtnEdit: {
+    width: "100%",
+    height: 35,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  textBtnName: {
+    fontSize: 17,
+    marginHorizontal: 10,
   },
 });
