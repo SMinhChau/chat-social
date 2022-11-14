@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Alert, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import axios from "axios";
@@ -6,30 +6,28 @@ import { URL, AvatarDefault } from "../../../utils/constant";
 import { getToken } from "../../../utils/function";
 import { useState } from "react";
 import { bgborder } from "../../../utils/color";
+import { useDispatch } from "react-redux";
+import { handleSendToUser } from "../../../redux/slices/FriendSlice";
 
 function AddFrientItem({ name, content, avatar, curentUser, id }) {
   const [isLoading, setIsLoading] = useState(false);
-
+  const [icon, setIcon] = useState(true);
+  const dispatch = useDispatch();
   // Send request to user
+
   const handleAddFriend = async () => {
     setIsLoading(true);
-    console.log(id);
-    const data = await axios
-      .post(
-        `${URL}/api/friend-request/send-to-user/${id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${await getToken()}`,
-            Accept: "application/json",
-          },
-        }
-      )
-      .catch((err) => console.log(err));
 
-    if (data.code === 200) {
-      console.log("Gửi lời mời thành công");
-    }
+    dispatch(handleSendToUser(id)).then((data) => {
+      if (data.code == 200) {
+        Alert.alert("Gửi lời mời thành công");
+        setIcon(false);
+      } else {
+        setIcon(false);
+        Alert.alert("Đã gửi lời mời");
+      }
+    });
+
     setIsLoading(false);
   };
 
@@ -45,15 +43,16 @@ function AddFrientItem({ name, content, avatar, curentUser, id }) {
       </View>
 
       <View style={styles.container__Right}>
-        <TouchableOpacity>
-          <Ionicons
-            name="person-add-outline"
-            size={30}
-            size={24}
-            style={styles.icon}
-            onPress={handleAddFriend}
-          />
-        </TouchableOpacity>
+        {icon ? (
+          <TouchableOpacity>
+            <Ionicons
+              name="person-add-outline"
+              size={24}
+              style={styles.icon}
+              onPress={handleAddFriend}
+            />
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );

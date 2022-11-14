@@ -84,6 +84,7 @@ function AddFriend({ navigation }) {
       onSubmit: (values) => {
         onFinishFindFriend(values);
       },
+      initialValues: { phone: "" },
     });
 
   //  Search
