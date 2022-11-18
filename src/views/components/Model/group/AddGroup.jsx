@@ -9,19 +9,29 @@ import {
   Image,
   CheckBox,
   Button,
+  FlatList,
 } from "react-native";
 import React, { useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { AvatarDefault } from "../../../../utils/constant";
 import * as ImagePicker from "expo-image-picker";
-import { subprimaryColor } from "../../../../utils/color";
+import { headerBar, subprimaryColor } from "../../../../utils/color";
 import { Formik } from "formik";
-import Checkbox from "./Checkbox ";
+
+import { useDispatch } from "react-redux";
+import { getMyFriends } from "../../../../redux/slices/FriendSlice";
+
+import { useEffect } from "react";
+import AddFriendGroup from "./AddFriendGroup";
+
 function AddGroup({ navigation }) {
   const [image, setImage] = useState(null);
   const [groupName, setGroupName] = useState("");
   const [avatar, setAvater] = useState(null);
 
+  const [listFrient, setLisFrient] = useState([]);
+
+  const dispatch = useDispatch();
   //👇🏻 Function that closes the Modal component
   const closeModal = () => {
     navigation.navigate("home");
@@ -41,13 +51,19 @@ function AddGroup({ navigation }) {
       aspect: [4, 3],
       quality: 1,
     });
-
     console.log(result);
-
     if (!result.canceled) {
       setImage(result.uri);
     }
   };
+
+  // Get list Friend
+  useEffect(() => {
+    dispatch(getMyFriends()).then((data) => {
+      setLisFrient(data.payload);
+      console.log("listFrient", data.payload);
+    });
+  }, [dispatch]);
 
   return (
     <SafeAreaView style={styles.modalContainer}>
@@ -105,8 +121,27 @@ function AddGroup({ navigation }) {
 
       <View style={styles.line}></View>
       {/* List Friend */}
-      <View>
-        <Text>Danh bạ</Text>
+      <View style={styles.box}>
+        <Text style={styles.box_title}>Danh bạ</Text>
+        {listFrient ? (
+          <FlatList
+            style={[styles.contentFlatList]}
+            data={listFrient}
+            renderItem={({ item, index }) => (
+              <AddFriendGroup
+                key={index}
+                data={listFrient}
+                navigation={navigation}
+                name={item.name}
+                avatar={item.avatar}
+                id={item.id}
+                keyExtractor={(item, index) => index}
+              />
+            )}
+          />
+        ) : (
+          <Text style={styles.text_friend}>Chưa có bạn bè</Text>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -132,6 +167,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     fontWeight: "500",
   },
+
   content: {
     width: "100%",
     paddingHorizontal: 10,
@@ -187,5 +223,14 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 2,
     backgroundColor: "gray",
+  },
+  box: {
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+  box_title: {
+    fontSize: 20,
+    color: `${headerBar}`,
+    fontWeight: "600",
   },
 });
