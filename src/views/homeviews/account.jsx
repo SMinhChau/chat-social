@@ -4,19 +4,16 @@ import {
   SafeAreaView,
   Text,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import React, {useState} from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { useSelector} from 'react-redux';
-import { images } from '../../imgs/index'
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { images } from "../../imgs/index";
 
-
-export default function Account() {
-
-  const navigation = useNavigation();
-  const user = useSelector(state => state.user.user);
+export default function Account({ navigation }) {
+  const user = useSelector((state) => state.user.user);
   const [imageUri, setImageUri] = useState(user.avatar);
 
   return (
@@ -37,11 +34,18 @@ export default function Account() {
           />
         </TouchableOpacity>
       </View>
-    
-      <TouchableOpacity style={styles.buttonAccount} onPress={() => {navigation.navigate('AccountInfo')}}> 
-        {imageUri ?
-          <Image source={{uri: user.avatar}} style={styles.imgAccount}/> :
-          <Image source={images.avatar} style={styles.imgAccount}/>}
+
+      <TouchableOpacity
+        style={styles.buttonAccount}
+        onPress={() => {
+          navigation.navigate("AccountInfo");
+        }}
+      >
+        {imageUri ? (
+          <Image source={{ uri: user.avatar }} style={styles.imgAccount} />
+        ) : (
+          <Image source={images.avatar} style={styles.imgAccount} />
+        )}
 
         <View>
           <Text style={{ fontSize: 17 }}>{user.name}</Text>
@@ -69,7 +73,10 @@ export default function Account() {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.buttonOption}>
+      <TouchableOpacity
+        style={styles.buttonOption}
+        onPress={() => navigation.navigate("AccountSercuriery")}
+      >
         <Ionicons name="key-outline" style={styles.iconButton} />
         <View style={styles.textAccount}>
           <Text style={{ fontSize: 17 }}>Tài khoản và bảo mật</Text>

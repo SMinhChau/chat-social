@@ -86,8 +86,9 @@ const UserSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.user = null;
-      state.isSuccess = false;
+      AsyncStorage.removeItem("user");
+      // state.user = null;
+      // state.isSuccess = false;
     },
   },
   extraReducers: (builder) => {

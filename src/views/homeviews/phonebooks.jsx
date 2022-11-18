@@ -48,7 +48,7 @@ function PhoneBooks({ navigation, onClick }) {
   useEffect(() => {
     dispatch(getMyFriends()).then((data) => {
       setLisFrient(data.payload);
-      console.log("listFrient", data);
+      console.log("listFrient", data.payload);
     });
   }, [dispatch]);
 
@@ -116,6 +116,7 @@ function PhoneBooks({ navigation, onClick }) {
                 <AvatarFriend
                   key={index}
                   data={listFrient}
+                  navigation={navigation}
                   name={item.name}
                   avatar={item.avatar}
                   id={item.id}

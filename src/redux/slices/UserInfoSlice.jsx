@@ -3,11 +3,10 @@ import { getToken } from "../../utils/function";
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 const { default: axios } = require("axios");
 
-// First, create the thunk
+// Get infor user join conservation
 export const fetchUserSenderById = createAsyncThunk(
   "info/fetchUserInfo",
   async (id, thunkAPI) => {
-    console.log(" redux id", id);
     try {
       const data = await axios.get(`${URL}/api/user/${id}`, {
         headers: {
@@ -15,11 +14,27 @@ export const fetchUserSenderById = createAsyncThunk(
           Accept: "application/json",
         },
       });
-
-      // console.log("Slide", data.data);
       return data.data;
     } catch (error) {
       console.log(error);
+    }
+  }
+);
+
+// Change PassWord
+export const handleChangePassword = createAsyncThunk(
+  "info/handleChangePassword",
+  async (data, thunkAPI) => {
+    try {
+      const res = await axios.post(`${URL}/api/user/change-password`, data, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          Accept: "application/json",
+        },
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log("error", `Change Password: ${error.message}`);
     }
   }
 );
@@ -36,6 +51,12 @@ const UserInfoSlice = createSlice({
     builder.addCase(fetchUserSenderById.fulfilled, (state, action) => {
       state.info = action.payload;
       state.status = "idle";
+    });
+    builder.addCase(handleChangePassword.pending, (state, { payload }) => {
+      state.status = "loading";
+    });
+    builder.addCase(handleChangePassword.fulfilled, (state, action) => {
+      state.info = action.payload;
     });
   },
 });
