@@ -40,7 +40,9 @@ function ContentMyMessage({ message }) {
                     <Text style={styles.createAt}>
                       {moment(new Date(message.timeSend)).format("LT")}
                     </Text>
-                  ) : null}
+                  ) : (
+                    ""
+                  )}
                 </View>
               </View>
             </View>

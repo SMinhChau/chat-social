@@ -55,9 +55,9 @@ export default function Home({
 
   return (
     <SafeAreaView style={styles.home__content}>
-      <SearchBar navigation={navigation} />
+      <SearchBar navigation={navigation} user={userId} />
       <View style={styles.content__FlatList}>
-        {conversations ? (
+        {conversations.length ? (
           <ScrollView style={styles.scrollView} horizontal={false}>
             <>
               {conversations.map((conversation, index) => (

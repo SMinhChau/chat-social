@@ -58,10 +58,10 @@ export default function Login({ navigation }) {
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
       validationSchema: LoginSchema,
-      initialValues: { phoneNumber: "", password: "" },
+      initialValues: { phoneNumber: "0795811111", password: "123" },
       onSubmit: (values) => {
         onFinish(values);
-        // console.log("Login form " + values);
+        console.log("Login form " + values);
       },
     });
 

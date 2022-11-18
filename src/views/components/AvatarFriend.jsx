@@ -35,7 +35,7 @@ function AvatarFriend({ name, avatar, id, navigation }) {
 
   // Change To Screen Info
   const handleGetInfo = () => {
-    navigation.navigate("AccountInfo");
+    navigation("AccountInfo");
   };
 
   return (

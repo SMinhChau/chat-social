@@ -15,12 +15,14 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { logout } from "../../redux/slices/UserSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-function SearchBar({ navigation, onClick }) {
+import AddGroup from "./Model/group/AddGroup";
+// import { store } from "../../redux/store";
+function SearchBar({ navigation }) {
   const [visible, setVisible] = useState(false);
+  const [visibleModel, setVisibleModel] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
-  const { id: userId } = useSelector((state) => state.user.user);
-  const [logOut, setLogOut] = useState(false);
   const [searchInput, setSearchInput] = useState("");
+
   const dispatch = useDispatch();
 
   const onOpenSearch = () => {
@@ -40,80 +42,85 @@ function SearchBar({ navigation, onClick }) {
     navigation.navigate("AddFriend");
     setVisible(!visible);
   };
-  const handleOnClickAddGroup = () => {};
 
-  //
+  const handlaNewGroup = () => {
+    navigation.navigate("AddGroup");
+    setVisible(!visible);
+  };
+
   const handleLogout = () => {
     dispatch(logout());
     navigation.navigate("Login");
   };
 
   return (
-    <View style={styles.searchBar}>
-      {isSearch === true ? (
-        <>
-          <Icon
-            name="arrow-left"
-            size={24}
-            color="#fff"
-            onPress={onHideSearch}
-          />
-          <View style={styles.inputSearch}>
-            <TextInput
-              placeholder="Tìm kiếm"
-              value={searchInput}
-              onChangeText={handleSearchInput}
-            />
-          </View>
-        </>
-      ) : (
-        <>
-          <Icon name="magnify" size={24} color="#fff" />
-          <View style={styles.textSearch}>
-            <Text style={styles.textSearch} onPress={onOpenSearch}>
-              Tìm Kiếm
-            </Text>
-          </View>
-        </>
-      )}
-
-      <Tooltip
-        isVisible={visible}
-        content={
+    <>
+      <View style={styles.searchBar}>
+        {isSearch === true ? (
           <>
-            <MenuIcon
-              icon={<Ionicons name="person-add-outline" size={20} />}
-              title={"Thêm bạn"}
-              onPress={handleOnClickAdd}
-              onClose={() => handleCancel(false)}
+            <Icon
+              name="arrow-left"
+              size={24}
+              color="#fff"
+              onPress={onHideSearch}
             />
-            <MenuIcon
-              icon={<Ionicons name="people-outline" size={20} />}
-              title={"Tạo nhóm"}
-              onPress={handleOnClickAddGroup}
-            />
-            <MenuIcon
-              icon={<Ionicons name="log-in-outline" size={20} />}
-              title={"Đăng xuất"}
-              onPress={handleLogout}
-            />
+            <View style={styles.inputSearch}>
+              <TextInput
+                placeholder="Tìm kiếm"
+                value={searchInput}
+                onChangeText={handleSearchInput}
+              />
+            </View>
           </>
-        }
-        placement={"bottom"}
-        onClose={() => setVisible(!visible)}
-        contentStyle={{ width: 200, height: 120 }}
-        {...(Platform.OS === "ios"
-          ? { tooltipStyle: { marginLeft: 17, marginTop: 10 } }
-          : { tooltipStyle: { marginLeft: 17, marginTop: 0 } })}
-      >
-        <Icon
-          name="plus"
-          size={30}
-          color="#fff"
-          onPress={() => setVisible(true)}
-        />
-      </Tooltip>
-    </View>
+        ) : (
+          <>
+            <Icon name="magnify" size={24} color="#fff" />
+            <View style={styles.textSearch}>
+              <Text style={styles.textSearch} onPress={onOpenSearch}>
+                Tìm Kiếm
+              </Text>
+            </View>
+          </>
+        )}
+
+        <Tooltip
+          isVisible={visible}
+          content={
+            <>
+              <MenuIcon
+                icon={<Ionicons name="person-add-outline" size={20} />}
+                title={"Thêm bạn"}
+                onPress={handleOnClickAdd}
+                onClose={() => handleCancel(false)}
+              />
+              <MenuIcon
+                icon={<Ionicons name="people-outline" size={20} />}
+                title={"Tạo nhóm"}
+                onPress={handlaNewGroup}
+              />
+              <MenuIcon
+                icon={<Ionicons name="log-in-outline" size={20} />}
+                title={"Đăng xuất"}
+                onPress={handleLogout}
+              />
+            </>
+          }
+          placement={"bottom"}
+          onClose={() => setVisible(!visible)}
+          contentStyle={{ width: 200, height: 120 }}
+          {...(Platform.OS === "ios"
+            ? { tooltipStyle: { marginLeft: 17, marginTop: 10 } }
+            : { tooltipStyle: { marginLeft: 17, marginTop: 0 } })}
+        >
+          <Icon
+            name="plus"
+            size={30}
+            color="#fff"
+            onPress={() => setVisible(true)}
+          />
+        </Tooltip>
+      </View>
+    </>
   );
 }
 const styles = StyleSheet.create({

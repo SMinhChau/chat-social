@@ -18,6 +18,7 @@ import { updateContentChat } from "../../../../redux/slices/ChatSlice";
 function InputMessage({ conversationId }) {
   const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
+  const [file, setFile] = useState(null);
 
   const dispatch = useDispatch();
   const handleSetInput = (value) => {
@@ -129,6 +130,18 @@ function InputMessage({ conversationId }) {
     }
   };
 
+  //
+  const pickFile = async () => {
+    let result = await DocumentPicker.getDocumentAsync({
+      copyToCacheDirectory: false,
+      type: "*/*",
+    });
+    console.log(result);
+    if (!result.canceled) {
+      setFile(result.uri);
+    }
+  };
+
   return (
     <View style={styles.contentTop}>
       <View style={styles.barInput}>
@@ -171,7 +184,7 @@ function InputMessage({ conversationId }) {
               name="ios-link"
               size={24}
               color="#0068FF"
-              onPress={pickImage}
+              onPress={pickFile}
             />
           </TouchableOpacity>
         </View>

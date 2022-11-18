@@ -63,7 +63,7 @@ export const updateStatusFriendsRequest = createAsyncThunk(
   }
 );
 
-// First, create the thunk
+// Send request Friend to User
 export const handleSendToUser = createAsyncThunk(
   "info/handleSendToUser",
   async (id, thunkAPI) => {
