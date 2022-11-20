@@ -8,8 +8,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Header from "../../components/Header";
 
 function TopBarChat({ name, navigation }) {
-  const [btnColor, setBtnColor] = useState("red");
-
   return (
     <Header
       onPress={() => {
@@ -31,10 +29,14 @@ function TopBarChat({ name, navigation }) {
         <TouchableOpacity>
           <Ionicons name="videocam-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
-        {/* 
-        <TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("InfoChat", { nameChat: name });
+          }}
+        >
           <Ionicons name="list-outline" size={24} style={styles.icon} />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </Header>
   );

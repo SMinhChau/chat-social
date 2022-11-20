@@ -3,7 +3,7 @@ import { View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import axios from "axios";
 import { URL, AvatarDefault } from "../../../../utils/constant";
-import { getToken } from "../../../../utils/function";
+
 import { useState } from "react";
 import { bgColor, bg_item_frient, headerBar } from "../../../../utils/color";
 

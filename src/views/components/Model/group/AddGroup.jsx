@@ -61,14 +61,13 @@ function AddGroup({ navigation }) {
   useEffect(() => {
     dispatch(getMyFriends()).then((data) => {
       setLisFrient(data.payload);
-      console.log("listFrient", data.payload);
     });
   }, [dispatch]);
 
   return (
     <SafeAreaView style={styles.modalContainer}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="close-outline" size={30} />
         </TouchableOpacity>
         <Text style={styles.title}>Nhóm mới</Text>
