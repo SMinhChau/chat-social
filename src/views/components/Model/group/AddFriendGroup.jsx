@@ -7,23 +7,28 @@ import { getToken } from "../../../../utils/function";
 import { useState } from "react";
 import { bgColor, bg_item_frient, headerBar } from "../../../../utils/color";
 
-function AddFriendGroup({ name, avatar }) {
-  const [isLoading, setIsLoading] = useState(false);
+function AddFriendGroup({id,name, avatar,getListIdMemberCreate}) {
   const [checked, setChecked] = useState(false);
 
+  const handleCheck = () => {
+    setChecked((!checked));
+    getListIdMemberCreate(!checked,id);
+  }
+
+
   return (
-    <TouchableOpacity style={styles.container} onPress={() => setChecked(true)}>
+    <TouchableOpacity style={styles.container} onPress={handleCheck}>
       {checked ? (
         <Ionicons
           style={{ marginLeft: 10 }}
-          name={"radio-button-off-outline"}
+          name={"radio-button-on-outline"}
           size={25}
           color="#6BC185"
         />
       ) : (
         <Ionicons
           style={{ marginLeft: 10 }}
-          name={"md-radio-button-on-outline"}
+          name={"md-radio-button-off-outline"}
           size={25}
           color="#6BC185"
         />
@@ -61,6 +66,8 @@ const styles = StyleSheet.create({
     width: 45,
     borderRadius: 50,
     marginHorizontal: 15,
+    borderWidth:1,
+    borderColor: 'black'
   },
   container_name: {
     fontSize: 20,
