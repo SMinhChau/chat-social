@@ -28,7 +28,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 
-function ChatItem({ route, memberGroup, navigation }) {
+function ChatItem({ route, memberGroup, navigation, avatarChat }) {
   // Get all chat conversation
   const { userChat } = useSelector((state) => state.userChat);
   const { chat } = useSelector((state) => state.chat);

@@ -82,13 +82,6 @@ function InfoChat({ navigation, route }) {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="people" size={30} />
             </TouchableOpacity>
-            <Text style={styles.top_icon}>Tìm kiếm</Text>
-          </View>
-
-          <View style={styles._icon}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Ionicons name="people" size={30} />
-            </TouchableOpacity>
             <Text style={styles.top_icon}>Thêm thành viên</Text>
           </View>
         </View>
@@ -171,8 +164,7 @@ const styles = StyleSheet.create({
   flatList_icon: {
     width: "80%",
     flexDirection: "row",
-    flexDirection: "row",
-    backgroundColor: "pink",
+    justifyContent: "center",
   },
   item_name_icon: {
     width: 100,

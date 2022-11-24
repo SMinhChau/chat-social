@@ -52,7 +52,7 @@ export default function Zolo({ navigation }) {
                 />
               </TouchableOpacity>
               <Text style={[styles.text, styles.text_shadow]}>
-                Chào mừng bạn!
+                Bing Chiling
               </Text>
             </View>
           </Animated.View>

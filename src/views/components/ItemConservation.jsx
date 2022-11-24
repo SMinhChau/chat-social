@@ -34,6 +34,7 @@ function ItemConservation({
   const handleChangeChat = () => {
     navigation.navigate("Chats", {
       name: getNameConversation(),
+      avatarChat: avatar,
     });
     dispatch(getChatByConversationID(id));
     dispatch(

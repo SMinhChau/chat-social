@@ -25,10 +25,6 @@ function TabsScreen() {
                 : "chatbubble-ellipses-outline";
             } else if (route.name === "Danh bạ") {
               iconName = focused ? "md-call" : "md-call";
-            } else if (route.name === "Khám phá") {
-              iconName = focused
-                ? "color-palette-sharp"
-                : "color-palette-outline";
             } else if (route.name === "Nhật ký") {
               iconName = focused ? "time" : "time-outline";
             } else if (route.name === "Cá nhân") {
@@ -52,11 +48,6 @@ function TabsScreen() {
         <Tab.Screen
           name="Danh bạ"
           component={PhoneBooks}
-          options={{ headerShown: false, tabBarVisible: false }}
-        />
-        <Tab.Screen
-          name="Khám phá"
-          component={Login}
           options={{ headerShown: false, tabBarVisible: false }}
         />
 
