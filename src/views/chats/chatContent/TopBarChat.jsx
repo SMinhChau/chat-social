@@ -16,7 +16,7 @@ function TopBarChat({ name, navigation }) {
     >
       <View style={styles.content__left}>
         <View style={[styles.cotentText, styles.rowCenter]}>
-          <Text style={styles.nameText}>{name}</Text>
+          <Text style={styles.nameText} numberOfLines={1} textAlignVertical="top">{name}</Text>
           <Text style={styles.timeView}>2 phút</Text>
         </View>
       </View>

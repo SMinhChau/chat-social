@@ -79,10 +79,13 @@ function InfoChat({ navigation, route }) {
         <Text style={styles.name_Chat}>{nameChat}</Text>
         <View style={styles.flatList_icon}>
           <View style={styles._icon}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity
+              style={styles.tuoch_icon}
+              onPress={() => navigation.goBack()}
+            >
               <Ionicons name="people" size={30} />
+              <Text style={styles.top_icon}>Thêm thành viên</Text>
             </TouchableOpacity>
-            <Text style={styles.top_icon}>Thêm thành viên</Text>
           </View>
         </View>
       </View>
@@ -170,4 +173,9 @@ const styles = StyleSheet.create({
     width: 100,
   },
   _icon: {},
+  tuoch_icon: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });

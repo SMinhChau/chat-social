@@ -19,6 +19,8 @@ import { updateUser } from "../../redux/slices/UserSlice";
 import { getToken } from "../../utils/function";
 import { useEffect } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Header from "../components/Header";
+import { primaryColor } from "../../utils/color";
 
 export default function AccountInfo() {
   const dispatch = useDispatch();
@@ -191,6 +193,13 @@ export default function AccountInfo() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <Text style={styles.title}>Cập nhật thông tin </Text>
+      </Header>
       {/* cover image */}
       <View style={styles.backgroundImg}>
         {coverUri ? (
@@ -294,7 +303,7 @@ export default function AccountInfo() {
       </View>
 
       {/* button back */}
-      <View style={styles.title}>
+      {/* <View style={styles.title}>
         <TouchableOpacity
           style={styles.touchBack}
           onPress={() => {
@@ -306,7 +315,7 @@ export default function AccountInfo() {
             style={styles.imgIcon}
           />
         </TouchableOpacity>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 }
@@ -491,5 +500,11 @@ const styles = StyleSheet.create({
   textBtnName: {
     fontSize: 17,
     marginHorizontal: 10,
+  },
+  title: {
+    paddingLeft: 20,
+    fontSize: 22,
+    fontWeight: "500",
+    color: `${primaryColor}`,
   },
 });
