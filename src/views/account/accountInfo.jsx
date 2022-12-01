@@ -46,7 +46,7 @@ export default function AccountInfo() {
       base64: true,
     });
 
-    console.log("avatar image", result.uri);
+    // console.log("avatar image", result.uri);
     setCheckAvatar(result.uri);
     //   onCheckImg();
     setAvatarUrl(result.base64);
@@ -65,7 +65,7 @@ export default function AccountInfo() {
       base64: true,
     });
 
-    console.log("cover image", result.uri);
+    // console.log("cover image", result.uri);
     setCheckCover(result.uri);
     // onCheckCover();
     setCoverUrl(result.base64);
@@ -95,7 +95,7 @@ export default function AccountInfo() {
         }
       )
       .then((res) => {
-        console.log("Res", res);
+        // console.log("Res", res);
         console.log("cập nhật avatar thành công");
         dispatch(updateUser(res.data.data));
       })
@@ -122,7 +122,7 @@ export default function AccountInfo() {
         }
       )
       .then((res) => {
-        console.log("Res", res);
+        // console.log("Res", res);
         console.log("cập nhật ảnh bìa thành công");
         dispatch(updateUser(res.data.data));
       })
@@ -198,7 +198,7 @@ export default function AccountInfo() {
           navigation.goBack();
         }}
       >
-        <Text style={styles.title}>Cập nhật thông tin </Text>
+        <Text style={styles.title}>Trang cá nhân</Text>
       </Header>
       {/* cover image */}
       <View style={styles.backgroundImg}>

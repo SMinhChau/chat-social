@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
           let userInfo = res.data.data;
           setUserInfo(userInfo);
           global.userInfo = userInfo;
-          console.log(userInfo);
+          // console.log(userInfo);
           AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
           navigation.navigate("Home");
         } else {

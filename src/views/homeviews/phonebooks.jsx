@@ -8,6 +8,7 @@ import {
   Platform,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -24,6 +25,7 @@ function PhoneBooks({ navigation, onClick }) {
   const [isSearch, setIsSearch] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [listFrient, setLisFrient] = useState([]);
+  const [isloading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -43,13 +45,13 @@ function PhoneBooks({ navigation, onClick }) {
   const handleOnClickAdd = () => {
     navigation.navigate("AddFriend");
   };
-  const handleOnClickAddGroup = () => {};
 
   useEffect(() => {
+    setLoading(false);
     dispatch(getMyFriends()).then((data) => {
       setLisFrient(data.payload);
-      console.log("listFrient", data.payload);
     });
+    setLoading(false);
   }, [dispatch]);
 
   return (
@@ -108,24 +110,34 @@ function PhoneBooks({ navigation, onClick }) {
           </View>
 
           {/* Flatalist */}
-          {listFrient ? (
-            <FlatList
-              style={[styles.contentFlatList]}
-              data={listFrient}
-              renderItem={({ item, index }) => (
-                <AvatarFriend
-                  key={index}
-                  data={listFrient}
-                  navigation={navigation}
-                  name={item.name}
-                  avatar={item.avatar}
-                  id={item.id}
-                  keyExtractor={(item, index) => index}
-                />
-              )}
-            />
+          {isloading ? (
+            <>
+              <View style={[]}>
+                <ActivityIndicator size={"small"} />
+              </View>
+            </>
           ) : (
-            <Text style={styles.text_friend}>Chưa có bạn bè</Text>
+            <>
+              {listFrient ? (
+                <FlatList
+                  style={[styles.contentFlatList]}
+                  data={listFrient}
+                  renderItem={({ item, index }) => (
+                    <AvatarFriend
+                      key={index}
+                      data={listFrient}
+                      navigation={navigation}
+                      name={item.name}
+                      avatar={item.avatar}
+                      id={item.id}
+                      keyExtractor={(item, index) => index}
+                    />
+                  )}
+                />
+              ) : (
+                <Text style={styles.text_friend}>Chưa có bạn bè</Text>
+              )}
+            </>
           )}
         </View>
       </View>

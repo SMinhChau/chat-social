@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   Image,
   SafeAreaView,
@@ -12,13 +13,22 @@ import { AvatarDefault } from "../../../utils/constant";
 import Header from "../../components/Header";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState } from "react";
+import {
+  getConversationAllByToken,
+  handleMemberOutGroup,
+} from "../../../redux/slices/ConversationSlice";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { updateUserChat } from "../../../redux/slices/UserChatSlice";
+import { getToken } from "../../../utils/function";
 
-const Item = ({ title, action }) => (
+const Item = ({ title, action, colorItem }) => (
   <>
     <TouchableOpacity onPress={() => action(title.slug)} style={[styles.item]}>
-      <Text style={[styles.item_name]}>
-        <Ionicons name={title.icon} size={24} /> {title.name}
-      </Text>
+      <View style={[styles.item_View, { color: colorItem ? "red" : "" }]}>
+        <Ionicons name={title.icon} size={24} color={title.color} />
+        <Text style={styles.item_name}>{title.name}</Text>
+      </View>
       <View>
         <Ionicons name="chevron-forward" size={24} />
       </View>
@@ -27,20 +37,17 @@ const Item = ({ title, action }) => (
   </>
 );
 
-const ItemIcon = ({ title, action }) => (
-  <>
-    <TouchableOpacity
-      onPress={() => action(title.slug)}
-      style={[styles.item_icon]}
-    >
-      <Ionicons name={title.icon} size={24} />
-      <Text style={[styles.item_name_icon]}>{title.name}</Text>
-    </TouchableOpacity>
-  </>
-);
-
 function InfoChat({ navigation, route }) {
-  const { nameChat } = route.params;
+  const { InfoChat } = route.params;
+  const { avatarGroup } = route.params;
+  const { adminId } = route.params;
+  const { userChatId } = route.params;
+  const { conversationType } = route.params;
+  const { conversationId } = route.params;
+
+  const dispatch = useDispatch();
+  const [isloading, setIsLoading] = useState(false);
+  const { userChat } = useSelector((state) => state.userChat);
 
   const [menu, setMenu] = useState([
     {
@@ -51,10 +58,10 @@ function InfoChat({ navigation, route }) {
     },
 
     {
-      id: 1,
-      name: "Xem thành viên",
-      slug: "AddGroup",
-      icon: "people-outline",
+      id: 2,
+      name: "Cài đặt cá nhân",
+      slug: "AccountInfo",
+      icon: "settings-outline",
     },
   ]);
 
@@ -62,7 +69,9 @@ function InfoChat({ navigation, route }) {
     navigation.navigate(data);
   };
 
-  const renderItem = ({ item }) => <Item title={item} action={actionHandler} />;
+  const renderItem = ({ item }) => (
+    <Item title={item} action={actionHandler} colorItem={item.color} />
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,23 +84,72 @@ function InfoChat({ navigation, route }) {
       </Header>
 
       <View style={styles.top}>
-        <Image source={{ uri: AvatarDefault }} style={styles.imgMessage} />
-        <Text style={styles.name_Chat}>{nameChat}</Text>
+        {avatarGroup ? (
+          <Image source={{ uri: avatarGroup }} style={styles.imgMessage} />
+        ) : (
+          <Image source={{ uri: AvatarDefault }} style={styles.imgMessage} />
+        )}
+
+        <Text
+          style={styles.name_Chat}
+          numberOfLines={1}
+          textAlignVertical="top"
+        >
+          {InfoChat}
+        </Text>
         <View style={styles.flatList_icon}>
           <View style={styles._icon}>
             <TouchableOpacity
               style={styles.tuoch_icon}
               onPress={() => navigation.goBack()}
             >
-              <Ionicons name="people" size={30} />
-              <Text style={styles.top_icon}>Thêm thành viên</Text>
+              {conversationType == 1 ? (
+                <>
+                  <Ionicons name="people" size={30} />
+                  <Text style={styles.top_icon}>Thêm thành viên</Text>
+                </>
+              ) : (
+                <>
+                  <Ionicons name="settings-outline" size={30} />
+                  <Text style={styles.top_icon}>Cá nhân</Text>
+                </>
+              )}
             </TouchableOpacity>
           </View>
         </View>
       </View>
 
       <View style={styles.line}></View>
-      {/*  */}
+
+      {/* To Manager Member Group*/}
+      <View style={[styles.item_out]}>
+        <TouchableOpacity
+          style={[styles.item]}
+          onPress={() => {
+            navigation.navigate("GroupManage", {
+              adminId,
+              userChatId,
+              conversationId,
+            });
+          }}
+        >
+          <Text style={[styles.item_name]}>
+            <Ionicons
+              name={
+                conversationType == 1 ? "people-outline" : "person-add-outline"
+              }
+              size={24}
+            />
+            {conversationType == 1 ? "Xem thành viên" : "Thêm vào nhóm"}
+          </Text>
+          <View>
+            <Ionicons name="chevron-forward" size={24} />
+          </View>
+        </TouchableOpacity>
+        <View style={styles.line_item}></View>
+      </View>
+
+      {/* Menu */}
       <View style={styles.flatList}>
         <FlatList
           data={menu}
@@ -160,8 +218,15 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "space-between",
   },
+  item_View: {
+    flexDirection: "row",
+
+    alignItems: "center",
+  },
   item_name: {
+    paddingLeft: 10,
     fontSize: 18,
+    textAlign: "center",
   },
   //   item_icon
   flatList_icon: {
@@ -177,5 +242,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+  },
+  item_out: {
+    width: "100%",
+    paddingHorizontal: 20,
   },
 });

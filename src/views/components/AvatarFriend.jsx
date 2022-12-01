@@ -13,7 +13,7 @@ function AvatarFriend({ name, avatar, id, navigation }) {
   // Send request to user
   const handleAddFriend = async () => {
     setIsLoading(true);
-    console.log(id);
+    // console.log(id);
     const data = await axios
       .post(
         `${URL}/api/friend-request/send-to-user/${id}`,

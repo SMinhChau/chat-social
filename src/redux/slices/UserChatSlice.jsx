@@ -18,8 +18,11 @@ const UserChatSlice = createSlice({
     saveUserChat: (state, action) => {
       state.userChat = action.payload.userChat;
     },
+    updateUserChat: (state, action) => {
+      state.userChat = action.payload;
+    },
   },
 });
 
 export default UserChatSlice.reducer;
-export const { saveUserChat } = UserChatSlice.actions;
+export const { saveUserChat, updateUserChat } = UserChatSlice.actions;

@@ -10,12 +10,16 @@ import {
   TextInput,
   Button,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
-import { getConversationAllByToken } from "../../redux/slices/ConversationSlice";
+import {
+  getConversationAllByToken,
+  handleSearchConversations,
+} from "../../redux/slices/ConversationSlice";
 import { saveUserChat } from "../../redux/slices/UserChatSlice";
 import ItemConservation from "../components/ItemConservation";
 import SearchBar from "../components/SearchBar";
@@ -29,18 +33,13 @@ import {
 import { getToken } from "../../utils/function";
 import { AvatarDefault } from "../../utils/constant";
 
-export default function Home({
-  navigation,
-  clicked,
-  searchPhrase,
-  setSearchPhrase,
-  setCLicked,
-}) {
+export default function Home({ navigation }) {
   const dispatch = useDispatch();
 
-  const [isLoading, setIsLoading] = useState(false);
   const { id: userId, accessToken } = useSelector((state) => state.user.user);
-  const { conversations } = useSelector((state) => state.conversation);
+  const { conversations, isLoading } = useSelector(
+    (state) => state.conversation
+  );
   const { userChat } = useSelector((state) => state.userChat);
 
   useEffect(() => {
@@ -55,31 +54,52 @@ export default function Home({
 
   return (
     <SafeAreaView style={styles.home__content}>
-      <SearchBar navigation={navigation} user={userId} />
+      <SearchBar
+        navigation={navigation}
+        user={userId}
+        conversations={conversations}
+      />
       <View style={styles.content__FlatList}>
-        {conversations.length ? (
-          <ScrollView style={styles.scrollView} horizontal={false}>
-            <>
-              {conversations.map((conversation, index) => (
-                <ItemConservation
-                  style={styles.FlatList}
-                  navigation={navigation}
-                  isLoading={isLoading}
-                  key={index}
-                  avatar={conversation.avatar}
-                  name={conversation}
-                  index={conversation.id}
-                  userIdCurrent={userId}
-                  {...conversation}
-                />
-              ))}
-            </>
-          </ScrollView>
-        ) : (
-          <View style={[styles.conversations_found]}>
-            <Text style={[styles.text_friend]}>Chưa có bạn bè!</Text>
-            <Image source={{ uri: AvatarDefault }} style={styles.imgMessage} />
+        {isLoading ? (
+          <View style={[]}>
+            <ActivityIndicator size={"small"} />
           </View>
+        ) : (
+          <>
+            {conversations ? (
+              <ScrollView style={styles.scrollView} horizontal={false}>
+                <>
+                  {conversations.map((conversation, index) => (
+                    <ItemConservation
+                      style={styles.FlatList}
+                      navigation={navigation}
+                      isLoading={isLoading}
+                      key={index}
+                      conversationAdmin={
+                        conversation.type == 1 ? conversation.adminId : ""
+                      }
+                      userChatconversation={userChat}
+                      userCurrentId={userChat.id}
+                      conversationType={conversation.type}
+                      conversationId={conversation.id}
+                      avatar={conversation.avatar}
+                      name={conversation.name}
+                      userIdCurrent={userId}
+                      {...conversation}
+                    />
+                  ))}
+                </>
+              </ScrollView>
+            ) : (
+              <View style={[styles.conversations_found]}>
+                <Text style={[styles.text_friend]}>Chưa có bạn bè!</Text>
+                <Image
+                  source={{ uri: AvatarDefault }}
+                  style={styles.imgMessage}
+                />
+              </View>
+            )}
+          </>
         )}
       </View>
     </SafeAreaView>

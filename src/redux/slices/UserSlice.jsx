@@ -58,7 +58,7 @@ export const fetchUserById = createAsyncThunk(
       });
       const contentReverse = data.reverse();
       data = contentReverse;
-      console.log("data", contentReverse);
+      // console.log("data", contentReverse);
       return contentReverse;
     } catch (error) {
       console.log(error);

@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -32,24 +33,10 @@ function AddFriend({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const phoneRef = useRef();
-  // const datas = [
-  //   {
-  //     id: 0,
-  //     name: "Minh Chau",
-  //     avatar:
-  //       "https://s120-ava-talk.zadn.vn/4/8/3/5/51/120/3a1cf7ea2e80a0262202104db962090e.jpg",
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "Thanh Tung",
-  //     avatar:
-  //       "https://s120-ava-talk.zadn.vn/4/8/3/5/51/120/3a1cf7ea2e80a0262202104db962090e.jpg",
-  //   },
-  // ];
 
   const onFinishFindFriend = async (value) => {
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const { data } = await axios.get(
         `${URL}/api/user/phone-number/${value.phone}`,
         {
@@ -60,7 +47,8 @@ function AddFriend({ navigation }) {
         }
       );
       setFindFriend(data);
-      console.log(data);
+      setIsLoading(false);
+      // console.log(data);
     } catch (error) {
       setFindFriend({
         code: 404,
@@ -159,14 +147,22 @@ function AddFriend({ navigation }) {
               Kết quả tìm kiếm
             </Text>
 
-            {findFriend?.code === 200 ? (
-              <AddFrientItem
-                avatar={findFriend.data.avatar}
-                name={findFriend.data.name}
-                id={findFriend.data.id}
-              />
+            {isLoading ? (
+              <View style={[]}>
+                <ActivityIndicator size={"small"} />
+              </View>
             ) : (
-              <Text style={styles.textError}>{findFriend?.message}</Text>
+              <>
+                {findFriend?.code === 200 ? (
+                  <AddFrientItem
+                    avatar={findFriend.data.avatar}
+                    name={findFriend.data.name}
+                    id={findFriend.data.id}
+                  />
+                ) : (
+                  <Text style={styles.textError}>{findFriend?.message}</Text>
+                )}
+              </>
             )}
           </View>
         </KeyboardAvoidingView>

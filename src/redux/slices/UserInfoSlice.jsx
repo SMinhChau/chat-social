@@ -32,7 +32,7 @@ export const handleChangePassword = createAsyncThunk(
           Accept: "application/json",
         },
       });
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       console.log("error", `Change Password: ${error.message}`);
     }

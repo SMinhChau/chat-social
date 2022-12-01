@@ -46,7 +46,7 @@ function InputMessage({ conversationId }) {
 
     try {
       if (image) {
-        console.log("nameFile", image);
+        // console.log("nameFile", image);
 
         var bodyFormData = new FormData();
 
@@ -54,18 +54,18 @@ function InputMessage({ conversationId }) {
         const path = image.split("/");
         let fileType = uriParts[uriParts.length - 1];
         let nameFile = path[path.length - 1];
-        console.log(fileType, nameFile);
+        // console.log(fileType, nameFile);
 
         const _image = {
           uri: Platform.OS === "android" ? image : image.replace("file://", ""),
           type: `image/${fileType}`,
           name: nameFile,
         };
-        console.log("_image", _image);
+        // console.log("_image", _image);
         bodyFormData.append("file", _image);
 
         bodyFormData.append("id", `${conversationId}-${_content}`);
-        console.log("bodyFormData", bodyFormData);
+        // console.log("bodyFormData", bodyFormData);
         axios({
           method: "post",
           url: `${URL}/api/message/upload-message-file`,
@@ -76,7 +76,7 @@ function InputMessage({ conversationId }) {
           },
         })
           .then(({ data }) => {
-            console.log("dataSend", data);
+            // console.log("dataSend", data);
             dispatch(
               updateContentChat({
                 ...data.data,
@@ -123,7 +123,7 @@ function InputMessage({ conversationId }) {
       base64: true,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -136,7 +136,7 @@ function InputMessage({ conversationId }) {
       copyToCacheDirectory: false,
       type: "*/*",
     });
-    console.log(result);
+    // console.log(result);
     if (!result.canceled) {
       setFile(result.uri);
     }
