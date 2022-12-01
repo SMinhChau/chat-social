@@ -1,15 +1,20 @@
 import Item from "antd/lib/list/Item";
-import { Text, View, StyleSheet, Image } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableHighlight,
+} from "react-native";
 import { useSelector } from "react-redux";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import moment from "moment";
-import { AvatarDefault } from "../../../utils/constant";
-import { useEffect } from "react";
+import Tooltip from "react-native-walkthrough-tooltip";
+import { useState } from "react";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-function ContentMyMessage({ message }) {
-  // useEffect(() => {
-  //   console.log("message", message.content[0]);
-  // }, [message]);
-
+function ContentMyMessage({ message, revertChat }) {
+  const [visible, setVisible] = useState(false);
   const ImageMessage = () => {
     return (
       <>
@@ -22,32 +27,56 @@ function ContentMyMessage({ message }) {
       </>
     );
   };
+
   return (
     <>
       <View style={styles.content}>
-        <View style={styles.message}>
-          {message && (
-            <View style={styles.message_Item}>
-              <View style={styles.message_Item__content}>
-                {message.type === 1 ? (
-                  <ImageMessage />
-                ) : (
-                  <Text style={styles.message__Text}>{message.content[0]}</Text>
-                )}
-
-                <View style={styles.message__Time}>
-                  {message.content ? (
-                    <Text style={styles.createAt}>
-                      {moment(new Date(message.timeSend)).format("LT")}
-                    </Text>
+        {message && (
+          <Tooltip
+            style={styles.content_tooltip}
+            isVisible={visible}
+            content={
+              <TouchableOpacity
+                style={styles.remove_mess}
+                onPress={() => {
+                  revertChat(message.id);
+                  setVisible(false);
+                }}
+              >
+                <Text>Thu hồi tin nhắn</Text>
+              </TouchableOpacity>
+            }
+            placement="top"
+            // onClose={() => setVisible(!visible)}
+          >
+            <TouchableOpacity
+              style={styles.message}
+              onPress={() => setVisible(!visible)}
+            >
+              <View style={styles.message_Item}>
+                <View style={styles.message_Item__content}>
+                  {message.type === 1 ? (
+                    <ImageMessage />
                   ) : (
-                    ""
+                    <Text style={styles.message__Text}>
+                      {message.content[0]}
+                    </Text>
                   )}
+
+                  <View style={styles.message__Time}>
+                    {message.content ? (
+                      <Text style={styles.createAt}>
+                        {moment(new Date(message.timeSend)).format("LT")}
+                      </Text>
+                    ) : (
+                      ""
+                    )}
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
-        </View>
+            </TouchableOpacity>
+          </Tooltip>
+        )}
       </View>
     </>
   );
@@ -58,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row-reverse",
     marginVertical: 4,
-    marginHorizontal: 4,
+    // marginHorizontal: 4,
   },
 
   message: {
@@ -103,5 +132,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#24cd8c",
   },
+  // Thu hồi tin nhắn
+  remove_mess: {},
 });
 export default ContentMyMessage;

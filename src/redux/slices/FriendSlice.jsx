@@ -14,7 +14,7 @@ export const getMyFriends = createAsyncThunk(
           Accept: "application/json",
         },
       });
-      console.log("getMyFriends", data.data);
+      // console.log("getMyFriends", data.data);
       return data.data;
     } catch (error) {
       console.log(error);
@@ -48,7 +48,7 @@ export const getFriendsRequest = createAsyncThunk(
 export const updateStatusFriendsRequest = createAsyncThunk(
   "friends/updateStatusFriendsRequest",
   async (data, thunkAPI) => {
-    console.log("updateStatusFriendsRequest", data);
+    // console.log("updateStatusFriendsRequest", data);
 
     try {
       await axios.post(`${URL}/api/friend-request/update-status`, data, {

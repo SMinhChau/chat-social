@@ -41,8 +41,6 @@ function ChangePass({ navigation }) {
   });
 
   const onFinish = async (values) => {
-    console.log("oldPassword", values.oldPassword);
-    console.log("newPassword", values.password);
     const data = {
       oldPassword: values.oldPassword,
       newPassword: values.password,

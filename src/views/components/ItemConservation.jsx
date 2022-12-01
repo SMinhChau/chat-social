@@ -8,21 +8,23 @@ import moment from "moment";
 import { AvatarDefault } from "../../utils/constant";
 function ItemConservation({
   navigation,
+  userChatconversation,
   name,
   listMember = [],
   avatar,
   type,
   userIdCurrent,
+  conversationId,
   id,
+  userCurrentId,
   lastMessage,
-  isLoading,
+  conversationAdmin,
+
+  conversationType,
 }) {
   const dispatch = useDispatch();
-
+  // console.log("userCurrentId", userIdCurrent);
   const getNameConversation = () => {
-    // console.log(listMember);
-    // console.log(userIdCurrent);
-
     if (type) {
       return name;
     }
@@ -34,7 +36,13 @@ function ItemConservation({
   const handleChangeChat = () => {
     navigation.navigate("Chats", {
       name: getNameConversation(),
-      avatarChat: avatar,
+      userIdCurrent,
+      avatar,
+      userCurrentId,
+      conversationId,
+      admin: conversationAdmin,
+      conversationType,
+      userChatconversation,
     });
     dispatch(getChatByConversationID(id));
     dispatch(

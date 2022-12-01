@@ -9,17 +9,15 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Tooltip from "react-native-walkthrough-tooltip";
-import { headerBar } from "../../utils/color";
+import { headerBar, text } from "../../utils/color";
 import MenuIcon from "./MenuIcon";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { logout } from "../../redux/slices/UserSlice";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import AddGroup from "./Model/group/AddGroup";
+import { handleSearchConversations } from "../../redux/slices/ConversationSlice";
 // import { store } from "../../redux/store";
-function SearchBar({ navigation }) {
+function SearchBar({ navigation, conversations }) {
   const [visible, setVisible] = useState(false);
-  const [visibleModel, setVisibleModel] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
@@ -32,10 +30,6 @@ function SearchBar({ navigation }) {
   const onHideSearch = () => {
     setIsSearch(false);
     setSearchInput("");
-  };
-
-  const handleSearchInput = (value) => {
-    setSearchInput(() => setSearchInput(value));
   };
 
   const handleOnClickAdd = () => {
@@ -53,6 +47,15 @@ function SearchBar({ navigation }) {
     navigation.navigate("Login");
   };
 
+  const handleSetInput = (value) => {
+    setSearchInput(value);
+  };
+
+  // useEffect(() => {
+  //   dispatch(handleSearchConversations(searchInput));
+  //   console.log(searchInput);
+  // }, [searchInput, dispatch]);
+
   return (
     <>
       <View style={styles.searchBar}>
@@ -68,7 +71,7 @@ function SearchBar({ navigation }) {
               <TextInput
                 placeholder="Tìm kiếm"
                 value={searchInput}
-                onChangeText={handleSearchInput}
+                onChangeText={handleSetInput}
               />
             </View>
           </>

@@ -7,7 +7,17 @@ import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Header from "../../components/Header";
 
-function TopBarChat({ name, navigation }) {
+function TopBarChat({
+  nameChat,
+  navigation,
+  userId,
+  idGroup,
+  avatarGroup,
+  conversationId,
+  adminId,
+  userChatId,
+  conversationType,
+}) {
   return (
     <Header
       onPress={() => {
@@ -16,7 +26,13 @@ function TopBarChat({ name, navigation }) {
     >
       <View style={styles.content__left}>
         <View style={[styles.cotentText, styles.rowCenter]}>
-          <Text style={styles.nameText} numberOfLines={1} textAlignVertical="top">{name}</Text>
+          <Text
+            style={styles.nameText}
+            numberOfLines={1}
+            textAlignVertical="top"
+          >
+            {nameChat}
+          </Text>
           <Text style={styles.timeView}>2 phút</Text>
         </View>
       </View>
@@ -32,7 +48,16 @@ function TopBarChat({ name, navigation }) {
 
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("InfoChat", { nameChat: name });
+            navigation.navigate("InfoChat", {
+              InfoChat: nameChat,
+              idGroup,
+              avatarGroup,
+              userId,
+              conversationId,
+              adminId,
+              userChatId,
+              conversationType,
+            });
           }}
         >
           <Ionicons name="list-outline" size={24} style={styles.icon} />

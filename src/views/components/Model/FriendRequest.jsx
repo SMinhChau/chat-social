@@ -1,4 +1,9 @@
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+} from "react-native";
 import { bgColor, headerBar, primaryColor } from "../../../utils/color";
 import Header from "../Header";
 import { View, useWindowDimensions } from "react-native";
@@ -18,6 +23,7 @@ function FriendRequest({ navigation }) {
   const layout = useWindowDimensions();
   const [friendRequest, setFriendRequest] = useState([]);
   const [index, setIndex] = useState(0);
+  const [isloading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const [routes] = useState([
@@ -34,32 +40,44 @@ function FriendRequest({ navigation }) {
         {/* <Text style={styles.title_request}></Text> */}
 
         {/* Flatalist */}
-        {friendRequest ? (
-          <FlatList
-            style={[styles.contentFlatList]}
-            data={friendRequest}
-            renderItem={({ item, index }) => (
-              <AvatarFriendRequest
-                key={index}
-                name={item.fromUser.name}
-                avatar={item.fromUser.avatar}
-                idFriend={item.id}
-                friendRequestItem={item.fromUser}
-                keyExtractor={(item, index) => index}
-              />
-            )}
-          />
+
+        {isloading ? (
+          <>
+            <View style={[]}>
+              <ActivityIndicator size={"small"} />
+            </View>
+          </>
         ) : (
-          <Text style={styles.text_friend}>Không có lời mời nào</Text>
+          <>
+            {friendRequest ? (
+              <FlatList
+                style={[styles.contentFlatList]}
+                data={friendRequest}
+                renderItem={({ item, index }) => (
+                  <AvatarFriendRequest
+                    key={index}
+                    name={item.fromUser.name}
+                    avatar={item.fromUser.avatar}
+                    idFriend={item.id}
+                    friendRequestItem={item.fromUser}
+                    keyExtractor={(item, index) => index}
+                  />
+                )}
+              />
+            ) : (
+              <Text style={styles.text_friend}>Không có lời mời nào</Text>
+            )}
+          </>
         )}
       </View>
     </View>
   );
 
   useEffect(() => {
+    setLoading(true);
     dispatch(getFriendsRequest()).then((data) => {
       setFriendRequest(data.payload);
-      console.log("friendRequest", friendRequest);
+      setLoading(false);
     });
   }, [dispatch]);
 

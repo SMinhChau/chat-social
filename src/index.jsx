@@ -3,6 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import AccountSercuriery from "./views/account/AccountSercuriery";
 import ChangePass from "./views/account/ChangePass";
 import ChatItem from "./views/chats/ChatItem";
+import AddNewFriendsGroup from "./views/chats/info/AddNewFriendsGroup";
+import GroupManage from "./views/chats/info/GroupManage";
 import InfoChat from "./views/chats/info/InfoChat";
 import AddFriend from "./views/components/Model/AddFriend";
 
@@ -32,6 +34,11 @@ export default function Index() {
         <Stack.Screen name="AccountSercuriery" component={AccountSercuriery} />
         <Stack.Screen name="ChangePass" component={ChangePass} />
         <Stack.Screen name="InfoChat" component={InfoChat} />
+        <Stack.Screen name="GroupManage" component={GroupManage} />
+        <Stack.Screen
+          name="AddNewFriendsGroup"
+          component={AddNewFriendsGroup}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

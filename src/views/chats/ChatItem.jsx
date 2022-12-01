@@ -6,51 +6,74 @@ import {
   KeyboardAvoidingView,
   SafeAreaView,
   StyleSheet,
-  action,
-  TouchableWithoutFeedback,
   View,
-  Image,
   Platform,
-  Dimensions,
-  Button,
-  Text,
-  Pressable,
-  VirtualizedList,
-  ScrollView,
 } from "react-native";
 
 import InputMessage from "./chatContent/InputMessage/InputMessage";
 import ContentMessage from "./chatContent/ContentMessage";
 import ContentMyMessage from "./chatContent/ContentMyMessage";
-import { fetchUserById } from "../../redux/slices/UserSlice";
-import { getToken } from "../../utils/function";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 
-function ChatItem({ route, memberGroup, navigation, avatarChat }) {
+function ChatItem({ navigation, route }) {
+  const { userIdCurrent } = route.params;
+  const { avatar } = route.params;
+  const { conversationId } = route.params;
+  const { admin } = route.params;
+  const { name } = route.params;
+  const { userCurrentId } = route.params;
+  const { conversationType } = route.params;
+  const { userChatconversation } = route.params;
+
   // Get all chat conversation
   const { userChat } = useSelector((state) => state.userChat);
   const { chat } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
 
+  // Remove Message
+  const revertChat = (messageId) => {
+    console.log("revertChatId", messageId);
+    const chatMessage = {
+      messageId,
+      accessToken: user.accessToken,
+    };
+    stompClient.send(
+      "/app/chat.revertMessage",
+      {},
+      JSON.stringify(chatMessage)
+    );
+  };
+
+  // React message
+  const handleReaction = (messageId, type) => {
+    const chatMessage = {
+      messageId,
+      typeReact: actionReact.indexOf(type),
+      accessToken: user.accessToken,
+    };
+
+    stompClient.send("/app/chat.reactMessage", {}, JSON.stringify(chatMessage));
+  };
+
   const renderItem = ({ item }) => (
     <>
       {item.senderId === user.id ? (
-        <ContentMyMessage message={item} avatar={userChat.avatar} />
+        <ContentMyMessage
+          message={item}
+          avatar={userChatconversation.avatar}
+          revertChat={revertChat}
+        />
       ) : (
         <ContentMessage
           message={item}
-          avatar={userChat.avatar}
+          avatar={userChatconversation.avatar}
           receiverId={item.senderId}
         />
       )}
     </>
   );
 
-  // useEffect(() => {
-  //   console.log(chat.content);
-  // }, [chat.content]);
   return (
     <>
       <SafeAreaView style={{ flex: 1 }}>
@@ -60,7 +83,16 @@ function ChatItem({ route, memberGroup, navigation, avatarChat }) {
           keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 10}
         >
           <View style={styles.body}>
-            <TopBarChat name={userChat.name} navigation={navigation} />
+            <TopBarChat
+              nameChat={name}
+              navigation={navigation}
+              userId={userIdCurrent}
+              avatarGroup={avatar}
+              conversationId={conversationId}
+              adminId={admin}
+              userChatId={userIdCurrent}
+              conversationType={conversationType}
+            />
             {/* <ScrollView style={styles.scrollView}> */}
             <FlatList
               style={{ paddingHorizontal: 10, paddingVertical: 5 }}
