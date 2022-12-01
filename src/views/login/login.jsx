@@ -45,10 +45,9 @@ export default function Login({ navigation }) {
 
   // Valid
   const LoginSchema = Yup.object().shape({
-    phoneNumber: Yup.string().matches(
-      /^0[0-9]{9}$/,
-      "Vui lòng nhập số điện thoại của bạn!"
-    ),
+    phoneNumber: Yup.string()
+      .required("Vui lòng nhập mật khẩu của bạn!")
+      .matches(/^0[0-9]{9}$/, "Số điện thoại chưa đúng định dạng!"),
     password: Yup.string().required("Vui lòng nhập mật khẩu của bạn!"),
   });
   // 0763879020
@@ -184,6 +183,14 @@ export default function Login({ navigation }) {
                 <Text style={{ color: "red" }}>{errors.password}</Text>
               )}
             </View>
+          </View>
+
+          <View style={styles.password_remember}>
+            <TouchableOpacity onPress={() => navigation.navigate("AuthPhone")}>
+              <Text style={{ color: "#0573ff", fontStyle: "italic" }}>
+                Quên mật khẩu?
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.regisLink}>
@@ -363,15 +370,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     height: 300,
     width: "80%",
-
     borderColor: "transparent",
     borderWidth: 0.5,
     borderRadius: 10,
     shadowColor: "#2b3a9d",
-    textShadowOffset: { width: 2, height: 2 },
+    textShadowOffset: { width: 0.5, height: 0.5 },
     shadowOpacity: 0.5,
-    textShadowRadius: 10,
-    elevation: 5,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -389,5 +393,8 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+  password_remember: {
+    paddingHorizontal: 20,
   },
 });

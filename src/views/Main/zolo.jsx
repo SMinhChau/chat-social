@@ -112,20 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
   },
-  icon_logo: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: 140,
-    height: 140,
-    borderColor: "#36e60e",
-    borderWidth: 0.5,
-    borderRadius: 10,
-    shadowColor: "#36e60e",
-    textShadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.5,
-    textShadowRadius: 10,
-    elevation: 5,
-  },
+
   _touchableOpacity: {
     width: "100%",
 
