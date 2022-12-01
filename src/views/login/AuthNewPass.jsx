@@ -12,26 +12,40 @@ import { useSelector } from "react-redux";
 
 import { useDispatch } from "react-redux";
 
-function AuthPhoneOTP({ navigation }) {
+function AuthNewPass({ navigation }) {
   const [getPassVisible, setPassVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const phoneNumberRef = useRef(null);
+  const password = useRef(null);
   const dispatch = useDispatch();
+
+  const {
+    isLoading,
+    isSuccess,
+    isError,
+    message: messages,
+    user,
+  } = useSelector((state) => state.user);
 
   // Valid
   const Schema = Yup.object().shape({
-    phoneNumber: Yup.string().required("Vui lòng nhập mã"),
+    changepassword: Yup.string().when("password", {
+      is: (val) => (val && val.length > 0 ? true : false),
+      then: Yup.string().oneOf(
+        [Yup.ref("password")],
+        "Xác nhận mật khẩu chưa đúng!"
+      ),
+    }),
+    oldPassword: Yup.string().required("Vui lòng nhập mật khẩu"),
   });
 
   const onFinish = async (values) => {
-    setIsLoading(true);
-    navigation.navigate("AuthNewPass");
+    Alert.alert("Đổi mật khẩu thành công");
+    navigation.navigate("Login");
   };
 
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
       validationSchema: Schema,
-      initialValues: { phoneNumber: "" },
+      initialValues: { password: "", changepassword: "", oldPassword: "" },
       onSubmit: (values) => {
         onFinish(values);
       },
@@ -44,27 +58,28 @@ function AuthPhoneOTP({ navigation }) {
           navigation.goBack();
         }}
       >
-        <Text style={styles.title}>Mã xác thực </Text>
+        <Text style={styles.title}>Đổi mật khẩu </Text>
       </Header>
       {/* Form */}
       <View style={styles.content_Bottom}>
         <View style={{ width: "100%" }}>
-          {/* Check phone */}
+          {/* Change pass */}
           <View style={{ width: "100%" }}>
-            <Text style={styles.title_pass}>Nhập mã OTP</Text>
+            <Text style={styles.title_pass}>Nhập mật khẩu mới</Text>
           </View>
           <View
             style={{ paddingHorizontal: 32, marginBottom: 16, width: "100%" }}
           >
             <TextInput
-              ref={phoneNumberRef}
-              placeholder="Nhập mac OTP"
-              autoCompleteType="phoneNumber"
-              onChangeText={handleChange("phoneNumber")}
-              onBlur={handleBlur("phoneNumber")}
-              error={errors.phoneNumber}
-              touched={touched.phoneNumber}
-              values={values.phoneNumber}
+              ref={password}
+              icon="key"
+              placeholder="Nhập mật khẩu mới"
+              autoCompleteType="password"
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              error={errors.password}
+              touched={touched.password}
+              values={values.password}
               autoCapitalize="none"
               keyboardAppearance="dark"
               returnKeyType="go"
@@ -72,8 +87,31 @@ function AuthPhoneOTP({ navigation }) {
               secureTextEntry={getPassVisible ? false : true}
             />
 
-            {touched.phoneNumber && errors.phoneNumber && (
-              <Text style={{ color: "red" }}>{errors.phoneNumber}</Text>
+            {touched.password && errors.password && (
+              <Text style={{ color: "red" }}>{errors.password}</Text>
+            )}
+          </View>
+          <View
+            style={{ paddingHorizontal: 32, marginBottom: 16, width: "100%" }}
+          >
+            <TextInput
+              icon="key"
+              placeholder="Nhập lại mật khẩu"
+              autoCompleteType="changepassword"
+              onChangeText={handleChange("changepassword")}
+              onBlur={handleBlur("changepassword")}
+              error={errors.changepassword}
+              touched={touched.changepassword}
+              values={values.changepassword}
+              autoCapitalize="none"
+              keyboardAppearance="dark"
+              returnKeyType="go"
+              returnKeyLabel="go"
+              secureTextEntry={getPassVisible ? false : true}
+            />
+
+            {touched.changepassword && errors.changepassword && (
+              <Text style={{ color: "red" }}>{errors.changepassword}</Text>
             )}
           </View>
         </View>
@@ -90,7 +128,7 @@ function AuthPhoneOTP({ navigation }) {
   );
 }
 
-export default AuthPhoneOTP;
+export default AuthNewPass;
 
 const styles = StyleSheet.create({
   container: {

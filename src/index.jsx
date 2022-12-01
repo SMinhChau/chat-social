@@ -10,6 +10,7 @@ import AddFriend from "./views/components/Model/AddFriend";
 
 import FriendRequest from "./views/components/Model/FriendRequest";
 import AddGroup from "./views/components/Model/group/AddGroup";
+import AuthNewPass from "./views/login/AuthNewPass";
 import AuthPhone from "./views/login/AuthPhone";
 import AuthPhoneOTP from "./views/login/AuthPhoneOTP";
 
@@ -38,6 +39,7 @@ export default function Index() {
         <Stack.Screen name="AuthPhone" component={AuthPhone} />
         <Stack.Screen name="AuthPhoneOTP" component={AuthPhoneOTP} />
         <Stack.Screen name="InfoChat" component={InfoChat} />
+        <Stack.Screen name="AuthNewPass" component={AuthNewPass} />
         <Stack.Screen name="GroupManage" component={GroupManage} />
         <Stack.Screen
           name="AddNewFriendsGroup"
