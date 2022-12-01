@@ -9,10 +9,9 @@ import {
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import { useNavigation } from "@react-navigation/native";
-import * as ImagePicker from "expo-image-picker";
 import { images } from "../../imgs/index";
-import { ImagePickerModal } from "../components/Model/ImagePickerModal";
-import { URL } from "../../utils/constant";
+import * as ImagePicker from "expo-image-picker";
+import { AvatarDefault, URL } from "../../utils/constant";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUser } from "../../redux/slices/UserSlice";
@@ -20,128 +19,54 @@ import { getToken } from "../../utils/function";
 import { useEffect } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
-import { primaryColor } from "../../utils/color";
+import { bgColor, headerBar, primaryColor } from "../../utils/color";
 
 export default function AccountInfo() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [visible, setVisible] = useState(false);
+
   const user = useSelector((state) => state.user.user);
 
   const [avatarUrl, setAvatarUrl] = useState();
   const [imageUri, setImageUri] = useState(user.avatar);
   const [visibleBG, setVisibleBG] = useState(false);
   const [coverUri, setCoverUri] = useState(user.coverImage);
-  const [coverUrl, setCoverUrl] = useState();
-  const [checkAvatar, setCheckAvatar] = useState("");
-  const [checkCover, setCheckCover] = useState("");
   const [gender, setGender] = useState("");
 
-  const onAvatarLibrary = useCallback(async () => {
+  // Avatar
+  const [imageAvatar, setImageAvatar] = useState(null);
+  const [imageCover, setImageCover] = useState(null);
+  const [visible, setVisible] = useState(false);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [3, 3],
+      aspect: [4, 3],
       quality: 1,
       base64: true,
     });
-
-    // console.log("avatar image", result.uri);
-    setCheckAvatar(result.uri);
-    //   onCheckImg();
-    setAvatarUrl(result.base64);
-
-    if (!result.cancelled) {
-      setImageUri(result.uri);
+    // console.log(result);
+    if (!result.canceled) {
+      setImageCover("data:image/jpeg;base64," + result.base64);
     }
-  }, []);
+  };
 
-  const onBacgroundLibrary = useCallback(async () => {
+  const pickImageAvatar = async () => {
+    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [8, 4],
+      aspect: [4, 3],
       quality: 1,
       base64: true,
     });
-
-    // console.log("cover image", result.uri);
-    setCheckCover(result.uri);
-    // onCheckCover();
-    setCoverUrl(result.base64);
-
-    if (!result.cancelled) {
-      setCoverUri(result.uri);
+    // console.log(result);
+    if (!result.canceled) {
+      setImageAvatar("data:image/jpeg;base64," + result.base64);
     }
-  }, []);
-
-  const handleUpdateAvatar = async (name, avatar, coverImage, id) => {
-    axios
-      .put(
-        `${URL}/api/user/update`,
-        {
-          name: user.name,
-          avatar: checkAvatar + avatarUrl,
-          coverImage: user.coverImage,
-          dateOfBirth: user.dateOfBirth,
-          gender: user.gender,
-          id: user.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${await getToken()}`,
-            Accept: "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        // console.log("Res", res);
-        console.log("cập nhật avatar thành công");
-        dispatch(updateUser(res.data.data));
-      })
-      .catch((err) => console.log(err));
   };
-
-  const handleUpdateCover = async (name, avatar, coverImage, id) => {
-    axios
-      .put(
-        `${URL}/api/user/update`,
-        {
-          name: user.name,
-          avatar: user.avatar,
-          coverImage: checkCover + coverUrl,
-          dateOfBirth: user.dateOfBirth,
-          gender: user.gender,
-          id: user.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${await getToken()}`,
-            Accept: "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        // console.log("Res", res);
-        console.log("cập nhật ảnh bìa thành công");
-        dispatch(updateUser(res.data.data));
-      })
-      .catch((err) => console.log(err));
-  };
-
-  //camera
-  // const permisionFunction = async () => {
-  //     // here is how you can get the camera permission
-
-  //     const imagePermission = await ImagePicker.getMediaLibraryPermissionsAsync();
-  //     console.log(imagePermission.status);
-
-  //     setGalleryPermission(imagePermission.status === 'granted');
-
-  //     if (imagePermission.status !== 'granted') {
-  //       alert('Permission for media access needed.');
-  //     }
-  //   };
 
   //Convert dateOfBirth
   const [DateFormat, setDateFormat] = useState();
@@ -200,61 +125,58 @@ export default function AccountInfo() {
       >
         <Text style={styles.title}>Trang cá nhân</Text>
       </Header>
+
       {/* cover image */}
-      <View style={styles.backgroundImg}>
+      <View style={styles.cover_image}>
         {coverUri ? (
-          <Image
-            style={{ width: "100%", height: "100%" }}
-            source={{ uri: coverUri }}
-          />
+          <Image style={styles.img} source={{ source: AvatarDefault }} />
         ) : (
           <Image
             style={{ width: "100%", height: "100%" }}
             source={images.cover}
           />
         )}
-        <View style={styles.buttonCover}>
-          <TouchableOpacity
-            style={styles.btnCover}
-            onPress={() => {
-              setVisibleBG(true);
-            }}
-          >
-            <Text style={styles.textCover}>Tải lên</Text>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.btnCover}
-            onPress={() => {
-              handleUpdateCover();
-            }}
-          >
-            <Text style={styles.textCover}>Cập nhật</Text>
-          </TouchableOpacity>
+        <View style={styles.content_change_cover}>
+          {visible ? (
+            <View style={styles.content_chose}>
+              <TouchableOpacity onPress={pickImage}>
+                <Ionicons name="camera-sharp" size={30} />
+              </TouchableOpacity>
+            </View>
+          ) : null}
         </View>
       </View>
 
-      {/* avatar image */}
-      <View style={styles.containerImg}>
+      {/* Avatar */}
+      <View style={styles.content_avtar}>
         {imageUri ? (
           <Image style={styles.avatar} source={{ uri: imageUri }} />
         ) : (
           <Image style={styles.avatar} source={images.avatar} />
         )}
-        <TouchableOpacity
-          style={styles.buttonAvatar}
-          onPress={() => setVisible(true)}
-        >
-          <Text style={styles.textAvatar}>Tải lên</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.buttonAvatar}
-          onPress={() => handleUpdateAvatar()}
-        >
-          <Text style={styles.textAvatar}>Cập Nhật</Text>
-        </TouchableOpacity>
+        <View style={styles.content_change_avtar}>
+          <View style={styles.chose_View}>
+            {visible ? (
+              <View style={styles.content_chose}>
+                <TouchableOpacity onPress={pickImageAvatar}>
+                  <Ionicons name="camera-sharp" size={30} />
+                </TouchableOpacity>
+              </View>
+            ) : null}
+          </View>
+
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => setVisible(!visible)}
+          >
+            <Text style={styles.text_remove}>Chỉnh sửa</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+
+      {/* Content - Info */}
 
       <View style={styles.infoContainer}>
         <View style={styles.itemInfo}>
@@ -278,44 +200,19 @@ export default function AccountInfo() {
         </View>
       </View>
 
-      {/* Modal option */}
-      <ImagePickerModal
-        isVisible={visible}
-        onClose={() => setVisible(false)}
-        onImageLibraryPress={onAvatarLibrary}
-      />
-      <ImagePickerModal
-        isVisible={visibleBG}
-        onClose={() => setVisibleBG(false)}
-        onImageLibraryPress={onBacgroundLibrary}
-      />
-
       <View style={styles.containerBtnEdit}>
-        <TouchableOpacity
-          style={styles.buttonEdit}
-          onPress={() => {
-            navigation.navigate("EditAccountInfo");
-          }}
-        >
-          <Text style={styles.textBtnName}>Chỉnh sửa</Text>
-          <Ionicons style={{ fontSize: 25 }} name="create-outline"></Ionicons>
-        </TouchableOpacity>
+        {visible ? (
+          <TouchableOpacity
+            style={styles.buttonEdit}
+            onPress={() => {
+              navigation.navigate("EditAccountInfo");
+            }}
+          >
+            <Text style={styles.textBtnName}>Chỉnh sửa</Text>
+            <Ionicons style={{ fontSize: 25 }} name="create-outline"></Ionicons>
+          </TouchableOpacity>
+        ) : null}
       </View>
-
-      {/* button back */}
-      {/* <View style={styles.title}>
-        <TouchableOpacity
-          style={styles.touchBack}
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
-        >
-          <Image
-            source={require("../../imgs/left-arrow.png")}
-            style={styles.imgIcon}
-          />
-        </TouchableOpacity>
-      </View> */}
     </SafeAreaView>
   );
 }
@@ -323,135 +220,13 @@ export default function AccountInfo() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
+    justifyContent: "flex-start",
   },
-
-  backgroundImg: {
-    width: "100%",
-    height: 200,
-    borderWidth: 1,
-    borderBottomWidth: 2,
-  },
-
-  containerImg: {
-    width: 100,
-    height: 100,
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 15,
-  },
-
   avatarBorder: {
     width: 100,
     height: 100,
     borderRadius: 100,
-  },
-
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 100,
-    borderColor: "#000",
-    borderWidth: 2,
-    marginHorizontal: 20,
-  },
-
-  touchBack: {
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  title: {
-    width: 35,
-    height: 35,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    margin: 10,
-    left: 0,
-  },
-
-  imgIcon: {
-    height: 30,
-    width: 30,
-  },
-
-  textNameUser: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-
-  editAvatar: {
-    width: 25,
-    height: 25,
-  },
-
-  editBackground: {
-    width: 30,
-    height: 30,
-  },
-
-  buttonAvatar: {
-    width: 100,
-    height: 35,
-    backgroundColor: "#0573ff",
-    marginHorizontal: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
-  },
-
-  editAvatar: {
-    width: 25,
-    height: 25,
-  },
-
-  editBackground: {
-    width: 30,
-    height: 30,
-  },
-
-  buttonAvatar: {
-    width: 100,
-    height: 35,
-    backgroundColor: "#0573ff",
-    marginHorizontal: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
-  },
-
-  textAvatar: {
-    fontSize: 17,
-    fontWeight: "bold",
-    color: "white",
-  },
-
-  buttonCover: {
-    position: "absolute",
-    right: 5,
-    bottom: 12,
-    flexDirection: "row",
-    width: 170,
-    height: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  btnCover: {
-    height: 20,
-    width: 75,
-    marginRight: 10,
-    borderWidth: 1,
-    backgroundColor: "#0573ff",
-    borderRadius: 5,
-  },
-
-  textCover: {
-    width: 75,
-    textAlign: "center",
-    color: "white",
   },
 
   infoContainer: {
@@ -506,5 +281,73 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "500",
     color: `${primaryColor}`,
+  },
+
+  // cover_image
+  cover_image: {
+    width: "100%",
+    height: 200,
+    position: "relative",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  content_change_cover: {
+    paddingBottom: 10,
+    position: "absolute",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  content_change_avtar: {
+    width: "100%",
+    paddingTop: 70,
+    paddingLeft: 50,
+    position: "absolute",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
+  content_chose: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 40,
+    marginLeft: 5,
+    height: 40,
+    opacity: 0.5,
+    borderRadius: 50,
+    backgroundColor: `${bgColor}`,
+  },
+  btn: {
+    marginLeft: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 15,
+    height: 30,
+    flexDirection: "row",
+    borderRadius: 20,
+    backgroundColor: `${headerBar}`,
+  },
+  text_remove: {
+    fontWeight: "500",
+    color: "#fff",
+  },
+  //
+  content_avtar: {
+    width: "100%",
+    position: "relative",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
+  avatar: {
+    marginTop: 20,
+    marginHorizontal: 20,
+    width: 90,
+    height: 90,
+    borderRadius: 50,
+  },
+  chose_View: {
+    width: 50,
   },
 });

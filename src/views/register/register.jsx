@@ -1,12 +1,21 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+} from "react-native";
+import { TextInput, TouchableOpacity } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { useNavigation } from '@react-navigation/native';
-import RadioGroup from 'react-native-radio-buttons-group';
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { useNavigation } from "@react-navigation/native";
+import RadioGroup from "react-native-radio-buttons-group";
 
 import { URL } from "../../utils/constant";
-import axios from 'axios';
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { updateContentChat } from "../../redux/slices/ChatSlice";
 import { SignUpUser } from "../../redux/slices/UserSlice";
@@ -14,6 +23,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
+import Header from "../components/Header";
+import { primaryColor } from "../../utils/color";
 
 export default function Register(phoneNum) {
   const phone = phoneNum.route.params;
@@ -23,17 +34,17 @@ export default function Register(phoneNum) {
 
   const radioButtonsData = [
     {
-      id: '1', // acts as primary key, should be unique and non-empty string
-      label: 'Nam',
-      value: 'true',
-      color: '#0357ff',
-      selected:true
+      id: "1", // acts as primary key, should be unique and non-empty string
+      label: "Nam",
+      value: "true",
+      color: "#0357ff",
+      selected: true,
     },
     {
-      id: '2',
-      label: 'Nữ',
-      value: 'false',
-      color: '#0357ff'
+      id: "2",
+      label: "Nữ",
+      value: "false",
+      color: "#0357ff",
     },
   ];
 
@@ -44,26 +55,31 @@ export default function Register(phoneNum) {
   };
 
   const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
+  const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
+    setShow(Platform.OS === "ios");
     setDate(currentDate);
 
     let tmpDate = new Date(currentDate);
-    let fDate = tmpDate.getDate() + '/' + (tmpDate.getMonth() + 1) + '/' + tmpDate.getFullYear();
+    let fDate =
+      tmpDate.getDate() +
+      "/" +
+      (tmpDate.getMonth() + 1) +
+      "/" +
+      tmpDate.getFullYear();
     setText(fDate);
 
     console.log(fDate);
-  }
+  };
 
   const showMode = (curentMode) => {
     setShow(true);
     setMode(curentMode);
-  }
+  };
 
   //Register
   const [pass, setPass] = useState();
@@ -89,24 +105,26 @@ export default function Register(phoneNum) {
   };
 
   const handleSinUpUser = async () => {
-    axios.post(`${URL}/api/user/create`, {
-      avatar: "",
-      coverImage: "",
-      dateOfBirth: date,
-      gender: radioButtons,
-      name: name,
-      password: pass,
-      phoneNumber: phone
-    }).then(res => {
-      console.log("Res", res);
-      Alert.alert("Thông báo","Đăng ký thành công");
-      AsyncStorage.setItem("res.data.data", JSON.stringify(res.data.data));
-      navigation.navigate("Home");
-    }).catch(err => {
-      console.log(err);
-      Alert.alert("Thông báo","Đăng ký thất b");
-    })
-      
+    axios
+      .post(`${URL}/api/user/create`, {
+        avatar: "",
+        coverImage: "",
+        dateOfBirth: date,
+        gender: radioButtons,
+        name: name,
+        password: pass,
+        phoneNumber: phone,
+      })
+      .then((res) => {
+        console.log("Res", res);
+        Alert.alert("Thông báo", "Đăng ký thành công");
+        AsyncStorage.setItem("res.data.data", JSON.stringify(res.data.data));
+        navigation.navigate("Home");
+      })
+      .catch((err) => {
+        console.log(err);
+        Alert.alert("Thông báo", "Đăng ký thất b");
+      });
   };
 
   useEffect(() => {
@@ -128,13 +146,13 @@ export default function Register(phoneNum) {
 
   return (
     <SafeAreaView style={styles.main}>
-      <View style={styles.title}>
-        <TouchableOpacity style={styles.touchBack} onPress={() => { navigation.goBack() }}>
-          <Image source={require('../../imgs/left-arrow.png')} style={styles.imgIcon} />
-        </TouchableOpacity>
-
-        <Text style={styles.textTitle}>Đăng ký</Text>
-      </View>
+      <Header
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <Text style={styles.title}>Đăng ký</Text>
+      </Header>
 
       <View style={styles.noteText}>
         <Text>Sử dụng tên thật để bạn bè dễ nhận ra bạn </Text>
@@ -143,26 +161,40 @@ export default function Register(phoneNum) {
       <KeyboardAvoidingView style={styles.formRegis}>
         <Text style={styles.titleSubmit}>Tên hiển thị:</Text>
         <View style={styles.inputComponent}>
-          <TextInput style={styles.input}
-            onChangeText={text => { setName(text) }}
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => {
+              setName(text);
+            }}
             value={name}
           />
         </View>
 
         <View style={styles.inputDateOfBirth}>
-          <TextInput style={styles.textDate} placeholder='dd/mm/yy' value={text} />
+          <TextInput
+            style={styles.textDate}
+            placeholder="dd/mm/yy"
+            value={text}
+          />
 
-          <TouchableOpacity style={styles.buttonDate} onPress={() => showMode('date')}>
-            <Text style={{ color: 'white', fontWeight: 'bold' }}>Ngày sinh</Text>
+          <TouchableOpacity
+            style={styles.buttonDate}
+            onPress={() => showMode("date")}
+          >
+            <Text style={{ color: "white", fontWeight: "bold" }}>
+              Ngày sinh
+            </Text>
           </TouchableOpacity>
 
-          {show && <DateTimePicker
-            testID='DateTimePicker'
-            value={date}
-            mode={mode}
-            display='default'
-            onChange={onChange}
-          />}
+          {show && (
+            <DateTimePicker
+              testID="DateTimePicker"
+              value={date}
+              mode={mode}
+              display="default"
+              onChange={onChange}
+            />
+          )}
         </View>
 
         <View style={styles.inputComponent}>
@@ -171,7 +203,7 @@ export default function Register(phoneNum) {
           <RadioGroup
             radioButtons={radioButtonsData} //pass in our array
             onPress={(value) => setValue(value)}
-            layout='row'
+            layout="row"
           />
           {/* <Text>{radioButtons}</Text> */}
         </View>
@@ -179,15 +211,26 @@ export default function Register(phoneNum) {
         <Text style={styles.titleSubmit}>Mật khẩu:</Text>
 
         <View style={styles.inputComponent}>
-          <TextInput style={styles.input}
+          <TextInput
+            style={styles.input}
             value={pass}
-            onChangeText={text => { setPass(text) }}
-            secureTextEntry={getPassVisible ? false : true} />
+            onChangeText={(text) => {
+              setPass(text);
+            }}
+            secureTextEntry={getPassVisible ? false : true}
+          />
 
-          <TouchableOpacity style={{ fontSize: 26, right: '50%' }}
-            onPress={() => { setPassVisible(!getPassVisible) }}>
-            {getPassVisible ? <Text style={styles.txtHide}>Ẩn</Text> :
-              <Text style={styles.txtHide}>Hiện</Text>}
+          <TouchableOpacity
+            style={{ fontSize: 26, right: "50%" }}
+            onPress={() => {
+              setPassVisible(!getPassVisible);
+            }}
+          >
+            {getPassVisible ? (
+              <Text style={styles.txtHide}>Ẩn</Text>
+            ) : (
+              <Text style={styles.txtHide}>Hiện</Text>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -204,11 +247,15 @@ export default function Register(phoneNum) {
           </TouchableOpacity>
         </View> */}
 
-        <TouchableOpacity style={styles.buttonSub} onPress={() => { handleSinUpUser() }}>
+        <TouchableOpacity
+          style={styles.buttonSub}
+          onPress={() => {
+            handleSinUpUser();
+          }}
+        >
           <Text style={styles.textRegis}>Đăng ký</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-
     </SafeAreaView>
   );
 }
@@ -216,16 +263,14 @@ export default function Register(phoneNum) {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    display: 'flex'
+    display: "flex",
   },
 
   title: {
-    width: '100%',
-    height: 40,
-    backgroundColor: '#0573ff',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+    paddingLeft: 20,
+    fontSize: 22,
+    fontWeight: "500",
+    color: `${primaryColor}`,
   },
 
   imgIcon: {
@@ -235,47 +280,47 @@ const styles = StyleSheet.create({
 
   textTitle: {
     fontSize: 22,
-    color: 'white',
+    color: "white",
     height: 40,
-    width: '62%',
+    width: "62%",
     paddingTop: 4,
   },
 
   touchBack: {
-    width: '12%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center'
+    width: "12%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   noteText: {
-    width: '100%',
+    width: "100%",
     height: 30,
-    backgroundColor: '#EDEDED',
-    justifyContent: 'center',
-    paddingLeft: 8
+    backgroundColor: "#EDEDED",
+    justifyContent: "center",
+    paddingLeft: 8,
   },
 
   formRegis: {
-    width: '100%',
+    width: "100%",
     height: 350,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   inputComponent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '90%'
+    flexDirection: "row",
+    alignItems: "center",
+    width: "90%",
   },
 
   inputDateOfBirth: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
     marginVertical: 15,
-    justifyContent: 'flex-start',
-    width: '83%',
-    height: 35
+    justifyContent: "flex-start",
+    width: "83%",
+    height: 35,
   },
 
   textDate: {
@@ -283,71 +328,70 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: 100,
     height: 35,
-    textAlign: 'center',
-    borderRadius:10,
-    borderColor: '#0573ff',
+    textAlign: "center",
+    borderRadius: 10,
+    borderColor: "#0573ff",
   },
 
   buttonDate: {
     width: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: 20,
-    backgroundColor: '#0573ff',
-    borderRadius: 5
+    backgroundColor: "#0573ff",
+    borderRadius: 5,
   },
 
   input: {
     borderWidth: 1,
-    width: '90%',
+    width: "90%",
     height: 40,
     fontSize: 17,
     marginLeft: 15,
     marginBottom: 10,
-    paddingLeft:10,
-    borderRadius:10,
-    borderColor:'#0537ff'
+    paddingLeft: 10,
+    borderRadius: 10,
+    borderColor: "#0537ff",
   },
 
   buttonSub: {
-    width: '55%',
+    width: "55%",
     height: 43,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#0573ff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0573ff",
     borderRadius: 20,
-    marginTop: 30
+    marginTop: 30,
   },
 
   txtHide: {
     fontSize: 16,
     bottom: 5,
-    right: '55%',
+    right: "55%",
     width: 40,
-    textAlign: 'right',
-    color:'#0573ff'
+    textAlign: "right",
+    color: "#0573ff",
   },
 
   textRegis: {
     fontSize: 18,
-    color: '#fff',
-    backgroundColor: '#0573ff',
+    color: "#fff",
+    backgroundColor: "#0573ff",
   },
 
   titleSubmit: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 10,
     paddingLeft: 15,
-    width: '90%',
-    color:'#0573ff'
+    width: "90%",
+    color: "#0573ff",
   },
 
-  titleGender:{
-    fontSize:16,
-    fontWeight: 'bold',
-    paddingLeft:12,
-    color:'#0573ff'
-  }
-
+  titleGender: {
+    fontSize: 16,
+    fontWeight: "bold",
+    paddingLeft: 12,
+    color: "#0573ff",
+  },
 });
