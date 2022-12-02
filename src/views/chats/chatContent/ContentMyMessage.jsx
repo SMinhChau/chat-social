@@ -47,7 +47,7 @@ function ContentMyMessage({ message, revertChat }) {
               </TouchableOpacity>
             }
             placement="top"
-            onClose={() => setVisible(!visible)}
+            // onClose={() => setVisible(!visible)}
           >
             <TouchableOpacity
               style={styles.message}
