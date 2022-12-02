@@ -11,8 +11,10 @@ import Button from "../components/Button";
 import { useSelector } from "react-redux";
 
 import { useDispatch } from "react-redux";
+import axios from "axios";
+import {URL} from "../../utils/constant";
 
-function AuthNewPass({ navigation }) {
+function AuthNewPass({ navigation, route }) {
   const [getPassVisible, setPassVisible] = useState(false);
   const password = useRef(null);
   const dispatch = useDispatch();
@@ -44,10 +46,26 @@ function AuthNewPass({ navigation }) {
 
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
-      validationSchema: Schema,
+      // validationSchema: Schema,
       initialValues: { password: "", changepassword: "", oldPassword: "" },
       onSubmit: (values) => {
-        onFinish(values);
+        axios.post(
+            `${URL}/api/user/forget-password`,
+            {
+                    "phoneNumber":route.params.phoneNumber,
+                    "password": values.changepassword
+                }
+        ).then((res) => {
+              console.log("Res: ", res.data);
+              onFinish(values);
+        }).catch((err) => {
+          console.log("Res: ", err.response.status);
+           if (err.response.status == 404){
+             Alert.alert("Tài khoản này không tồn tại!");
+           } else {
+             Alert.alert("Đã có lỗi xảy ra!");
+           }
+        });
       },
     });
 
