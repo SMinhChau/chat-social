@@ -87,7 +87,6 @@ export default function EditAccountInfo({ route, navigation }) {
       )
       .then((res) => {
         Alert.alert("Thông báo", "Cập nhật thành công");
-        console.log(res.data);
         navigation.navigate("AccountInfo");
         dispatch(updateUser(res.data));
       })

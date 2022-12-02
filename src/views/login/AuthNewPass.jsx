@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import {URL} from "../../utils/constant";
+import { URL } from "../../utils/constant";
 
 function AuthNewPass({ navigation, route }) {
   const [getPassVisible, setPassVisible] = useState(false);
@@ -46,26 +46,26 @@ function AuthNewPass({ navigation, route }) {
 
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
-      // validationSchema: Schema,
-      initialValues: { password: "", changepassword: "", oldPassword: "" },
+      validationSchema: Schema,
+      initialValues: { changepassword: "", oldPassword: "" },
       onSubmit: (values) => {
-        axios.post(
-            `${URL}/api/user/forget-password`,
-            {
-                    "phoneNumber":route.params.phoneNumber,
-                    "password": values.changepassword
-                }
-        ).then((res) => {
-              console.log("Res: ", res.data);
-              onFinish(values);
-        }).catch((err) => {
-          console.log("Res: ", err.response.status);
-           if (err.response.status == 404){
-             Alert.alert("Tài khoản này không tồn tại!");
-           } else {
-             Alert.alert("Đã có lỗi xảy ra!");
-           }
-        });
+        axios
+          .post(`${URL}/api/user/forget-password`, {
+            phoneNumber: route.params.phoneNumber,
+            password: values.changepassword,
+          })
+          .then((res) => {
+            console.log("Res: ", res.data);
+            onFinish(values);
+          })
+          .catch((err) => {
+            console.log("Res: ", err.response.status);
+            if (err.response.status == 404) {
+              Alert.alert("Tài khoản này không tồn tại!");
+            } else {
+              Alert.alert("Đã có lỗi xảy ra!");
+            }
+          });
       },
     });
 

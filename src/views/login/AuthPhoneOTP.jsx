@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import {URL} from "../../utils/constant";
+import { URL } from "../../utils/constant";
 
 function AuthPhoneOTP({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,12 +21,17 @@ function AuthPhoneOTP({ navigation, route }) {
 
   // Valid
   const Schema = Yup.object().shape({
-    OTP: Yup.string().required("Vui lòng nhập mã"),
+    OTP: Yup.string()
+      .required("Vui lòng nhập mã")
+      .min(6, "Mã gồm 6 ký tự")
+      .max(6, "Mã gồm 6 ký tự"),
   });
 
   const onFinish = async (values) => {
     setIsLoading(true);
-    navigation.navigate("AuthNewPass",{"phoneNumber":route.params.phoneNumber});
+    navigation.navigate("AuthNewPass", {
+      phoneNumber: route.params.phoneNumber,
+    });
   };
 
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
@@ -34,25 +39,22 @@ function AuthPhoneOTP({ navigation, route }) {
       validationSchema: Schema,
       initialValues: { OTP: "" },
       onSubmit: (values) => {
-        axios.post(
-            `${URL}/api/auth/verify-otp-phone-number`,
-            {
-                    "phoneNumber": route.params.phoneNumber,
-                    "otp": values.OTP
-                  })
-            .then((res) => {
-                if (res.data.data) {
-                  onFinish(values);
-                } else {
-                    Alert.alert("Mã OTP không đúng!");
-                }
-
-            })
-            .catch((err) => {
-                console.log(err.response.status);
-                Alert.alert("Mã OTP không đúng!");
-            });
-
+        axios
+          .post(`${URL}/api/auth/verify-otp-phone-number`, {
+            phoneNumber: route.params.phoneNumber,
+            otp: values.OTP,
+          })
+          .then((res) => {
+            if (res.data.data) {
+              onFinish(values);
+            } else {
+              Alert.alert("Mã OTP không đúng!");
+            }
+          })
+          .catch((err) => {
+            console.log(err.response.status);
+            Alert.alert("Mã OTP không đúng!");
+          });
       },
     });
 
