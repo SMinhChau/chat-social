@@ -7,7 +7,7 @@ import {
   Image,
   Alert,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { images } from "../../imgs/index";
 import * as ImagePicker from "expo-image-picker";
@@ -21,22 +21,31 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
 import { bgColor, headerBar, primaryColor } from "../../utils/color";
 
-export default function AccountInfo() {
+export default function AccountInfo({ navigation }) {
   const dispatch = useDispatch();
-  const navigation = useNavigation();
 
   const user = useSelector((state) => state.user.user);
-
-  const [avatarUrl, setAvatarUrl] = useState();
-  const [imageUri, setImageUri] = useState(user.avatar);
-  const [visibleBG, setVisibleBG] = useState(false);
-  const [coverUri, setCoverUri] = useState(user.coverImage);
+  const [imageUri, setImageUri] = useState("");
+  const [coverUri, setCoverUri] = useState("");
   const [gender, setGender] = useState("");
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [DateFormat, setDateFormat] = useState();
+
+  useEffect(() => {
+    setImageUri(user.avatar);
+    setCoverUri(user.coverImage);
+    setName(user.name);
+    setGender(user.gender === true ? "Nữ" : "Nam");
+    setPhoneNumber(user.phoneNumber);
+    setDateFormat(convertDateOfBirth(user.dateOfBirth));
+  }, [dispatch]);
 
   // Avatar
   const [imageAvatar, setImageAvatar] = useState(null);
   const [imageCover, setImageCover] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -69,52 +78,17 @@ export default function AccountInfo() {
   };
 
   //Convert dateOfBirth
-  const [DateFormat, setDateFormat] = useState();
-  const convertDateOfBirth = () => {
-    const milliseconds = user.dateOfBirth;
+  const convertDateOfBirth = (date) => {
+    const milliseconds = date;
     const dateObject = new Date(milliseconds);
-    setDateFormat(
+    const result =
       dateObject.getDate() +
-        "/" +
-        dateObject.getMonth() +
-        "/" +
-        dateObject.getFullYear()
-    );
+      "/" +
+      dateObject.getMonth() +
+      "/" +
+      dateObject.getFullYear();
+    return result;
   };
-
-  //convert gender
-  const covertGender = () => {
-    if (user.gender === "true" || user.gender === true) {
-      setGender("Nam");
-    } else if (user.gender === "false" || user.gender === false) {
-      setGender("Nữ");
-    } else {
-      setGender("Khác");
-    }
-  };
-
-  const [data, setData] = useState();
-  async function FreshData() {
-    axios
-      .get(`${URL}/api/user/${user.id}`, {
-        headers: {
-          Authorization: `Bearer ${await getToken()}`,
-          Accept: "application/json",
-        },
-      })
-      .then((res) => {
-        dispatch(setData(res.data));
-      })
-      .catch((err) => {
-        console.log("error:", err);
-      });
-  }
-
-  useEffect(() => {
-    FreshData();
-    covertGender();
-    convertDateOfBirth();
-  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -125,16 +99,27 @@ export default function AccountInfo() {
       >
         <Text style={styles.title}>Trang cá nhân</Text>
       </Header>
-
       {/* cover image */}
       <View style={styles.cover_image}>
         {coverUri ? (
-          <Image style={styles.img} source={{ source: AvatarDefault }} />
+          <Image
+            style={{ width: "100%", height: "100%" }}
+            source={{ source: AvatarDefault }}
+          />
         ) : (
           <Image
             style={{ width: "100%", height: "100%" }}
             source={images.cover}
           />
+        )}
+
+        {imageCover && (
+          <View style={styles.content__cover}>
+            <Image
+              source={{ uri: imageCover }}
+              style={{ width: "100%", height: "100%" }}
+            />
+          </View>
         )}
 
         <View style={styles.content_change_cover}>
@@ -156,6 +141,10 @@ export default function AccountInfo() {
           <Image style={styles.avatar} source={images.avatar} />
         )}
 
+        <View style={styles.imageAvtar}>
+          <Image source={{ uri: imageAvatar }} style={styles.avatar} />
+        </View>
+
         <View style={styles.content_change_avtar}>
           <View style={styles.chose_View}>
             {visible ? (
@@ -169,7 +158,9 @@ export default function AccountInfo() {
 
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => setVisible(!visible)}
+            onPress={() => {
+              setVisible(!visible);
+            }}
           >
             <Text style={styles.text_remove}>Chỉnh sửa</Text>
           </TouchableOpacity>
@@ -177,11 +168,10 @@ export default function AccountInfo() {
       </View>
 
       {/* Content - Info */}
-
       <View style={styles.infoContainer}>
         <View style={styles.itemInfo}>
           <Text style={styles.titleInfo}>Tên hiển thị:</Text>
-          <Text style={styles.titleName}>{user.name}</Text>
+          <Text style={styles.titleName}>{name}</Text>
         </View>
 
         <View style={styles.itemInfo}>
@@ -196,7 +186,7 @@ export default function AccountInfo() {
 
         <View style={styles.itemInfo}>
           <Text style={styles.titleInfo}>Số điện thoại:</Text>
-          <Text style={styles.titleName}>{user.phoneNumber}</Text>
+          <Text style={styles.titleName}>{phoneNumber}</Text>
         </View>
       </View>
 
@@ -205,7 +195,10 @@ export default function AccountInfo() {
           <TouchableOpacity
             style={styles.buttonEdit}
             onPress={() => {
-              navigation.navigate("EditAccountInfo");
+              navigation.navigate("EditAccountInfo", {
+                imageAvatar,
+                imageCover,
+              });
             }}
           >
             <Text style={styles.textBtnName}>Chỉnh sửa</Text>
@@ -349,5 +342,16 @@ const styles = StyleSheet.create({
   },
   chose_View: {
     width: 50,
+  },
+  imageAvtar: {
+    position: "absolute",
+  },
+  imageCover: {
+    position: "absolute",
+  },
+  content__cover: {
+    position: "absolute",
+    width: "100%",
+    height: 200,
   },
 });

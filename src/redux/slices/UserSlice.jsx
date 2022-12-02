@@ -90,6 +90,9 @@ const UserSlice = createSlice({
       // state.user = null;
       // state.isSuccess = false;
     },
+    updateUser: (state, { payload }) => {
+      state.user = payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(SignInUser.fulfilled, (state, { payload }) => {
