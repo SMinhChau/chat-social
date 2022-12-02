@@ -13,6 +13,7 @@ import AddGroup from "./views/components/Model/group/AddGroup";
 import AuthNewPass from "./views/login/AuthNewPass";
 import AuthPhone from "./views/login/AuthPhone";
 import AuthPhoneOTP from "./views/login/AuthPhoneOTP";
+import OtpAuth from "./views/register/otpauth";
 
 import RootStackScreen from "./views/screen/RootStackScreen";
 
@@ -41,6 +42,7 @@ export default function Index() {
         <Stack.Screen name="InfoChat" component={InfoChat} />
         <Stack.Screen name="AuthNewPass" component={AuthNewPass} />
         <Stack.Screen name="GroupManage" component={GroupManage} />
+        <Stack.Screen name="OtpAuth" component={OtpAuth} />
         <Stack.Screen
           name="AddNewFriendsGroup"
           component={AddNewFriendsGroup}

@@ -11,9 +11,11 @@ import Button from "../components/Button";
 import { useSelector } from "react-redux";
 
 import { useDispatch } from "react-redux";
+import axios from "axios";
+import {URL} from "../../utils/constant";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function AuthPhone({ navigation }) {
-  const [getPassVisible, setPassVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const phoneNumberRef = useRef(null);
   const dispatch = useDispatch();
@@ -21,13 +23,22 @@ function AuthPhone({ navigation }) {
   // Valid
   const Schema = Yup.object().shape({
     phoneNumber: Yup.string()
-      .required("Vui lòng nhập mật khẩu của bạn!")
+      .required("Vui lòng nhập số điện thoại để nhận OTP!")
       .matches(/^0[0-9]{9}$/, "Số điện thoại chưa đúng định dạng!"),
   });
 
   const onFinish = async (values) => {
+    console.log(values);
     setIsLoading(true);
-    navigation.navigate("AuthPhoneOTP");
+    axios.post(
+            `${URL}/api/auth/send-otp-verify-phone-number/${values.phoneNumber}`
+        )
+        .then((res) => {
+          console.log("Res: ", res.data);
+          console.log("Đã gửi SĐT đi");
+        })
+        .catch((err) => console.log(err));
+    navigation.navigate("AuthPhoneOTP",{"phoneNumber":values.phoneNumber});
   };
 
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
@@ -46,7 +57,7 @@ function AuthPhone({ navigation }) {
           navigation.goBack();
         }}
       >
-        <Text style={styles.title}>Xác nhận số điện thoại </Text>
+        <Text style={styles.title}>Quên mật khẩu</Text>
       </Header>
       {/* Form */}
       <View style={styles.content_Bottom}>
@@ -72,7 +83,6 @@ function AuthPhone({ navigation }) {
               keyboardAppearance="dark"
               returnKeyType="go"
               returnKeyLabel="go"
-              secureTextEntry={getPassVisible ? false : true}
             />
 
             {touched.phoneNumber && errors.phoneNumber && (
@@ -83,7 +93,7 @@ function AuthPhone({ navigation }) {
 
         <View style={styles.regisLink}>
           <Button
-            label="XÁC NHẬN"
+            label="GỞI OTP"
             disabled={isLoading}
             onPress={handleSubmit}
           />

@@ -16,9 +16,8 @@ import axios from "axios";
 import { URL } from "../../utils/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function OtpAuth( phoneNum ) {
-  const phone = "+84" + phoneNum.route.params;
-  const navigation = useNavigation();
+export default function OtpAuth({ navigation, route }) {
+  const phone = route.params.phoneNumber;
   const [otpCode, setOtpCode] = useState("");
   // const dispatch = useDispatch();
 
@@ -56,15 +55,24 @@ export default function OtpAuth( phoneNum ) {
   // }, [isLoading, isSuccess, isError]);
 
   const handleOptAuth = async () => {
-    axios.post(`${URL}/api/auth/verify-otp-phone-number`, {
-      otp: otpCode,
-      phoneNumber: phone,
-    }).then(res => {
-        console.log("Res", res);
-        console.log("otp đã xác nhận");
-        // AsyncStorage.setItem("res.data.data", JSON.stringify(res.data.data));
-        navigation.navigate("Register");
-    }).catch(err => console.log(err))
+      axios.post(
+          `${URL}/api/auth/verify-otp-phone-number`,
+          {
+              "phoneNumber": phone,
+              "otp": otpCode
+          })
+          .then((res) => {
+              if (res.data.data) {
+                  navigation.navigate("Register");
+              } else {
+                  Alert.alert("Mã OTP không đúng!");
+              }
+
+          })
+          .catch((err) => {
+              console.log(err.response.status);
+              Alert.alert("Mã OTP không đúng!");
+          });
   };
 
     return (
@@ -80,7 +88,7 @@ export default function OtpAuth( phoneNum ) {
         </View>
 
         <View style={styles.otpContainer}>
-            <Text style={styles.noteText}>Nhập mã OTP vừa gửi đến số</Text>
+            <Text style={styles.noteText}>Nhập mã OTP vừa gửi đến số {phone}</Text>
 
                   {/* <TextInput style={styles.inputCode}
                      keyboardType='numeric'

@@ -4,7 +4,7 @@ import {
   View,
   SafeAreaView,
   Image,
-  KeyboardAvoidingView,
+  KeyboardAvoidingView, Alert,
 } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
@@ -32,19 +32,27 @@ export default function RegisterPhone() {
     }
   };
 
-  const handleSubPhoneNumber = async (phoneNumber) => {
-    axios
-      .post(
-        `${URL}/api/auth/send-otp-verify-phone-number/+84${phoneNumber}`,
-        {}
-      )
-      .then((res) => {
-        console.log("Res: ", res);
-        console.log("Đã gửi SĐT đi");
-        AsyncStorage.setItem("res.data.data", JSON.stringify(res.data.data));
-        navigation.navigate("OtpAuth", phoneNum);
-      })
-      .catch((err) => console.log(err));
+  const handleSubPhoneNumber = async () => {
+    axios.get(`${URL}/api/user/existed/${phoneNum}`).then((res) => {
+      if(res.data.data) {
+        Alert.alert("Số điện thoại này đăng ký tài khoản");
+      } else {
+        axios
+          .post(
+            `${URL}/api/auth/send-otp-verify-phone-number/${phoneNum}`
+          )
+          .then((res) => {
+            console.log("Res: ", res);
+            console.log("Đã gửi SĐT đi");
+            AsyncStorage.setItem("res.data.data", JSON.stringify(res.data.data));
+            navigation.navigate("OtpAuth",{'phoneNumber':phoneNum});
+          })
+          .catch((err) => Alert.alert("Đã có lỗi xảy ra!"));
+      }
+
+    }).catch((err) => {
+      Alert.alert("Đã có lỗi xảy ra!");
+    })
   };
 
   return (
@@ -90,7 +98,7 @@ export default function RegisterPhone() {
           <TouchableOpacity
             disabled
             style={styles.buttonSubDisable}
-            onPress={() => navigation.navigate("Register")}
+            // onPress={() => navigation.navigate("Register")}
           >
             <Text style={styles.textNext}>Tiếp theo</Text>
             <Ionicons
@@ -101,7 +109,7 @@ export default function RegisterPhone() {
         ) : (
           <TouchableOpacity
             style={styles.buttonSub}
-            onPress={() => navigation.navigate("Register")}
+            onPress={handleSubPhoneNumber}
           >
             <Text style={styles.textNext}>Tiếp theo</Text>
             <Ionicons

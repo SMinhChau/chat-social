@@ -11,29 +11,48 @@ import Button from "../components/Button";
 import { useSelector } from "react-redux";
 
 import { useDispatch } from "react-redux";
+import axios from "axios";
+import {URL} from "../../utils/constant";
 
-function AuthPhoneOTP({ navigation }) {
-  const [getPassVisible, setPassVisible] = useState(false);
+function AuthPhoneOTP({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const phoneNumberRef = useRef(null);
   const dispatch = useDispatch();
 
   // Valid
   const Schema = Yup.object().shape({
-    phoneNumber: Yup.string().required("Vui lòng nhập mã"),
+    OTP: Yup.string().required("Vui lòng nhập mã"),
   });
 
   const onFinish = async (values) => {
     setIsLoading(true);
-    navigation.navigate("AuthNewPass");
+    navigation.navigate("AuthNewPass",{"phoneNumber":route.params.phoneNumber});
   };
 
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
       validationSchema: Schema,
-      initialValues: { phoneNumber: "" },
+      initialValues: { OTP: "" },
       onSubmit: (values) => {
-        onFinish(values);
+        axios.post(
+            `${URL}/api/auth/verify-otp-phone-number`,
+            {
+                    "phoneNumber": route.params.phoneNumber,
+                    "otp": values.OTP
+                  })
+            .then((res) => {
+                if (res.data.data) {
+                  onFinish(values);
+                } else {
+                    Alert.alert("Mã OTP không đúng!");
+                }
+
+            })
+            .catch((err) => {
+                console.log(err.response.status);
+                Alert.alert("Mã OTP không đúng!");
+            });
+
       },
     });
 
@@ -51,29 +70,27 @@ function AuthPhoneOTP({ navigation }) {
         <View style={{ width: "100%" }}>
           {/* Check phone */}
           <View style={{ width: "100%" }}>
-            <Text style={styles.title_pass}>Nhập mã OTP</Text>
+            <Text style={styles.title_pass}>Nhập mã xác thực</Text>
           </View>
           <View
             style={{ paddingHorizontal: 32, marginBottom: 16, width: "100%" }}
           >
             <TextInput
               ref={phoneNumberRef}
-              placeholder="Nhập mac OTP"
-              autoCompleteType="phoneNumber"
-              onChangeText={handleChange("phoneNumber")}
-              onBlur={handleBlur("phoneNumber")}
-              error={errors.phoneNumber}
-              touched={touched.phoneNumber}
-              values={values.phoneNumber}
+              placeholder="Nhập mã OTP"
+              onChangeText={handleChange("OTP")}
+              onBlur={handleBlur("OTP")}
+              error={errors.OTP}
+              touched={touched.OTP}
+              values={values.OTP}
               autoCapitalize="none"
               keyboardAppearance="dark"
               returnKeyType="go"
               returnKeyLabel="go"
-              secureTextEntry={getPassVisible ? false : true}
             />
 
-            {touched.phoneNumber && errors.phoneNumber && (
-              <Text style={{ color: "red" }}>{errors.phoneNumber}</Text>
+            {touched.OTP && errors.OTP && (
+              <Text style={{ color: "red" }}>{errors.OTP}</Text>
             )}
           </View>
         </View>
