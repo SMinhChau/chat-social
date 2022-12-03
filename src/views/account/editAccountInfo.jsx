@@ -106,7 +106,7 @@ export default function EditAccountInfo({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <Header
         onPress={() => {
-          navigation.goBack();
+          navigation.navigate("AccountInfo");
         }}
       >
         <Text style={styles.title}>Thay đổi thông tin</Text>

@@ -32,6 +32,32 @@ function ContentMessage({ message, navigation, receiverId }) {
     );
   };
 
+  const MessageTypeFile = () => {
+    if (message.content[0] == "Tin nhắn đã được thu hồi") {
+      return "Tin nhắn đã được thu hồi";
+    }
+
+    return (
+      <div>
+        Tên: {getFileName}
+        <br />
+        <img
+          alt="hinhaanh"
+          src="https://play-lh.googleusercontent.com/58sr3IvX1wiE8ei_BICqPgywKgZ5DPpmRL_2YuZINnFlz_9D2os9PmueeZPPtZno0zk"
+          width={50}
+        />
+        <a
+          onClick={() => window.open(message.content && message.content[0])}
+          href={message.url}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <EyeOutlined style={{ fontSize: 25, marginLeft: 30 }} />
+        </a>
+      </div>
+    );
+  };
+
   return (
     <>
       <View style={styles.content}>
@@ -61,6 +87,10 @@ function ContentMessage({ message, navigation, receiverId }) {
                     style={{ width: 100, height: 100 }}
                     source={{ uri: message.content[0] }}
                   />
+                ) : message.type === 2 ? (
+                  <Text>
+                    FILE: {message.content && message.content[0].slice(67)}
+                  </Text>
                 ) : (
                   <Text style={styles.message__Text}>{message.content[0]}</Text>
                 )}
