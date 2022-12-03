@@ -23,7 +23,7 @@ function ItemConservation({
   conversationType,
 }) {
   const dispatch = useDispatch();
-  // console.log("userCurrentId", userIdCurrent);
+
   const getNameConversation = () => {
     if (type) {
       return name;

@@ -11,10 +11,15 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { images } from "../../imgs/index";
+import { useEffect } from "react";
 
 export default function Account({ navigation }) {
   const user = useSelector((state) => state.user.user);
-  const [imageUri, setImageUri] = useState(user.avatar);
+  const [imageUri, setImageUri] = useState("");
+
+  useEffect(() => {
+    setImageUri(user.avatar);
+  }, [imageUri]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,12 +46,7 @@ export default function Account({ navigation }) {
           navigation.navigate("AccountInfo");
         }}
       >
-        {imageUri ? (
-          <Image source={{ uri: user.avatar }} style={styles.imgAccount} />
-        ) : (
-          <Image source={images.avatar} style={styles.imgAccount} />
-        )}
-
+        <Image source={{ uri: imageUri }} style={styles.imgAccount} />
         <View>
           <Text style={{ fontSize: 17 }}>{user.name}</Text>
           <Text style={{ color: "#6e6e6e" }}>Xem trang cá nhân</Text>

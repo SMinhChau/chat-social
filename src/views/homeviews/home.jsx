@@ -82,10 +82,14 @@ export default function Home({ navigation }) {
                       userCurrentId={userChat.id}
                       conversationType={conversation.type}
                       conversationId={conversation.id}
-                      avatar={conversation.avatar}
                       name={conversation.name}
                       userIdCurrent={userId}
-                      {...conversation}
+                      avatar={
+                        conversation.avatar ||
+                        conversation?.listMember.find(
+                          (x) => x.id != userChat.id
+                        )?.avatar
+                      }
                     />
                   ))}
                 </>
