@@ -94,7 +94,7 @@ export default function AccountInfo({ navigation }) {
     <SafeAreaView style={styles.container}>
       <Header
         onPress={() => {
-          navigation.goBack();
+          navigation.navigate("Home");
         }}
       >
         <Text style={styles.title}>Trang cá nhân</Text>

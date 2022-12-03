@@ -86,9 +86,11 @@ const UserSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      AsyncStorage.removeItem("user");
-      // state.user = null;
-      // state.isSuccess = false;
+      state.user = {
+        userId: "",
+        accessToken: "",
+      };
+      state.isSuccess = false;
     },
     updateUser: (state, { payload }) => {
       state.user = payload;

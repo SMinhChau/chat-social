@@ -1,20 +1,24 @@
-import { StyleSheet,
-         StatusBar, 
-         SafeAreaView,
-         View,
-         TouchableOpacity,
-         Image,
-         Text,
-         TextInput,
-         Alert} from "react-native";
-import React, {useRef, useState, useEffect} from "react";
-import { useNavigation } from '@react-navigation/native';
+import {
+  StyleSheet,
+  StatusBar,
+  SafeAreaView,
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  TextInput,
+  Alert,
+} from "react-native";
+import React, { useRef, useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
 import { OtpVerify } from "../../redux/slices/OtpSlice";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { URL } from "../../utils/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Header from "../components/Header";
+import { primaryColor } from "../../utils/color";
 
 export default function OtpAuth({ navigation, route }) {
   const phone = route.params.phoneNumber;
@@ -55,42 +59,40 @@ export default function OtpAuth({ navigation, route }) {
   // }, [isLoading, isSuccess, isError]);
 
   const handleOptAuth = async () => {
-      axios.post(
-          `${URL}/api/auth/verify-otp-phone-number`,
-          {
-              "phoneNumber": phone,
-              "otp": otpCode
-          })
-          .then((res) => {
-              if (res.data.data) {
-                  navigation.navigate("Register");
-              } else {
-                  Alert.alert("Mã OTP không đúng!");
-              }
-
-          })
-          .catch((err) => {
-              console.log(err.response.status);
-              Alert.alert("Mã OTP không đúng!");
-          });
+    axios
+      .post(`${URL}/api/auth/verify-otp-phone-number`, {
+        phoneNumber: phone,
+        otp: otpCode,
+      })
+      .then((res) => {
+        if (res.data.data) {
+          navigation.navigate("Register", { phoneRes: phone });
+        } else {
+          Alert.alert("Mã OTP không đúng!");
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.status);
+        Alert.alert("Mã OTP không đúng!");
+      });
   };
 
-    return (
-       <SafeAreaView style={styles.container}>
-        <StatusBar styles='auto'/>
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar styles="auto" />
 
-        <View style={styles.title}>
-            <TouchableOpacity style={styles.touchBack} onPress={() => { navigation.goBack() }}>
-                <Image source={require('../../imgs/left-arrow.png')} style={styles.imgIcon} />
-            </TouchableOpacity>
+      <Header
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <Text style={styles.title}>Xác nhận OTP</Text>
+      </Header>
 
-            <Text style={styles.textTitle}>Xác nhận mã OTP</Text>
-        </View>
+      <View style={styles.otpContainer}>
+        <Text style={styles.noteText}>Nhập mã OTP vừa gửi đến số {phone}</Text>
 
-        <View style={styles.otpContainer}>
-            <Text style={styles.noteText}>Nhập mã OTP vừa gửi đến số {phone}</Text>
-
-                  {/* <TextInput style={styles.inputCode}
+        {/* <TextInput style={styles.inputCode}
                      keyboardType='numeric'
                      onChangeText={handleChange("otp")}
                      onBlur={handleBlur("otp")}
@@ -102,118 +104,123 @@ export default function OtpAuth({ navigation, route }) {
                      returnKeyLabel="next"
                      placeholder='Code'/> */}
 
-                     <TextInput style={styles.inputCode}
-                                keyboardType='numeric'
-                                value={otpCode}
-                                onChangeText={text => {setOtpCode(text)}}
-                     />
+        <TextInput
+          style={styles.inputCode}
+          keyboardType="numeric"
+          value={otpCode}
+          onChangeText={(text) => {
+            setOtpCode(text);
+          }}
+        />
 
-            <TouchableOpacity style={styles.OtpButton} onPress={() => {handleOptAuth()}}>
-                <Text style={styles.textButton}>Xác Nhận</Text>
-            </TouchableOpacity>
-        </View>
-
-       </SafeAreaView>
-    );
+        <TouchableOpacity
+          style={styles.OtpButton}
+          onPress={() => {
+            handleOptAuth();
+          }}
+        >
+          <Text style={styles.textButton}>Xác Nhận</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    inputCode:{
-      borderWidth:1,
-      borderColor:'#0573ff',
-      width:140,
-      height:55,
-      textAlign:'center',
-      borderRadius:15,
-      fontSize:25,
-      marginTop:10
-    },
+  inputCode: {
+    borderWidth: 1,
+    borderColor: "#0573ff",
+    width: 140,
+    height: 55,
+    textAlign: "center",
+    borderRadius: 15,
+    fontSize: 25,
+    marginTop: 10,
+  },
 
-    container: {
-        flex: 1,
-        justifyContent:'flex-start',
-    },
+  container: {
+    flex: 1,
+    justifyContent: "flex-start",
+  },
 
-    title: {
-        width: '100%',
-        height: 40,
-        backgroundColor: '#0573ff',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center'
-      },
+  title: {
+    width: "100%",
+    height: 40,
+    backgroundColor: "#0573ff",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
 
-      textTitle: {
-        fontSize: 22,
-        color: 'white',
-        height: 40,
-        width: '62%',
-        paddingTop: 4,
-      },
-    
-      touchBack: {
-        width: '12%',
-        height: '100%',
-        justifyContent: 'center',
-        alignItems: 'center'
-      },
+  textTitle: {
+    fontSize: 22,
+    color: "white",
+    height: 40,
+    width: "62%",
+    paddingTop: 4,
+  },
 
-      imgIcon: {
-        height: 29,
-        width: 29,
-      },
+  touchBack: {
+    width: "12%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
-      otpContainer:{
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center',
-      },
+  imgIcon: {
+    height: 29,
+    width: 29,
+  },
 
-      noteText:{
-        fontSize:19,
-        // width:'90%',
-        paddingVertical:10,
-        borderRadius:10,
-        fontWeight:'bold'
-      },
+  otpContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
-      OtpButton:{
-        backgroundColor:'#0573ff',
-        width:'50%',
-        height:45,
-        borderRadius:10,
-        justifyContent:'center',
-        alignItems:'center',
-        marginTop:35
-      },
+  noteText: {
+    fontSize: 19,
+    // width:'90%',
+    paddingVertical: 10,
+    borderRadius: 10,
+    fontWeight: "bold",
+  },
 
-      textButton:{
-        color:'white',
-        fontSize:20
-      },
-      
-      otpInputContainer:{
-        marginHorizontal: 20,
-        marginBottom: 20,
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        flexDirection: 'row',
-        marginTop:15
-      },
+  OtpButton: {
+    backgroundColor: "#0573ff",
+    width: "50%",
+    height: 45,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 35,
+  },
 
-      otpBox:{
-        borderRadius: 5,
-        borderColor: '#0573ff',
-        borderWidth: 0.5,
-        marginHorizontal:5
-      },
+  textButton: {
+    color: "white",
+    fontSize: 20,
+  },
 
-      // otpText:{
-      //   fontSize: 25,
-      //   padding: 0,
-      //   textAlign: 'center',
-      //   paddingHorizontal: 13,
-      //   paddingVertical: 10,
-      // }
+  otpInputContainer: {
+    marginHorizontal: 20,
+    marginBottom: 20,
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: 15,
+  },
 
+  otpBox: {
+    borderRadius: 5,
+    borderColor: "#0573ff",
+    borderWidth: 0.5,
+    marginHorizontal: 5,
+  },
+
+  title: {
+    paddingLeft: 20,
+    fontSize: 22,
+    fontWeight: "500",
+    color: `${primaryColor}`,
+  },
 });

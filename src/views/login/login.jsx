@@ -34,6 +34,7 @@ export default function Login({ navigation }) {
   const [getPassVisible, setPassVisible] = useState(false);
   const password = useRef(null);
   const dispatch = useDispatch();
+  const [conected, setConected] = useState(false);
 
   const {
     isLoading,
@@ -70,6 +71,7 @@ export default function Login({ navigation }) {
   };
   const onConnected = () => {
     console.log(" ======== connected ==========: ");
+
     global.stompClient.subscribe(`/user/${user.id}/chat`, function (chat) {
       const message = JSON.parse(chat.body);
       dispatch(updateContentChat(message));
@@ -78,6 +80,7 @@ export default function Login({ navigation }) {
 
   useEffect(() => {
     if (isSuccess) {
+      setConected(true);
       var sock = new SockJS(`${URL}/ws`);
       global.stompClient = Stomp.over(sock);
 
@@ -86,6 +89,7 @@ export default function Login({ navigation }) {
 
       console.log(" ======== stompClient.connect ==========: ");
       global.stompClient.connect(onError, onConnected);
+      setConected(false);
     }
     if (isError) {
       console.log(isError);

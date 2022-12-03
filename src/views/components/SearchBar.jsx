@@ -14,8 +14,8 @@ import MenuIcon from "./MenuIcon";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { logout } from "../../redux/slices/UserSlice";
 import { useDispatch } from "react-redux";
-import { handleSearchConversations } from "../../redux/slices/ConversationSlice";
-// import { store } from "../../redux/store";
+import { getConversationAllByToken } from "../../redux/slices/ConversationSlice";
+import { getToken } from "../../utils/function";
 function SearchBar({ navigation, conversations }) {
   const [visible, setVisible] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
@@ -47,14 +47,14 @@ function SearchBar({ navigation, conversations }) {
     navigation.navigate("Login");
   };
 
+  const handleReloading = async () => {
+    dispatch(getConversationAllByToken(await getToken()));
+    setVisible(false);
+  };
+
   const handleSetInput = (value) => {
     setSearchInput(value);
   };
-
-  // useEffect(() => {
-  //   dispatch(handleSearchConversations(searchInput));
-  //   console.log(searchInput);
-  // }, [searchInput, dispatch]);
 
   return (
     <>
@@ -97,6 +97,11 @@ function SearchBar({ navigation, conversations }) {
                 onClose={() => handleCancel(false)}
               />
               <MenuIcon
+                icon={<Ionicons name="reload-outline" size={20} />}
+                title={"Loading"}
+                onPress={handleReloading}
+              />
+              <MenuIcon
                 icon={<Ionicons name="people-outline" size={20} />}
                 title={"Tạo nhóm"}
                 onPress={handlaNewGroup}
@@ -110,7 +115,7 @@ function SearchBar({ navigation, conversations }) {
           }
           placement={"bottom"}
           onClose={() => setVisible(!visible)}
-          contentStyle={{ width: 200, height: 120 }}
+          contentStyle={{ width: 200, height: 150 }}
           {...(Platform.OS === "ios"
             ? { tooltipStyle: { marginLeft: 17, marginTop: 10 } }
             : { tooltipStyle: { marginLeft: 17, marginTop: 0 } })}

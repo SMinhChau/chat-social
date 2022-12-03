@@ -48,7 +48,6 @@ function AddFriend({ navigation }) {
       );
       setFindFriend(data);
       setIsLoading(false);
-      // console.log(data);
     } catch (error) {
       setFindFriend({
         code: 404,
