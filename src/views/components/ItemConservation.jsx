@@ -19,11 +19,9 @@ function ItemConservation({
   userCurrentId,
   lastMessage,
   conversationAdmin,
-
   conversationType,
 }) {
   const dispatch = useDispatch();
-  console.log("userCurrentId", userChatconversation);
 
   const getNameConversation = () => {
     if (type) {
@@ -34,11 +32,19 @@ function ItemConservation({
     else return "Chưa xác định";
   };
 
+  const getAvatar = () => {
+    if (type) {
+      return avatar;
+    }
+    if (listMember.length)
+      return listMember.find((m) => m.id !== userIdCurrent)?.avatar;
+  };
+
   const handleChangeChat = () => {
     navigation.navigate("Chats", {
       name: getNameConversation(),
       userIdCurrent,
-      avatar,
+      avatar: getAvatar(),
       userCurrentId,
       conversationId,
       admin: conversationAdmin,
@@ -52,7 +58,7 @@ function ItemConservation({
           id,
           name: getNameConversation(),
           listMember,
-          avatar,
+          avatar: getAvatar(),
           type,
         },
       })
@@ -66,8 +72,8 @@ function ItemConservation({
         handleChangeChat();
       }}
     >
-      {avatar ? (
-        <Image source={{ uri: avatar }} style={styles.imgMessage} />
+      {getAvatar() ? (
+        <Image source={{ uri: getAvatar() }} style={styles.imgMessage} />
       ) : (
         <Image source={{ uri: AvatarDefault }} style={styles.imgMessage} />
       )}
@@ -85,7 +91,6 @@ function ItemConservation({
           {lastMessage?.content[0] ? lastMessage.content : ""}
         </Text>
       </View>
-
       <View style={styles.viewTime}>
         <Text style={styles.textdiscrible_time}>
           {lastMessage?.timeSend

@@ -58,7 +58,7 @@ export default function Login({ navigation }) {
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
       validationSchema: LoginSchema,
-      initialValues: { phoneNumber: "", password: "" },
+      initialValues: { phoneNumber: "0795815992", password: "11111111" },
       onSubmit: (values) => {
         onFinish(values);
         console.log("Login form " + values);
@@ -67,11 +67,13 @@ export default function Login({ navigation }) {
 
   //   Connect Socket
   const onError = (error) => {
+    Alert("Eror!", error);
     console.log("Could not connect" + error);
   };
-  const onConnected = () => {
-    console.log(" ======== connected ==========: ");
 
+  const onConnected = () => {
+    setConected(true);
+    console.log(" ======== connected ==========: ");
     global.stompClient.subscribe(`/user/${user.id}/chat`, function (chat) {
       const message = JSON.parse(chat.body);
       dispatch(updateContentChat(message));
@@ -85,10 +87,10 @@ export default function Login({ navigation }) {
       global.stompClient = Stomp.over(sock);
 
       navigation.navigate("Home");
-      // console.log(messages);
 
       console.log(" ======== stompClient.connect ==========: ");
       global.stompClient.connect(onError, onConnected);
+
       setConected(false);
     }
     if (isError) {

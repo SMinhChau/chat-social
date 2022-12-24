@@ -15,7 +15,6 @@ export const getConversationAllByToken = createAsyncThunk(
           Accept: "application/json",
         },
       });
-
       return data;
     } catch (error) {
       console.log(error);
@@ -43,7 +42,6 @@ export const handleMemberOutGroup = createAsyncThunk(
           },
         }
       );
-      console.log("data -OutGroup", res.data);
 
       return res.data;
     } catch (error) {
